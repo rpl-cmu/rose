@@ -1,0 +1,30 @@
+"""Setup file to install the robust package."""
+
+try:
+    from setuptools import setup, find_packages
+except ImportError:
+    from distutils.core import setup, find_packages
+
+packages = find_packages(where=".")
+print("PACKAGES: ", packages)
+
+package_data = {
+    '': [
+        "./*.so",
+        "./*.dll",
+    ]
+}
+
+setup(
+    name='robust',
+    version='0.0.1',
+    description='Robust Multi-Sensor Odometry',
+    author='Easton Potokar',
+    author_email='epotokar@cmu.edu',
+    keywords='slam sam robotics vio robust localization optimization',
+    # https://pypi.org/pypi?%3Aaction=list_classifiers
+    packages=packages,
+    include_package_data=True,
+    package_data=package_data,
+    zip_safe=False,
+)

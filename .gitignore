@@ -1,0 +1,10 @@
+.vscode
+build
+data
+/*.png
+__pycache__
+*.jrr
+*.jrl
+*.yaml
+*.log
+figures/*.png
