@@ -6,8 +6,8 @@
 #include <gtsam/nonlinear/LevenbergMarquardtOptimizer.h>
 #include <gtsam/nonlinear/LevenbergMarquardtParams.h>
 
-#include "backend/WheelDang.h"
-#include "backend/WheelFactorCov.h"
+#include "backend/WheelBaseline.h"
+#include "backend/WheelRose.h"
 
 #include "gtest/gtest.h"
 
@@ -20,7 +20,7 @@ using gtsam::symbol_shorthand::X;
 
 #define EXPECT_ZERO(v) EXPECT_TRUE(v.isZero(1e-4)) << " Actual is not zero:\n" << v
 
-TEST(Factor, WheelFactorCov) {
+TEST(Factor, WheelRose) {
     double wl = 0.4;
     double wr = 0.2;
     double dt = 0.1;
@@ -32,7 +32,7 @@ TEST(Factor, WheelFactorCov) {
     pwm_params->wyCov = 1e-2;
     pwm_params->vyCov = 1e-4;
     pwm_params->vzCov = 1e-4;
-    PreintegratedWheelCov pwm(pwm_params);
+    PreintegratedWheelRose pwm(pwm_params);
     for (int i = 0; i < 10; ++i) {
         pwm.integrateMeasurements(wl, wr, dt);
     }
@@ -78,7 +78,7 @@ TEST(Factor, WheelFactorDang) {
     pwm_params->wyCov = 1e-2;
     pwm_params->vyCov = 1e-4;
     pwm_params->vzCov = 1e-4;
-    PreintegratedWheelDang pwm(pwm_params);
+    PreintegratedWheelBaseline pwm(pwm_params);
     for (int i = 0; i < 1; ++i) {
         pwm.integrateVelocities(w, v, dt);
     }

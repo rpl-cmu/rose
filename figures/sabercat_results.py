@@ -141,10 +141,10 @@ if __name__ == "__main__":
 
     # W/O IMU
     alias = {
-        "wheel_cov": plot.WheelType.WHEEL_COV.value,
-        "wheel_intr_slip": plot.WheelType.WHEEL_COV_INTR_SLIP.value,
-        "wheel_dang": plot.WheelType.WHEEL_UNDER.value,
-        "wheel_dang_planar": plot.WheelType.WHEEL_PLANAR.value,
+        "wheel_rose": plot.WheelType.WHEEL_ROSE.value,
+        "wheel_intr_slip": plot.WheelType.WHEEL_ROSE_INTR_SLIP.value,
+        "wheel_baseline": plot.WheelType.WHEEL_UNDER.value,
+        "wheel_baseline_planar": plot.WheelType.WHEEL_PLANAR.value,
         "cam_only": plot.WheelType.SVO.value,
         "wheel_only": plot.WheelType.WHEEL.value,
     }
@@ -157,8 +157,8 @@ if __name__ == "__main__":
             plot.WheelType.SVO.value,
             plot.WheelType.WHEEL.value,
             plot.WheelType.WHEEL_PLANAR.value,
-            plot.WheelType.WHEEL_COV.value,
-            plot.WheelType.WHEEL_COV_INTR_SLIP.value,
+            plot.WheelType.WHEEL_ROSE.value,
+            plot.WheelType.WHEEL_ROSE_INTR_SLIP.value,
         ],
         ordered=True,
     )
@@ -202,8 +202,8 @@ if __name__ == "__main__":
             plot.WheelType.SVO.value.replace("SVO", "SVIO"),
             plot.WheelType.WHEEL_UNDER.value.replace("SVO", "SVIO"),
             plot.WheelType.WHEEL_PLANAR.value.replace("SVO", "SVIO"),
-            plot.WheelType.WHEEL_COV.value.replace("SVO", "SVIO"),
-            plot.WheelType.WHEEL_COV_INTR_SLIP.value.replace("SVO", "SVIO"),
+            plot.WheelType.WHEEL_ROSE.value.replace("SVO", "SVIO"),
+            plot.WheelType.WHEEL_ROSE_INTR_SLIP.value.replace("SVO", "SVIO"),
         ],
         ordered=True,
     )

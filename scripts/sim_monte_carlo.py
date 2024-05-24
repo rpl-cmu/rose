@@ -10,11 +10,11 @@ from rose.dataset import Dataset2JRL, Sensor
 from rose.rose_python import (
     PlanarPriorTag,
     PriorFactorManifoldTag,
-    WheelCovIntrSlipTag,
-    WheelCovIntrTag,
-    WheelCovSlipTag,
-    WheelCovTag,
-    WheelDangTag,
+    WheelRoseIntrSlipTag,
+    WheelRoseIntrTag,
+    WheelRoseSlipTag,
+    WheelRoseTag,
+    WheelBaselineTag,
     WheelManifoldTag,
     ZPriorTag,
     makeFrontend,
@@ -75,11 +75,11 @@ if __name__ == "__main__":
 
         for use_imu in [False]:
             for tag in [
-                WheelDangTag,
-                WheelCovTag,
-                WheelCovSlipTag,
-                WheelCovIntrTag,
-                WheelCovIntrSlipTag,
+                WheelBaselineTag,
+                WheelRoseTag,
+                WheelRoseSlipTag,
+                WheelRoseIntrTag,
+                WheelRoseIntrSlipTag,
                 "stereo",
             ]:
                 # if not use_imu and tag == "None":
@@ -90,16 +90,16 @@ if __name__ == "__main__":
                 ]
                 if tag != "stereo":
                     sensors.append(tag)
-                if WheelDangTag in sensors:
+                if WheelBaselineTag in sensors:
                     sensors.append(PlanarPriorTag)
                     sensors.append(ZPriorTag)
                 if WheelManifoldTag in sensors:
                     sensors.append(PriorFactorManifoldTag)
-                if WheelCovSlipTag in sensors:
+                if WheelRoseSlipTag in sensors:
                     sensors.append(jrl.PriorFactorPoint2Tag)
-                if WheelCovIntrTag in sensors:
+                if WheelRoseIntrTag in sensors:
                     sensors.append(jrl.PriorFactorPoint3Tag)
-                if WheelCovIntrSlipTag in sensors:
+                if WheelRoseIntrSlipTag in sensors:
                     sensors.append(jrl.PriorFactorPoint2Tag)
                     sensors.append(jrl.PriorFactorPoint3Tag)
                 if use_imu:
@@ -126,10 +126,10 @@ if __name__ == "__main__":
                 states="rpis",
                 show=False,
                 filename=f"sim_{i}.png",
-                cov=traj[f"{WheelCovTag}{i}"],
-                slip=traj[f"{WheelCovSlipTag}{i}"],
-                intr=traj[f"{WheelCovIntrTag}{i}"],
-                intrslip=traj[f"{WheelCovIntrSlipTag}{i}"],
+                cov=traj[f"{WheelRoseTag}{i}"],
+                slip=traj[f"{WheelRoseSlipTag}{i}"],
+                intr=traj[f"{WheelRoseIntrTag}{i}"],
+                intrslip=traj[f"{WheelRoseIntrSlipTag}{i}"],
             )
             plt.close()
 

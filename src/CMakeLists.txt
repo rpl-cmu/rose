@@ -6,9 +6,9 @@ add_library(rose
     FixedLagBackend.cpp
     LMBackend.cpp
     MEstBackend.cpp
-    WheelDang.cpp
+    WheelBaseline.cpp
     WheelFactorBase.cpp
-    WheelFactorCov.cpp
+    WheelRose.cpp
 ) 
 
 # Set Library Properties

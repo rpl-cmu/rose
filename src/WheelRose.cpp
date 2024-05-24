@@ -1,16 +1,16 @@
-#include "backend/WheelFactorCov.h"
+#include "backend/WheelRose.h"
 
 // ------------------------- Preintegrated Wheel Measurements ------------------------- //
-PreintegratedWheelCov::PreintegratedWheelCov(const boost::shared_ptr<PreintegratedWheelParams> p) : Base(p) {
+PreintegratedWheelRose::PreintegratedWheelRose(const boost::shared_ptr<PreintegratedWheelParams> p) : Base(p) {
     resetIntegration();
     intr_est_ = p_->intrinsics;
 }
 
-PreintegratedWheelCov::PreintegratedWheelCov(Base base, gtsam::Matrix62 H_slip, gtsam::Matrix63 H_intr,
+PreintegratedWheelRose::PreintegratedWheelRose(Base base, gtsam::Matrix62 H_slip, gtsam::Matrix63 H_intr,
                                              gtsam::Vector3 intr_est)
     : Base(base), H_slip_(H_slip), H_intr_(H_intr), intr_est_(intr_est) {}
 
-void PreintegratedWheelCov::resetIntegration() {
+void PreintegratedWheelRose::resetIntegration() {
     H_slip_.setZero();
     H_intr_.setZero();
     Base::resetIntegration();
@@ -18,7 +18,7 @@ void PreintegratedWheelCov::resetIntegration() {
 
 // TODO Reset integration & reset intrinsics
 
-void PreintegratedWheelCov::integrateMeasurements(double wl, double wr, double dt) {
+void PreintegratedWheelRose::integrateMeasurements(double wl, double wr, double dt) {
     // Convert angular rates to w, v
     gtsam::Matrix2 T = intrinsicsMat();
     gtsam::Vector2 wl_wr;
@@ -61,13 +61,13 @@ void PreintegratedWheelCov::integrateMeasurements(double wl, double wr, double d
 }
 
 // ------------------------- For WheelFactor2 ------------------------- //
-gtsam::Pose3 PreintegratedWheelCov::predict(const gtsam::Pose3 &x_i, boost::optional<gtsam::Matrix &> H1) const {
+gtsam::Pose3 PreintegratedWheelRose::predict(const gtsam::Pose3 &x_i, boost::optional<gtsam::Matrix &> H1) const {
     gtsam::Vector6 preintCorr = preint_;
     gtsam::Pose3 delta = gtsam::Pose3::Expmap(preint_);
     return x_i.compose(delta, H1);
 }
 
-gtsam::Vector PreintegratedWheelCov::evaluateError(const gtsam::Pose3 &pose_i, const gtsam::Pose3 &pose_j,
+gtsam::Vector PreintegratedWheelRose::evaluateError(const gtsam::Pose3 &pose_i, const gtsam::Pose3 &pose_j,
                                                    boost::optional<gtsam::Matrix &> H1,
                                                    boost::optional<gtsam::Matrix &> H2) const {
     gtsam::Pose3 pose_j_est = predict(pose_i, H1);
@@ -81,7 +81,7 @@ gtsam::Vector PreintegratedWheelCov::evaluateError(const gtsam::Pose3 &pose_i, c
 }
 
 // ------------------------- For WheelFactor3 ------------------------- //
-gtsam::Pose3 PreintegratedWheelCov::predict(const gtsam::Pose3 &x_i, const gtsam::Vector2 &slip,
+gtsam::Pose3 PreintegratedWheelRose::predict(const gtsam::Pose3 &x_i, const gtsam::Vector2 &slip,
                                             boost::optional<gtsam::Matrix &> H1,
                                             boost::optional<gtsam::Matrix &> H2) const {
 
@@ -98,7 +98,7 @@ gtsam::Pose3 PreintegratedWheelCov::predict(const gtsam::Pose3 &x_i, const gtsam
     return x_j_hat;
 }
 
-gtsam::Vector PreintegratedWheelCov::evaluateError(const gtsam::Pose3 &pose_i, const gtsam::Vector2 &slip,
+gtsam::Vector PreintegratedWheelRose::evaluateError(const gtsam::Pose3 &pose_i, const gtsam::Vector2 &slip,
                                                    const gtsam::Pose3 &pose_j, boost::optional<gtsam::Matrix &> H1,
                                                    boost::optional<gtsam::Matrix &> H2,
                                                    boost::optional<gtsam::Matrix &> H3) const {
@@ -118,7 +118,7 @@ gtsam::Vector PreintegratedWheelCov::evaluateError(const gtsam::Pose3 &pose_i, c
 }
 
 // ------------------------- For WheelFactor4 ------------------------- //
-gtsam::Pose3 PreintegratedWheelCov::predict(const gtsam::Pose3 &x_i, const gtsam::Vector3 &intr,
+gtsam::Pose3 PreintegratedWheelRose::predict(const gtsam::Pose3 &x_i, const gtsam::Vector3 &intr,
                                             boost::optional<gtsam::Matrix &> H1,
                                             boost::optional<gtsam::Matrix &> H2) const {
     gtsam::Matrix H_comp, H_exp;
@@ -134,7 +134,7 @@ gtsam::Pose3 PreintegratedWheelCov::predict(const gtsam::Pose3 &x_i, const gtsam
     return x_j_hat;
 }
 
-gtsam::Vector PreintegratedWheelCov::evaluateError(const gtsam::Pose3 &pose_i, const gtsam::Vector3 &intr_i,
+gtsam::Vector PreintegratedWheelRose::evaluateError(const gtsam::Pose3 &pose_i, const gtsam::Vector3 &intr_i,
                                                    const gtsam::Pose3 &pose_j, const gtsam::Vector3 &intr_j,
                                                    boost::optional<gtsam::Matrix &> H1,
                                                    boost::optional<gtsam::Matrix &> H2,
@@ -183,7 +183,7 @@ gtsam::Vector PreintegratedWheelCov::evaluateError(const gtsam::Pose3 &pose_i, c
 }
 
 // ------------------------- For WheelFactor5 ------------------------- //
-gtsam::Pose3 PreintegratedWheelCov::predict(const gtsam::Pose3 &x_i, const gtsam::Vector3 &intr,
+gtsam::Pose3 PreintegratedWheelRose::predict(const gtsam::Pose3 &x_i, const gtsam::Vector3 &intr,
                                             const gtsam::Vector2 &slip, boost::optional<gtsam::Matrix &> H1,
                                             boost::optional<gtsam::Matrix &> H2,
                                             boost::optional<gtsam::Matrix &> H3) const {
@@ -203,7 +203,7 @@ gtsam::Pose3 PreintegratedWheelCov::predict(const gtsam::Pose3 &x_i, const gtsam
     return x_j_hat;
 }
 
-gtsam::Vector PreintegratedWheelCov::evaluateError(const gtsam::Pose3 &pose_i, const gtsam::Vector3 &intr_i,
+gtsam::Vector PreintegratedWheelRose::evaluateError(const gtsam::Pose3 &pose_i, const gtsam::Vector3 &intr_i,
                                                    const gtsam::Pose3 &pose_j, const gtsam::Vector3 &intr_j,
                                                    const gtsam::Vector2 &slip, boost::optional<gtsam::Matrix &> H1,
                                                    boost::optional<gtsam::Matrix &> H2,

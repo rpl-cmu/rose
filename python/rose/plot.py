@@ -10,7 +10,7 @@ import pandas as pd
 import seaborn as sns
 from gtsam.symbol_shorthand import B, I, M, S, V, X
 from matplotlib.lines import Line2D
-from rose.rose_python import WheelCovIntrSlipTag, WheelCovTag, WheelDangTag
+from rose.rose_python import WheelRoseIntrSlipTag, WheelRoseTag, WheelBaselineTag
 
 
 # https://stackoverflow.com/a/43343934
@@ -76,8 +76,8 @@ class WheelType(Enum):
     WHEEL = "WO"
     WHEEL_PLANAR = "SVO + Planar"
     WHEEL_UNDER = "SVO + Under"
-    WHEEL_COV = "SVO + ROSE--"
-    WHEEL_COV_INTR_SLIP = "SVO + ROSE"
+    WHEEL_ROSE = "SVO + ROSE--"
+    WHEEL_ROSE_INTR_SLIP = "SVO + ROSE"
 
 
 def tags_to_names():
@@ -85,9 +85,9 @@ def tags_to_names():
         "GT": WheelType.GT.value,
         "stereo": WheelType.SVO.value,
         "wheel": WheelType.WHEEL.value,
-        WheelCovTag: WheelType.WHEEL_COV.value,
-        WheelCovIntrSlipTag: WheelType.WHEEL_COV_INTR_SLIP.value,
-        WheelDangTag: WheelType.WHEEL_PLANAR.value,
+        WheelRoseTag: WheelType.WHEEL_ROSE.value,
+        WheelRoseIntrSlipTag: WheelType.WHEEL_ROSE_INTR_SLIP.value,
+        WheelBaselineTag: WheelType.WHEEL_PLANAR.value,
         "under": WheelType.WHEEL_UNDER.value,
     }
 
@@ -108,8 +108,8 @@ def setup_plot():
         WheelType.GT.value: (0.2, 0.2, 0.2),
         WheelType.SVO.value: c[0],
         WheelType.WHEEL.value: c[1],
-        WheelType.WHEEL_COV.value: c[2],
-        WheelType.WHEEL_COV_INTR_SLIP.value: c[3],
+        WheelType.WHEEL_ROSE.value: c[2],
+        WheelType.WHEEL_ROSE_INTR_SLIP.value: c[3],
         WheelType.WHEEL_PLANAR.value: c[4],
         WheelType.WHEEL_UNDER.value: c[-1],
     }

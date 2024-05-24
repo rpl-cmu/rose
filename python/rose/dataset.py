@@ -21,15 +21,15 @@ from rose.jrl import (
 from rose.rose_python import (
     PlanarPriorFactor,
     PlanarPriorTag,
-    PreintegratedWheelCov,
-    PreintegratedWheelDang,
+    PreintegratedWheelRose,
+    PreintegratedWheelBaseline,
     PreintegratedWheelParams,
     PriorFactorIntrinsicsTag,
-    WheelCovIntrSlipTag,
-    WheelCovIntrTag,
-    WheelCovSlipTag,
-    WheelCovTag,
-    WheelDangTag,
+    WheelRoseIntrSlipTag,
+    WheelRoseIntrTag,
+    WheelRoseSlipTag,
+    WheelRoseTag,
+    WheelBaselineTag,
     WheelFactor2,
     WheelFactor3,
     WheelFactor4Intrinsics,
@@ -1017,11 +1017,11 @@ class Dataset2JRL:
         data.interp(self.stamps)
 
         allPWMs = [
-            PreintegratedWheelDang(pwmParamsDang),
-            PreintegratedWheelCov(pwmParams),
-            PreintegratedWheelCov(pwmParams),
-            PreintegratedWheelCov(pwmParams),
-            PreintegratedWheelCov(pwmParams),
+            PreintegratedWheelBaseline(pwmParamsDang),
+            PreintegratedWheelRose(pwmParams),
+            PreintegratedWheelRose(pwmParams),
+            PreintegratedWheelRose(pwmParams),
+            PreintegratedWheelRose(pwmParams),
         ]
         pwmFactors = [
             lambda i, pwm: WheelFactor2(X(i - 1), X(i), pwm.copy(), data.extrinsics),
@@ -1037,11 +1037,11 @@ class Dataset2JRL:
             ),
         ]
         pwmTags = [
-            WheelDangTag,
-            WheelCovTag,
-            WheelCovSlipTag,
-            WheelCovIntrTag,
-            WheelCovIntrSlipTag,
+            WheelBaselineTag,
+            WheelRoseTag,
+            WheelRoseSlipTag,
+            WheelRoseIntrTag,
+            WheelRoseIntrSlipTag,
         ]
 
         wheel_traj = gtsam.Values()

@@ -11,7 +11,7 @@ import seaborn as sns
 from rose.dataset import Dataset2JRL, Sensor, WheelData, WheelIntrinsics
 from rose.flat import FlatDataset
 from rose.kaist import KaistDataset
-from rose.rose_python import PreintegratedWheelCov, PreintegratedWheelParams
+from rose.rose_python import PreintegratedWheelRose, PreintegratedWheelParams
 from rose.ros import GrizzlyBag
 
 np.set_printoptions(suppress=True, precision=4)
@@ -50,7 +50,7 @@ def nder(
 def wheel_estimate(slip: np.ndarray, data: np.ndarray, dt: float = 0.1) -> np.ndarray:
     assert data.shape[1] == 2
     pwmParams = PreintegratedWheelParams()
-    pwm = PreintegratedWheelCov(pwmParams)
+    pwm = PreintegratedWheelRose(pwmParams)
 
     for wl, wr in data:
         pwm.integrateMeasurements(wl + slip[0], wr + slip[1], dt)
@@ -60,7 +60,7 @@ def wheel_estimate(slip: np.ndarray, data: np.ndarray, dt: float = 0.1) -> np.nd
 
 def H_function(slip: np.ndarray, data: np.ndarray, dt: float = 0.1) -> np.ndarray:
     pwmParams = PreintegratedWheelParams()
-    pwm = PreintegratedWheelCov(pwmParams)
+    pwm = PreintegratedWheelRose(pwmParams)
 
     E = np.zeros((6, 2))
     E[2:4, :] = np.eye(2)

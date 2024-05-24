@@ -7,7 +7,7 @@ import rose.plot as plot
 import seaborn as sns
 from matplotlib.patches import ConnectionPatch, Rectangle
 from mpl_toolkits.axes_grid1.inset_locator import mark_inset
-from rose.rose_python import WheelCovIntrSlipTag
+from rose.rose_python import WheelRoseIntrSlipTag
 
 
 # https://stackoverflow.com/a/73308476
@@ -62,7 +62,7 @@ if __name__ == "__main__":
         r"$s_r$",
     ]
     unit_states = ["$m$", "$m$", "$m$", "$rad/s$", "$rad/s$"]
-    names = [plot.WheelType.GT.value, plot.WheelType.WHEEL_COV_INTR_SLIP.value]
+    names = [plot.WheelType.GT.value, plot.WheelType.WHEEL_ROSE_INTR_SLIP.value]
 
     fig = plt.figure(layout="constrained", figsize=(8, 1.5))
     ax = []

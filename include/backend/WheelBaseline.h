@@ -16,14 +16,14 @@
 // ------------------------- Wheel Factors ------------------------- //
 
 // TODO: Make equals functions for these classes
-class PreintegratedWheelDang : public PreintegratedWheelBase {
+class PreintegratedWheelBaseline : public PreintegratedWheelBase {
   public:
-    typedef PreintegratedWheelDang This;
+    typedef PreintegratedWheelBaseline This;
     typedef PreintegratedWheelBase Base;
-    typedef typename boost::shared_ptr<PreintegratedWheelDang> shared_ptr;
+    typedef typename boost::shared_ptr<PreintegratedWheelBaseline> shared_ptr;
 
-    PreintegratedWheelDang(const boost::shared_ptr<PreintegratedWheelParams> p);
-    PreintegratedWheelDang(Base base);
+    PreintegratedWheelBaseline(const boost::shared_ptr<PreintegratedWheelParams> p);
+    PreintegratedWheelBaseline(Base base);
 
     // This are inherited, overriden functions
     void integrateVelocities(double omega, double v, double dt) override;
@@ -41,9 +41,9 @@ class PreintegratedWheelDang : public PreintegratedWheelBase {
 };
 
 // ------------------------- JRL WRAPPER ------------------------- //
-static const std::string WheelDangTag = "WheelDang";
+static const std::string WheelBaselineTag = "WheelBaseline";
 
 inline PreintegratedWheelBase::shared_ptr parsePWMDang(nlohmann::json input_json) {
     PreintegratedWheelBase::shared_ptr pwmBase = parsePWBase(input_json);
-    return boost::make_shared<PreintegratedWheelDang>(*pwmBase);
+    return boost::make_shared<PreintegratedWheelBaseline>(*pwmBase);
 }

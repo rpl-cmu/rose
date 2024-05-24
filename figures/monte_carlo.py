@@ -4,10 +4,10 @@ import pandas as pd
 import rose.plot as plot
 import seaborn as sns
 from rose.rose_python import (
-    WheelCovIntrSlipTag,
-    WheelCovSlipTag,
-    WheelCovTag,
-    WheelDangTag,
+    WheelRoseIntrSlipTag,
+    WheelRoseSlipTag,
+    WheelRoseTag,
+    WheelBaselineTag,
 )
 
 
@@ -22,8 +22,8 @@ def plot_bars(file):
         plot.WheelType.SVO.value,
         plot.WheelType.WHEEL.value,
         plot.WheelType.WHEEL_PLANAR.value,
-        plot.WheelType.WHEEL_COV.value,
-        plot.WheelType.WHEEL_COV_INTR_SLIP.value,
+        plot.WheelType.WHEEL_ROSE.value,
+        plot.WheelType.WHEEL_ROSE_INTR_SLIP.value,
     ]
     df = df[df["WheelFactor"].isin(variations)]
 

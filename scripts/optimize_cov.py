@@ -13,11 +13,11 @@ from rose.kaist import KaistDataset
 from rose.rose_python import (
     PlanarPriorTag,
     PriorFactorIntrinsicsTag,
-    WheelCovIntrSlipTag,
-    WheelCovIntrTag,
-    WheelCovSlipTag,
-    WheelCovTag,
-    WheelDangTag,
+    WheelRoseIntrSlipTag,
+    WheelRoseIntrTag,
+    WheelRoseSlipTag,
+    WheelRoseTag,
+    WheelBaselineTag,
     ZPriorTag,
     makeFrontend,
 )
@@ -163,7 +163,7 @@ if __name__ == "__main__":
             gt = data.traj[Sensor.GT]
             km = compute_traj_length(gt) / 1000
 
-            # WheelCovIntrSlipTag,  # wheel factor
+            # WheelRoseIntrSlipTag,  # wheel factor
             # jrl.PriorFactorPoint2Tag,  # slip prior throughout
             # PriorFactorIntrinsicsTag,  # intrinsics prior throughout
             # jrl.PriorFactorPoint3Tag,  # intrinsics prior
@@ -179,7 +179,7 @@ if __name__ == "__main__":
             #             jrl.PriorFactorIMUBiasTag,
             #             jrl.CombinedIMUTag,
             #             #
-            #             WheelCovIntrTag,
+            #             WheelRoseIntrTag,
             #             PriorFactorIntrinsicsTag,
             #             jrl.PriorFactorPoint3Tag,
             #             #
@@ -200,7 +200,7 @@ if __name__ == "__main__":
                 sol = frontend.run(
                     data.to_dataset(),
                     [
-                        WheelCovIntrSlipTag,
+                        WheelRoseIntrSlipTag,
                         jrl.PriorFactorPoint3Tag,
                         jrl.PriorFactorPoint2Tag,
                         jrl.PriorFactorPoint3Tag,
@@ -276,7 +276,7 @@ if __name__ == "__main__":
 
     # print(out)
     # noise = vec2noise(out.x, all_datasets[0].noise(Sensor.WHEEL))
-    # noise.save("intr_wheel_cov.yaml")
+    # noise.save("intr_wheel_rose.yaml")
 
     # print(
     #     direct(

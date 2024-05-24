@@ -7,7 +7,7 @@
 #include <gtsam/nonlinear/LevenbergMarquardtParams.h>
 
 #include "backend/PlanarPriorFactor.h"
-#include "backend/WheelFactorCov.h"
+#include "backend/WheelRose.h"
 #include "backend/ZPriorFactor.h"
 
 #include "gtest/gtest.h"
@@ -21,7 +21,7 @@ using gtsam::symbol_shorthand::X;
 #define EXPECT_MATRICES_EQ(M_actual, M_expected)                                                                       \
     EXPECT_TRUE(M_actual.isApprox(M_expected, 1e-5)) << "  Actual:\n" << M_actual << "\nExpected:\n" << M_expected
 
-TEST(Jacobians, WheelFactorCov) {
+TEST(Jacobians, WheelRose) {
     double wl = 0.6;
     double wr = 0.4;
     double dt = 0.1;
@@ -33,7 +33,7 @@ TEST(Jacobians, WheelFactorCov) {
     pwm_params->wyCov = 1e-2;
     pwm_params->vyCov = 1e-4;
     pwm_params->vzCov = 1e-4;
-    PreintegratedWheelCov pwm(pwm_params);
+    PreintegratedWheelRose pwm(pwm_params);
     for (int i = 0; i < 10; ++i) {
         pwm.integrateMeasurements(wl, wr, dt);
     }
@@ -73,7 +73,7 @@ TEST(Jacobians, WheelFactorSlip) {
     pwm_params->wyCov = 1e-2;
     pwm_params->vyCov = 1e-4;
     pwm_params->vzCov = 1e-4;
-    PreintegratedWheelCov pwm(pwm_params);
+    PreintegratedWheelRose pwm(pwm_params);
     for (int i = 0; i < 10; ++i) {
         pwm.integrateMeasurements(wl, wr, dt);
     }
@@ -116,7 +116,7 @@ TEST(Jacobians, WheelFactorIntr) {
     pwm_params->vyCov = 1e-4;
     pwm_params->vzCov = 1e-4;
     pwm_params->intrinsics = gtsam::Vector3(3, 0.1, 0.1);
-    PreintegratedWheelCov pwm(pwm_params);
+    PreintegratedWheelRose pwm(pwm_params);
     for (int i = 0; i < 10; ++i) {
         pwm.integrateMeasurements(wl, wr, dt);
     }
@@ -160,7 +160,7 @@ TEST(Jacobians, WheelFactorIntrSlip) {
     pwm_params->vyCov = 1e-4;
     pwm_params->vzCov = 1e-4;
     pwm_params->intrinsics = gtsam::Vector3(3, 0.1, 0.1);
-    PreintegratedWheelCov pwm(pwm_params);
+    PreintegratedWheelRose pwm(pwm_params);
     for (int i = 0; i < 10; ++i) {
         pwm.integrateMeasurements(wl, wr, dt);
     }
@@ -210,7 +210,7 @@ TEST(Jacobians, Wheel2Factor_Cov) {
     pwm_params->wyCov = 1e-2;
     pwm_params->vyCov = 1e-4;
     pwm_params->vzCov = 1e-4;
-    PreintegratedWheelCov pwm(pwm_params);
+    PreintegratedWheelRose pwm(pwm_params);
     for (int i = 0; i < 10; ++i) {
         pwm.integrateMeasurements(wl, wr, dt);
     }
@@ -250,7 +250,7 @@ TEST(Jacobians, Wheel3Factor_Cov) {
     pwm_params->wyCov = 1e-2;
     pwm_params->vyCov = 1e-4;
     pwm_params->vzCov = 1e-4;
-    PreintegratedWheelCov pwm(pwm_params);
+    PreintegratedWheelRose pwm(pwm_params);
     for (int i = 0; i < 10; ++i) {
         pwm.integrateMeasurements(wl, wr, dt);
     }
@@ -294,7 +294,7 @@ TEST(Jacobians, Wheel4Factor_Cov) {
     pwm_params->vyCov = 1e-4;
     pwm_params->vzCov = 1e-4;
     pwm_params->intrinsics = gtsam::Vector3(3, 0.1, 0.1);
-    PreintegratedWheelCov pwm(pwm_params);
+    PreintegratedWheelRose pwm(pwm_params);
     for (int i = 0; i < 10; ++i) {
         pwm.integrateMeasurements(wl, wr, dt);
     }
@@ -343,7 +343,7 @@ TEST(Jacobians, Wheel5Factor_Cov) {
     pwm_params->vyCov = 1e-4;
     pwm_params->vzCov = 1e-4;
     pwm_params->intrinsics = gtsam::Vector3(3, 0.1, 0.1);
-    PreintegratedWheelCov pwm(pwm_params);
+    PreintegratedWheelRose pwm(pwm_params);
     for (int i = 0; i < 10; ++i) {
         pwm.integrateMeasurements(wl, wr, dt);
     }

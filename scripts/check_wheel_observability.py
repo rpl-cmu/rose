@@ -2,7 +2,7 @@ import gtsam
 import numpy as np
 from gtsam.symbol_shorthand import I, S, X
 from rose.rose_python import (
-    PreintegratedWheelCov,
+    PreintegratedWheelRose,
     PreintegratedWheelParams,
     WheelFactor3,
     WheelFactor4Intrinsics,
@@ -20,7 +20,7 @@ def wheel_estimate(
     pwmParams = PreintegratedWheelParams()
     pwmParams.intrinsics = [b, wl, wr]
     pwmParams = PreintegratedWheelParams()
-    pwm = PreintegratedWheelCov(pwmParams)
+    pwm = PreintegratedWheelRose(pwmParams)
 
     for wl, wr in data:
         pwm.integrateMeasurements(wl, wr, dt)

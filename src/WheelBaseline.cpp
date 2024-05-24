@@ -1,13 +1,13 @@
-#include "backend/WheelDang.h"
+#include "backend/WheelBaseline.h"
 
 // ------------------------- Preintegrated Wheel Measurements ------------------------- //
-PreintegratedWheelDang::PreintegratedWheelDang(const boost::shared_ptr<PreintegratedWheelParams> p) : Base(p) {
+PreintegratedWheelBaseline::PreintegratedWheelBaseline(const boost::shared_ptr<PreintegratedWheelParams> p) : Base(p) {
     resetIntegration();
 }
 
-PreintegratedWheelDang::PreintegratedWheelDang(Base base) : Base(base) {}
+PreintegratedWheelBaseline::PreintegratedWheelBaseline(Base base) : Base(base) {}
 
-void PreintegratedWheelDang::integrateVelocities(double w, double v, double dt) {
+void PreintegratedWheelBaseline::integrateVelocities(double w, double v, double dt) {
     // Find change in states
     double deltaTheta = w * dt;
     double deltaD = v * dt;
@@ -46,12 +46,12 @@ void PreintegratedWheelDang::integrateVelocities(double w, double v, double dt) 
     deltaTij_ += dt;
 }
 
-gtsam::Pose3 PreintegratedWheelDang::predict(const gtsam::Pose3 &x_i, boost::optional<gtsam::Matrix &> H1) const {
+gtsam::Pose3 PreintegratedWheelBaseline::predict(const gtsam::Pose3 &x_i, boost::optional<gtsam::Matrix &> H1) const {
     gtsam::Pose3 delta(gtsam::Rot3::Rz(preint_[0]), gtsam::Vector3(preint_[1], preint_[2], 0));
     return x_i.compose(delta);
 }
 
-gtsam::Vector PreintegratedWheelDang::evaluateError(const gtsam::Pose3 &pose_i, const gtsam::Pose3 &pose_j,
+gtsam::Vector PreintegratedWheelBaseline::evaluateError(const gtsam::Pose3 &pose_i, const gtsam::Pose3 &pose_j,
                                                     boost::optional<gtsam::Matrix &> H1,
                                                     boost::optional<gtsam::Matrix &> H2) const {
     gtsam::Pose3 measured = pose_i.inverse() * predict(pose_i);

@@ -64,8 +64,8 @@ if __name__ == "__main__":
     types = {
         plot.WheelType.GT.value: "_gt.jrr",
         plot.WheelType.WHEEL.value: "_wheel.jrr",
-        plot.WheelType.WHEEL_PLANAR.value: "f-base.wheel_dang.planar_prior.jrr",
-        plot.WheelType.WHEEL_COV_INTR_SLIP.value: "f-base.wheel_intr_slip.jrr",
+        plot.WheelType.WHEEL_PLANAR.value: "f-base.wheel_baseline.planar_prior.jrr",
+        plot.WheelType.WHEEL_ROSE_INTR_SLIP.value: "f-base.wheel_intr_slip.jrr",
     }
 
     results = {}
@@ -115,7 +115,7 @@ if __name__ == "__main__":
     else:
         plt.imshow(final_map, extent=extent, cmap="grey", alpha=0.55)
 
-    dark_ones = [plot.WheelType.WHEEL_COV_INTR_SLIP.value, plot.WheelType.GT.value]
+    dark_ones = [plot.WheelType.WHEEL_ROSE_INTR_SLIP.value, plot.WheelType.GT.value]
     for name, values in results.items():
         alpha = 1 if name in dark_ones else 0.9
         lw = 1.25 if name in dark_ones else 0.8

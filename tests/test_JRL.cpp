@@ -5,8 +5,8 @@
 #include "jrl/DatasetBuilder.h"
 
 #include "backend/JRL.h"
-#include "backend/WheelDang.h"
-#include "backend/WheelFactorCov.h"
+#include "backend/WheelBaseline.h"
+#include "backend/WheelRose.h"
 
 #include "gtest/gtest.h"
 
@@ -31,7 +31,7 @@ TEST(JRL, WheelFactorDang) {
 
     // Setup factors
     auto pwm_params = PreintegratedWheelParams::MakeShared();
-    PreintegratedWheelDang pwm(pwm_params);
+    PreintegratedWheelBaseline pwm(pwm_params);
     pwm.integrateVelocities(w, v, dt);
     WheelFactor2 write_factor(X(0), X(1), pwm.copy());
 
@@ -40,20 +40,20 @@ TEST(JRL, WheelFactorDang) {
     graph.push_back(write_factor);
 
     jrl::DatasetBuilder builder("test", {'a'});
-    builder.addEntry('a', 0, graph, {WheelDangTag});
+    builder.addEntry('a', 0, graph, {WheelBaselineTag});
 
     jrl::Writer writer = makeRoseWriter();
-    writer.writeDataset(builder.build(), "wheel_dang.jrl");
+    writer.writeDataset(builder.build(), "wheel_baseline.jrl");
 
     // Load it back in!
     jrl::Parser parser = makeRoseParser();
-    jrl::Dataset dataset = parser.parseDataset("wheel_dang.jrl");
+    jrl::Dataset dataset = parser.parseDataset("wheel_baseline.jrl");
     WheelFactor2::shared_ptr read_factor = boost::dynamic_pointer_cast<WheelFactor2>(dataset.factorGraph('a')[0]);
 
     EXPECT_MATRICES_EQ(write_factor.evaluateError(x0, x1), read_factor->evaluateError(x0, x1));
 }
 
-TEST(JRL, WheelFactorCov) {
+TEST(JRL, WheelRose) {
     double wl = 1;
     double wr = 1;
     double dt = 0.1;
@@ -64,7 +64,7 @@ TEST(JRL, WheelFactorCov) {
 
     // Setup factors
     auto pwm_params = PreintegratedWheelParams::MakeShared();
-    PreintegratedWheelCov pwm(pwm_params);
+    PreintegratedWheelRose pwm(pwm_params);
     pwm.integrateMeasurements(wl, wr, dt);
     WheelFactor2 write_factor(X(0), X(1), pwm.copy());
 
@@ -73,20 +73,20 @@ TEST(JRL, WheelFactorCov) {
     graph.push_back(write_factor);
 
     jrl::DatasetBuilder builder("test", {'a'});
-    builder.addEntry('a', 0, graph, {WheelCovTag});
+    builder.addEntry('a', 0, graph, {WheelRoseTag});
 
     jrl::Writer writer = makeRoseWriter();
-    writer.writeDataset(builder.build(), "wheel_cov.jrl");
+    writer.writeDataset(builder.build(), "wheel_rose.jrl");
 
     // Load it back in!
     jrl::Parser parser = makeRoseParser();
-    jrl::Dataset dataset = parser.parseDataset("wheel_cov.jrl");
+    jrl::Dataset dataset = parser.parseDataset("wheel_rose.jrl");
     WheelFactor2::shared_ptr read_factor = boost::dynamic_pointer_cast<WheelFactor2>(dataset.factorGraph('a')[0]);
 
     EXPECT_MATRICES_EQ(write_factor.evaluateError(x0, x1), read_factor->evaluateError(x0, x1));
 }
 
-TEST(JRL, WheelFactorCov3) {
+TEST(JRL, WheelRose3) {
     double wl = 1;
     double wr = 1;
     double dt = 0.1;
@@ -99,7 +99,7 @@ TEST(JRL, WheelFactorCov3) {
 
     // Setup factors
     auto pwm_params = PreintegratedWheelParams::MakeShared();
-    PreintegratedWheelCov pwm(pwm_params);
+    PreintegratedWheelRose pwm(pwm_params);
     pwm.integrateMeasurements(wl, wr, dt);
     WheelFactor3 write_factor(X(0), X(1), W(0), pwm.copy(), b_T_w);
 
@@ -108,20 +108,20 @@ TEST(JRL, WheelFactorCov3) {
     graph.push_back(write_factor);
 
     jrl::DatasetBuilder builder("test", {'a'});
-    builder.addEntry('a', 0, graph, {WheelCovSlipTag});
+    builder.addEntry('a', 0, graph, {WheelRoseSlipTag});
 
     jrl::Writer writer = makeRoseWriter();
-    writer.writeDataset(builder.build(), "wheel_cov_slip.jrl");
+    writer.writeDataset(builder.build(), "wheel_rose_slip.jrl");
 
     // Load it back in!
     jrl::Parser parser = makeRoseParser();
-    jrl::Dataset dataset = parser.parseDataset("wheel_cov_slip.jrl");
+    jrl::Dataset dataset = parser.parseDataset("wheel_rose_slip.jrl");
     WheelFactor3::shared_ptr read_factor = boost::dynamic_pointer_cast<WheelFactor3>(dataset.factorGraph('a')[0]);
 
     EXPECT_MATRICES_EQ(write_factor.evaluateError(x0, x1, slip), read_factor->evaluateError(x0, x1, slip));
 }
 
-TEST(JRL, WheelFactorCov4) {
+TEST(JRL, WheelRose4) {
     double wl = 1;
     double wr = 1;
     double dt = 0.1;
@@ -134,7 +134,7 @@ TEST(JRL, WheelFactorCov4) {
 
     // Setup factors
     auto pwm_params = PreintegratedWheelParams::MakeShared();
-    PreintegratedWheelCov pwm(pwm_params);
+    PreintegratedWheelRose pwm(pwm_params);
     pwm.integrateMeasurements(wl, wr, dt);
     WheelFactor4Intrinsics write_factor(X(0), I(0), X(1), I(1), pwm.copy(), b_T_w);
 
@@ -143,20 +143,20 @@ TEST(JRL, WheelFactorCov4) {
     graph.push_back(write_factor);
 
     jrl::DatasetBuilder builder("test", {'a'});
-    builder.addEntry('a', 0, graph, {WheelCovIntrTag});
+    builder.addEntry('a', 0, graph, {WheelRoseIntrTag});
 
     jrl::Writer writer = makeRoseWriter();
-    writer.writeDataset(builder.build(), "wheel_cov_intr.jrl");
+    writer.writeDataset(builder.build(), "wheel_rose_intr.jrl");
 
     // Load it back in!
     jrl::Parser parser = makeRoseParser();
-    jrl::Dataset dataset = parser.parseDataset("wheel_cov_intr.jrl");
+    jrl::Dataset dataset = parser.parseDataset("wheel_rose_intr.jrl");
     WheelFactor4Intrinsics::shared_ptr read_factor =
         boost::dynamic_pointer_cast<WheelFactor4Intrinsics>(dataset.factorGraph('a')[0]);
     EXPECT_MATRICES_EQ(write_factor.evaluateError(x0, intr, x1, intr), read_factor->evaluateError(x0, intr, x1, intr));
 }
 
-TEST(JRL, WheelFactorCov5) {
+TEST(JRL, WheelRose5) {
     double wl = 1;
     double wr = 1;
     double dt = 0.1;
@@ -170,7 +170,7 @@ TEST(JRL, WheelFactorCov5) {
 
     // Setup factors
     auto pwm_params = PreintegratedWheelParams::MakeShared();
-    PreintegratedWheelCov pwm(pwm_params);
+    PreintegratedWheelRose pwm(pwm_params);
     pwm.integrateMeasurements(wl, wr, dt);
     WheelFactor5 write_factor(X(0), I(0), X(1), I(1), S(0), pwm.copy(), b_T_w);
 
@@ -179,14 +179,14 @@ TEST(JRL, WheelFactorCov5) {
     graph.push_back(write_factor);
 
     jrl::DatasetBuilder builder("test", {'a'});
-    builder.addEntry('a', 0, graph, {WheelCovIntrSlipTag});
+    builder.addEntry('a', 0, graph, {WheelRoseIntrSlipTag});
 
     jrl::Writer writer = makeRoseWriter();
-    writer.writeDataset(builder.build(), "wheel_cov_intr_slip.jrl");
+    writer.writeDataset(builder.build(), "wheel_rose_intr_slip.jrl");
 
     // Load it back in!
     jrl::Parser parser = makeRoseParser();
-    jrl::Dataset dataset = parser.parseDataset("wheel_cov_intr_slip.jrl");
+    jrl::Dataset dataset = parser.parseDataset("wheel_rose_intr_slip.jrl");
     WheelFactor5::shared_ptr read_factor = boost::dynamic_pointer_cast<WheelFactor5>(dataset.factorGraph('a')[0]);
     EXPECT_MATRICES_EQ(write_factor.evaluateError(x0, intr, x1, intr, slip),
                        read_factor->evaluateError(x0, intr, x1, intr, slip));

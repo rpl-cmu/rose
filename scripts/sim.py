@@ -12,11 +12,11 @@ from rose.jrl import values2results
 from rose.rose_python import (
     PlanarPriorTag,
     PriorFactorIntrinsicsTag,
-    WheelCovIntrSlipTag,
-    WheelCovIntrTag,
-    WheelCovSlipTag,
-    WheelCovTag,
-    WheelDangTag,
+    WheelRoseIntrSlipTag,
+    WheelRoseIntrTag,
+    WheelRoseSlipTag,
+    WheelRoseTag,
+    WheelBaselineTag,
     ZPriorTag,
     makeFrontend,
 )
@@ -72,19 +72,19 @@ if __name__ == "__main__":
     traj = {"GT": dataset.traj[Sensor.GT], "Wheel": dataset.traj[Sensor.WHEEL]}
     data = [["Kind", "ATEt", "ATEr"]]
     names = {
-        WheelCovTag: "6DoF Cov Prop",
-        WheelDangTag: "Planar",
-        WheelCovSlipTag: "Slip",
-        WheelCovIntrTag: "Intrinsics",
-        WheelCovIntrSlipTag: "Intrinsics + Slip",
+        WheelRoseTag: "6DoF Cov Prop",
+        WheelBaselineTag: "Planar",
+        WheelRoseSlipTag: "Slip",
+        WheelRoseIntrTag: "Intrinsics",
+        WheelRoseIntrSlipTag: "Intrinsics + Slip",
         None: "No Wheel",
     }
     for tag in [
-        WheelDangTag,
-        WheelCovTag,
-        WheelCovSlipTag,
-        WheelCovIntrTag,
-        WheelCovIntrSlipTag,
+        WheelBaselineTag,
+        WheelRoseTag,
+        WheelRoseSlipTag,
+        WheelRoseIntrTag,
+        WheelRoseIntrSlipTag,
         None,
     ]:
         sensors = [
@@ -96,14 +96,14 @@ if __name__ == "__main__":
         ]
         if tag is not None:
             sensors.append(tag)
-        if tag == WheelDangTag:
+        if tag == WheelBaselineTag:
             sensors.append(PlanarPriorTag)
             sensors.append(ZPriorTag)
-        if WheelCovSlipTag in sensors:
+        if WheelRoseSlipTag in sensors:
             sensors.append(jrl.PriorFactorPoint2Tag)
-        if WheelCovIntrTag in sensors:
+        if WheelRoseIntrTag in sensors:
             sensors.append(jrl.PriorFactorPoint3Tag)
-        if WheelCovIntrSlipTag in sensors:
+        if WheelRoseIntrSlipTag in sensors:
             sensors.append(jrl.PriorFactorPoint2Tag)
             sensors.append(jrl.PriorFactorPoint3Tag)
         frontend = makeFrontend(kf=5)

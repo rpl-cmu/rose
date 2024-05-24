@@ -9,7 +9,7 @@
 
 #include "backend/JRL.h"
 #include "backend/MEstBackend.h"
-#include "backend/WheelFactorCov.h"
+#include "backend/WheelRose.h"
 #include "frontend/JRLFrontend.h"
 
 namespace py = pybind11;
@@ -25,11 +25,11 @@ PYBIND11_MODULE(rose_python, m) {
     py::module jrl = py::module::import("jrl");
 
     // ------------------------- Custom JRL bindings for the below ------------------------- //
-    m.attr("WheelCovTag") = py::str(WheelCovTag);
-    m.attr("WheelCovSlipTag") = py::str(WheelCovSlipTag);
-    m.attr("WheelCovIntrTag") = py::str(WheelCovIntrTag);
-    m.attr("WheelCovIntrSlipTag") = py::str(WheelCovIntrSlipTag);
-    m.attr("WheelDangTag") = py::str(WheelDangTag);
+    m.attr("WheelRoseTag") = py::str(WheelRoseTag);
+    m.attr("WheelRoseSlipTag") = py::str(WheelRoseSlipTag);
+    m.attr("WheelRoseIntrTag") = py::str(WheelRoseIntrTag);
+    m.attr("WheelRoseIntrSlipTag") = py::str(WheelRoseIntrSlipTag);
+    m.attr("WheelBaselineTag") = py::str(WheelBaselineTag);
     m.attr("PriorFactorIntrinsicsTag") = py::str(PriorFactorIntrinsicsTag);
     m.attr("PlanarPriorTag") = py::str(PlanarPriorTag);
     m.attr("ZPriorTag") = py::str(ZPriorTag);
@@ -120,22 +120,22 @@ PYBIND11_MODULE(rose_python, m) {
              "body_T_sensor"_a = gtsam::Pose3::Identity());
 
     // ------------------------- PreintegratedWheel Implementations ------------------------- //
-    py::class_<PreintegratedWheelDang, boost::shared_ptr<PreintegratedWheelDang>, PreintegratedWheelBase>(
-        m, "PreintegratedWheelDang")
+    py::class_<PreintegratedWheelBaseline, boost::shared_ptr<PreintegratedWheelBaseline>, PreintegratedWheelBase>(
+        m, "PreintegratedWheelBaseline")
         .def(py::init<boost::shared_ptr<PreintegratedWheelParams>>(), "params"_a)
         .def(py::init<PreintegratedWheelBase>(), "base"_a)
-        .def("integrateVelocities", &PreintegratedWheelDang::integrateVelocities)
+        .def("integrateVelocities", &PreintegratedWheelBaseline::integrateVelocities)
         .def(
-            "predict", [](PreintegratedWheelDang *self, const gtsam::Pose3 &x1) { return self->predict(x1); }, "x1"_a)
-        .def("copy", &PreintegratedWheelDang::copy);
+            "predict", [](PreintegratedWheelBaseline *self, const gtsam::Pose3 &x1) { return self->predict(x1); }, "x1"_a)
+        .def("copy", &PreintegratedWheelBaseline::copy);
 
-    py::class_<PreintegratedWheelCov, boost::shared_ptr<PreintegratedWheelCov>, PreintegratedWheelBase>(
-        m, "PreintegratedWheelCov")
+    py::class_<PreintegratedWheelRose, boost::shared_ptr<PreintegratedWheelRose>, PreintegratedWheelBase>(
+        m, "PreintegratedWheelRose")
         .def(py::init<boost::shared_ptr<PreintegratedWheelParams>>(), "params"_a)
-        .def("integrateMeasurements", &PreintegratedWheelCov::integrateMeasurements)
-        .def("preint_H_slip", &PreintegratedWheelCov::preint_H_slip)
-        .def("preint_H_intr", &PreintegratedWheelCov::preint_H_intr)
+        .def("integrateMeasurements", &PreintegratedWheelRose::integrateMeasurements)
+        .def("preint_H_slip", &PreintegratedWheelRose::preint_H_slip)
+        .def("preint_H_intr", &PreintegratedWheelRose::preint_H_intr)
         .def(
-            "predict", [](PreintegratedWheelCov *self, const gtsam::Pose3 &x1) { return self->predict(x1); }, "x1"_a)
-        .def("copy", &PreintegratedWheelCov::copy);
+            "predict", [](PreintegratedWheelRose *self, const gtsam::Pose3 &x1) { return self->predict(x1); }, "x1"_a)
+        .def("copy", &PreintegratedWheelRose::copy);
 }

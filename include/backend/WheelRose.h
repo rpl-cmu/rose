@@ -16,7 +16,7 @@
 // ------------------------- Wheel Factors ------------------------- //
 
 // TODO: Make equals functions for these classes
-class PreintegratedWheelCov : public PreintegratedWheelBase {
+class PreintegratedWheelRose : public PreintegratedWheelBase {
   protected:
     gtsam::Matrix62 H_slip_;
     gtsam::Matrix63 H_intr_;
@@ -32,12 +32,12 @@ class PreintegratedWheelCov : public PreintegratedWheelBase {
     }
 
   public:
-    typedef PreintegratedWheelCov This;
+    typedef PreintegratedWheelRose This;
     typedef PreintegratedWheelBase Base;
-    typedef typename boost::shared_ptr<PreintegratedWheelCov> shared_ptr;
+    typedef typename boost::shared_ptr<PreintegratedWheelRose> shared_ptr;
 
-    PreintegratedWheelCov(const boost::shared_ptr<PreintegratedWheelParams> p);
-    PreintegratedWheelCov(Base base, gtsam::Matrix62 H_slip, gtsam::Matrix63 H_intr, gtsam::Vector3 intr_est);
+    PreintegratedWheelRose(const boost::shared_ptr<PreintegratedWheelParams> p);
+    PreintegratedWheelRose(Base base, gtsam::Matrix62 H_slip, gtsam::Matrix63 H_intr, gtsam::Vector3 intr_est);
 
     // This are inherited, overriden functions
     void integrateMeasurements(double wl, double wr, double dt) override;
@@ -92,12 +92,12 @@ class PreintegratedWheelCov : public PreintegratedWheelBase {
 };
 
 // ------------------------- JRL WRAPPER ------------------------- //
-static const std::string WheelCovTag = "WheelCov";
-static const std::string WheelCovSlipTag = "WheelCovSlip";
-static const std::string WheelCovIntrTag = "WheelCovIntrinsics";
-static const std::string WheelCovIntrSlipTag = "WheelCovIntrinsicsSlip";
+static const std::string WheelRoseTag = "WheelRose";
+static const std::string WheelRoseSlipTag = "WheelRoseSlip";
+static const std::string WheelRoseIntrTag = "WheelRoseIntrinsics";
+static const std::string WheelRoseIntrSlipTag = "WheelRoseIntrinsicsSlip";
 
-inline PreintegratedWheelCov::shared_ptr parsePWMCov(const nlohmann::json &input_json) {
+inline PreintegratedWheelRose::shared_ptr parsePWMCov(const nlohmann::json &input_json) {
     // Get unique things to this factor
     json H_slip_json = input_json["H_slip"];
     gtsam::Matrix62 H_slip = jrl::io_measurements::parseMatrix(H_slip_json, 6, 2);
@@ -109,13 +109,13 @@ inline PreintegratedWheelCov::shared_ptr parsePWMCov(const nlohmann::json &input
     gtsam::Vector3 intr_est = jrl::io_values::parse<gtsam::Vector3>(intr_est_json);
 
     PreintegratedWheelBase::shared_ptr pwmBase = parsePWBase(input_json);
-    return boost::make_shared<PreintegratedWheelCov>(*pwmBase, H_slip, H_intr, intr_est);
+    return boost::make_shared<PreintegratedWheelRose>(*pwmBase, H_slip, H_intr, intr_est);
 }
 
 inline nlohmann::json serializePWMCov(PreintegratedWheelBase::shared_ptr pwm) {
     json output = serializePWBase(pwm);
 
-    typename PreintegratedWheelCov::shared_ptr pwmCov = boost::dynamic_pointer_cast<PreintegratedWheelCov>(pwm);
+    typename PreintegratedWheelRose::shared_ptr pwmCov = boost::dynamic_pointer_cast<PreintegratedWheelRose>(pwm);
     output["H_slip"] = jrl::io_measurements::serializeMatrix(pwmCov->preint_H_slip());
     output["H_intr"] = jrl::io_measurements::serializeMatrix(pwmCov->preint_H_intr());
     output["intr_est"] = jrl::io_values::serialize<gtsam::Vector3>(pwmCov->intr_est());

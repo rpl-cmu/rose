@@ -11,11 +11,11 @@ from rose import FlatDataset
 from rose import KaistDataset
 from rose.rose_python import (
     PlanarPriorTag,
-    WheelCovIntrSlipTag,
-    WheelCovIntrTag,
-    WheelCovSlipTag,
-    WheelCovTag,
-    WheelDangTag,
+    WheelRoseIntrSlipTag,
+    WheelRoseIntrTag,
+    WheelRoseSlipTag,
+    WheelRoseTag,
+    WheelBaselineTag,
     ZPriorTag,
     makeFrontend,
 )
@@ -202,15 +202,15 @@ if __name__ == "__main__":
                 jrl.PriorFactorIMUBiasTag,
                 jrl.CombinedIMUTag,
             ],
-            "wheel_cov": [WheelCovTag],
-            "wheel_intr": [WheelCovIntrTag, jrl.PriorFactorPoint3Tag],
-            "wheel_slip": [WheelCovSlipTag, jrl.PriorFactorPoint2Tag],
+            "wheel_rose": [WheelRoseTag],
+            "wheel_intr": [WheelRoseIntrTag, jrl.PriorFactorPoint3Tag],
+            "wheel_slip": [WheelRoseSlipTag, jrl.PriorFactorPoint2Tag],
             "wheel_intr_slip": [
-                WheelCovIntrSlipTag,
+                WheelRoseIntrSlipTag,
                 jrl.PriorFactorPoint3Tag,
                 jrl.PriorFactorPoint2Tag,
             ],
-            "wheel_dang": [WheelDangTag],
+            "wheel_baseline": [WheelBaselineTag],
             "planar_prior": [ZPriorTag, PlanarPriorTag],
         }
 
@@ -234,12 +234,12 @@ if __name__ == "__main__":
     # run("base")
 
     # run("base", "imu")
-    # run("base", "imu", "wheel_cov")
+    # run("base", "imu", "wheel_rose")
     run("base", "imu", "wheel_intr_slip")
-    # run("base", "imu", "wheel_dang")
-    # run("base", "imu", "wheel_dang", "planar_prior")
+    # run("base", "imu", "wheel_baseline")
+    # run("base", "imu", "wheel_baseline", "planar_prior")
 
-    # run("base", "wheel_cov")
+    # run("base", "wheel_rose")
     run("base", "wheel_intr_slip")
-    # run("base", "wheel_dang")
-    # run("base", "wheel_dang", "planar_prior")
+    # run("base", "wheel_baseline")
+    # run("base", "wheel_baseline", "planar_prior")
