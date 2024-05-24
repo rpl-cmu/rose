@@ -1,7 +1,7 @@
 import matplotlib.pyplot as plt
 import numpy as np
 import seaborn as sns
-from robust.plot import setup_plot
+from rose.plot import setup_plot
 
 c = setup_plot()
 c = sns.color_palette("colorblind")

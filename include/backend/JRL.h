@@ -14,7 +14,7 @@
 static const std::string PriorFactorIntrinsicsTag = "PriorFactorIntrinsics";
 
 // ------------------------- Register Custom Options ------------------------- //
-inline jrl::Parser makeRobustParser() {
+inline jrl::Parser makeRoseParser() {
     jrl::Parser parser;
 
     // clang-format off
@@ -35,7 +35,7 @@ inline jrl::Parser makeRobustParser() {
     return parser;
 }
 
-inline jrl::Writer makeRobustWriter() {
+inline jrl::Writer makeRoseWriter() {
     jrl::Writer writer;
 
     // clang-format off

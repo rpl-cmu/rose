@@ -11,61 +11,59 @@ import yaml
 import yourdfpy
 from cv_bridge import CvBridge
 
-from .dataset import CameraIntrinsics, CamNoise, IMUNoise, WheelIntrinsics, WheelNoise
+from rose.dataset import (
+    CameraIntrinsics,
+    CamNoise,
+    IMUNoise,
+    PriorNoise,
+    Sensor,
+    WheelIntrinsics,
+    WheelNoise,
+)
 
 URDF_DIR = os.environ["URDF_DIR"]
-SCALE = 672 / 5376
-
-# TODO: Save noise??
-
-
-# ------------------------- Helpers for grizzlyROS bags ------------------------- #
-class Sensor(Enum):
-    ADV = 1
-    KVH = 2
-    VIS = 3
-    GPS = 4
-    QUAD0 = 5
-    QUAD1 = 6
-    WHEELL = 7
-    WHEELR = 8
+HEIGHT = 512
+WIDTH = 640
+SCALE = 512 / 2048
 
 
-class GrizzlyBag:
-    def __init__(self, bagname: Path, modules: list[int] = [0, 1, 2]) -> None:
+# ------------------------- Helpers for sabercatROS bags ------------------------- #
+class SabercatBag:
+    def __init__(self, bagname: Path, modules: list[int] = [0]) -> None:
         self.name = bagname.stem
-        self.bag = rosbag.Bag(bagname, skip_index=True)
+        self.bagname = bagname
         self.modules = modules
 
-        types_topics = self.bag.get_type_and_topic_info()[1]
-        for k, v in types_topics.items():
-            if v.msg_type == "unicorn_sensor_msgs/ImageSet":
-                self.robot_name = k.split("/")[1]
-                break
+        # TODO: Find better way to avoid having to open the bag
+        # types_topics = self.bag.get_type_and_topic_info()[1]
+        # for k, v in types_topics.items():
+        #     if v.msg_type == "unicorn_sensor_msgs/ImageSet":
+        #         self.robot_name = k.split("/")[1]
+        #         break
+        self.robot_name = "sabercatA"
 
         self.bridge = CvBridge()
 
         self.sensor2topic = {
-            Sensor.ADV: f"/{self.robot_name}/ins",
-            Sensor.KVH: f"/{self.robot_name}/kvh/raw",
-            Sensor.VIS: f"/{self.robot_name}/visodo",
-            Sensor.GPS: f"/{self.robot_name}/ins",
-            Sensor.QUAD0: f"/{self.robot_name}/quadcam/visodo/0",
-            Sensor.QUAD1: f"/{self.robot_name}/quadcam/visodo/1",
-            Sensor.WHEELL: f"/{self.robot_name}/left_wheel/current_speed",
-            Sensor.WHEELR: f"/{self.robot_name}/right_wheel/current_speed",
+            Sensor.IMU: f"/{self.robot_name}/kvh/raw",
+            Sensor.CAM: f"/{self.robot_name}/visodo",
+            Sensor.GT: f"/{self.robot_name}/tripleGPS",
+            Sensor.WHEEL: f"/{self.robot_name}/robot_driver/robot_feedback",
         }
 
         self.sensor2parser = {
-            Sensor.ADV: self._get_imu,
-            Sensor.KVH: None,  # TODO
-            Sensor.VIS: self._get_image,
-            Sensor.GPS: self._get_gps,
-            Sensor.QUAD0: self._get_quad,
-            Sensor.QUAD1: self._get_quad,
-            Sensor.WHEELL: self._get_wheel,
-            Sensor.WHEELR: self._get_wheel,
+            Sensor.IMU: self._get_imu,
+            Sensor.CAM: self._get_image,
+            Sensor.GT: self._get_gps,
+            Sensor.WHEEL: self._get_wheel,
         }
+
+    @property
+    def bag(self):
+        if not hasattr(self, "_bag"):
+            self._bag = rosbag.Bag(self.bagname, skip_index=True)
+
+        return self._bag
 
     # ------------------------- Getting data from bag ------------------------- #
     def get_msgs(
@@ -122,51 +120,46 @@ class GrizzlyBag:
     def _get_imu(self, msg, t, stamp, data):
         data.append(
             [
-                msg.gyroscope_x_raw,
-                msg.gyroscope_y_raw,
-                msg.gyroscope_z_raw,
-                msg.accelerometer_x_raw,
-                msg.accelerometer_y_raw,
-                msg.accelerometer_z_raw,
+                msg.gx,
+                msg.gy,
+                msg.gz,
+                msg.ax,
+                msg.ay,
+                msg.az,
             ]
         )
         stamp.append(msg.header.stamp.to_nsec())
 
     def _get_gps(self, msg, t, stamp, data):
         """Save in END format"""
-        rot = gtsam.Rot3.RzRyRx(msg.roll, msg.pitch, msg.heading)
+        # Check if it's valid
+        if (
+            msg.rtk_status == 0
+            or np.isnan(msg.roll)
+            or np.isnan(msg.pitch)
+            or np.isnan(msg.yaw)
+            or msg.roll == 999
+            or msg.pitch == 999
+            or msg.yaw == 999
+        ):
+            print("\tSkipping a GPS message")
+            return
+
+        rot = gtsam.Rot3.RzRyRx(msg.roll, msg.pitch, msg.yaw)
         t = [msg.utm_northing, msg.utm_easting, -msg.utm_height]
         pose = gtsam.Pose3(rot, t)
 
         data.append(pose.matrix()[:3].flatten().tolist())
         stamp.append(msg.header.stamp.to_nsec())
 
-    def _get_quad(self, msg, t, stamp, data):
-        pose = msg.pose.pose
-        data.append(
-            [
-                pose.orientation.w,
-                pose.orientation.x,
-                pose.orientation.y,
-                pose.orientation.z,
-                pose.position.x,
-                pose.position.y,
-                pose.position.z,
-            ]
-        )
-        # TODO!! Using ROS timestamp here instead, not as accurate
-        # Needs to be swapped if CAM times are ever synced
-        stamp.append(t.to_nsec())
-
     def _get_wheel(self, msg, t, stamp, data):
-        # TODO!! No timestamp on wheel odometry?
-        # Convert to rad/s
-        data.append(msg.data * 2 * np.pi)
-        stamp.append(t.to_nsec())
+        # Convert to rad / s
+        data.append([msg.left_vel / 0.335, msg.right_vel / 0.335])
+        stamp.append(msg.header.stamp.to_nsec())
 
     # ------------------------- Getting data from YAML / URDF ------------------------- #
     def intrinsics(self, sensor: Sensor, module=None):
-        if sensor == Sensor.VIS:
+        if sensor == Sensor.CAM:
             if module is None:
                 raise ValueError("You have to choose a module for camera intrinsics")
 
@@ -190,96 +183,88 @@ class GrizzlyBag:
                 baseline=float(baseline),
             )
 
-        elif sensor == Sensor.WHEELL or sensor == Sensor.WHEELR:
+        elif sensor == Sensor.WHEEL:
             # TODO: Pull this from aidtr-urdf somehow
-            r = 0.15605
-            b = 1.6226
+            r = 0.3756  # 0.335
+            b = 1.532 * 2
+            b = 2.65
             return WheelIntrinsics(baseline=b, radius_l=r, radius_r=r)
 
     def extrinsics(self, sensor: Sensor, module=None):
         urdf = yourdfpy.URDF.load(
             f"{URDF_DIR}/{self.robot_name}/current/urdf/sensors.urdf"
         )
-        imu_frame = "imu_NED"
+        imu_frame = "imu_kvh_link"
 
-        if sensor == Sensor.ADV:
+        if sensor == Sensor.IMU:
             frame = imu_frame
-        elif sensor == Sensor.VIS:
+        elif sensor == Sensor.CAM:
             if module is None:
                 raise ValueError("You have to choose a module for camera intrinsics")
             frame = f"camera_module{module+1}_nir0_rect"
-        elif sensor == Sensor.WHEELL or sensor == Sensor.WHEELR:
+        elif sensor == Sensor.WHEEL:
             # TODO: Pull this from URDF?
-            x, y, z, w = 1, 0, 0, 0
-            p = [0.5878, 0, 1.5611]
+            # If NED
+            # x, y, z, w = 1, 0, 0, 0
+            # p = [-0.232, 0, 1.2166]
+            # otherwise
+            x, y, z, w = 0, 0, 0, 1
+            p = [-0.232, 0, -1.2166]
             return gtsam.Pose3(gtsam.Rot3(w, x, y, z), p)
-        elif sensor == Sensor.GPS:
-            frame = imu_frame
+        elif sensor == Sensor.GT:
+            frame = "triple_gps_NED"
 
         return gtsam.Pose3(urdf.get_transform(frame, imu_frame))
 
     def noise(self, sensor: Sensor):
-        if sensor == Sensor.ADV:
+        if sensor == Sensor.IMU:
             return IMUNoise(
-                sigma_a=9.8100e-04,
-                sigma_w=6.9813e-05,
-                sigma_ba=1.9620e-04,
-                sigma_bw=1.4544e-05,
-                preint_cov=1.0e-8,
-                preint_bias_cov=1.0e-5,
+                sigma_a=0.0000122324159021,
+                sigma_w=0.0000339369576777,
+                sigma_ba=0.000000766557736558,
+                sigma_bw=0.0000161176231405,
+                preint_cov=1.0e-5,
+                preint_bias_cov=1.0e-7,
             )
-        elif sensor == Sensor.WHEELL or sensor == Sensor.WHEELR:
-            return WheelNoise(sigma_rad_s=0.2)
-        elif sensor == Sensor.VIS:
+        elif sensor == Sensor.WHEEL:
+            return WheelNoise(
+                sigma_rad_s=0.05,
+                sigma_vy=0.1,
+                sigma_vz=0.1,
+                sigma_wx=0.05,
+                sigma_wy=0.05,
+                sig_slip_prior=0.01,
+                slip_prior_kernel=1.0,
+                sig_intr_baseline=9e-4,
+                sig_intr_radius=7e-6,
+                sig_rp_prior=0.05,
+                sig_z_prior=0.05,
+            )
+        elif sensor == Sensor.CAM:
             return CamNoise()
+        elif sensor == Sensor.PRIOR:
+            return PriorNoise()
 
-    def to_flat(self, dir: Path, module=1):
+    def to_flat_data(self, dir: Path, module=0):
         outdir = dir / self.name
-        dir_cal = outdir / "calibration"
-        dir_noise = outdir / "noise"
         dir_left = outdir / "left"
         dir_right = outdir / "right"
         dir_disp = outdir / "disp"
         outdir.mkdir(exist_ok=True)
-        dir_cal.mkdir(exist_ok=True)
         dir_left.mkdir(exist_ok=True)
         dir_right.mkdir(exist_ok=True)
         dir_disp.mkdir(exist_ok=True)
-        dir_noise.mkdir(exist_ok=True)
-
-        # ------------------------- save extrinsics ------------------------- #
-        np.savetxt(
-            dir_cal / "ext_wheel.txt", self.extrinsics(Sensor.WHEELL).matrix()[:3]
-        )
-        np.savetxt(
-            dir_cal / "ext_cam.txt",
-            self.extrinsics(Sensor.VIS, module).matrix()[:3],
-        )
-        np.savetxt(dir_cal / "ext_gt.txt", self.extrinsics(Sensor.GPS).matrix()[:3])
-
-        # ------------------------- save intrinsics & noise------------------------- #
-        # intrinsics
-        self.saveyaml(
-            dir_cal / "int_cam.yaml", self.intrinsics(Sensor.VIS, module).dict()
-        )
-        self.saveyaml(dir_cal / "int_wheel.yaml", self.intrinsics(Sensor.WHEELL).dict())
-
-        # noise
-        self.saveyaml(dir_noise / "cam.yaml", self.noise(Sensor.VIS).dict())
-        self.saveyaml(dir_noise / "imu.yaml", self.noise(Sensor.ADV).dict())
-        self.saveyaml(dir_noise / "wheel.yaml", self.noise(Sensor.WHEELL).dict())
 
         # ------------------------- save data ------------------------- #
-        stamps_cam, _ = self.get_msgs(Sensor.VIS, just_stamp=True)
-        stamps_imu, imu = self.get_msgs(Sensor.ADV)
-        stamps_wl, wl = self.get_msgs(Sensor.WHEELL)
-        stamps_wr, wr = self.get_msgs(Sensor.WHEELR)
+        stamps_cam, _ = self.get_msgs(Sensor.CAM, just_stamp=True)
+        stamps_imu, imu = self.get_msgs(Sensor.IMU)
+        stamps_w, wheel = self.get_msgs(Sensor.WHEEL)
 
         # Check if any images need to be skipped over till we get wheel & imu data
         first_cam_idx = 0
         while (
             stamps_cam[first_cam_idx] < stamps_imu[0]
-            or stamps_cam[first_cam_idx] < stamps_wl[0]
+            or stamps_cam[first_cam_idx] < stamps_w[0]
         ):
             first_cam_idx += 1
 
@@ -323,9 +308,12 @@ class GrizzlyBag:
 
                 # Read the image and put it in the data structure
                 if cam_type != "rgb" and module_num == module:
-                    saved[cam_type] = self.bridge.imgmsg_to_cv2(
-                        i, desired_encoding="passthrough"
-                    )
+                    img = self.bridge.imgmsg_to_cv2(i, desired_encoding="passthrough")
+                    if img.shape != (WIDTH, HEIGHT):
+                        img = cv2.resize(
+                            img, (WIDTH, HEIGHT), interpolation=cv2.INTER_AREA
+                        )
+                    saved[cam_type] = img
 
             # If missing an image skip!
             if "left" not in saved or "right" not in saved:
@@ -343,7 +331,7 @@ class GrizzlyBag:
 
             idx += 1
 
-        self.get_msgs(Sensor.VIS, f=save_cam)
+        self.get_msgs(Sensor.CAM, f=save_cam)
 
         if len(bad_idx) != 0:
             print(
@@ -352,20 +340,58 @@ class GrizzlyBag:
         stamps_cam = np.delete(stamps_cam, bad_idx, axis=0)
         np.savetxt(outdir / "stamps.txt", stamps_cam, fmt="%i")
 
+        # Camera mask
+        mask = np.full((HEIGHT, WIDTH), True)
+        mask[450:, 190:570] = False
+        mask[:190, :] = False
+        np.savetxt(outdir / "mask.txt", mask, fmt="%i")
+
         # IMU data
         self.savetxt(outdir / "imu.txt", stamps_imu, imu)
 
         # Wheel data
-        # They appear to be within about 1e-4 seconds of eachother
-        size = min(stamps_wr.size, stamps_wl.size)
-        wheel = np.column_stack((wl[:size], wr[:size]))
-        # Drop any extra messages that came through
-        self.savetxt(outdir / "wheel.txt", stamps_wl[:size], wheel)
+        self.savetxt(outdir / "wheel.txt", stamps_w, wheel)
 
-        stamps, gps = self.get_msgs(Sensor.GPS)
+        # GT data
+        stamps, gps = self.get_msgs(Sensor.GT)
         self.savetxt(outdir / "gt.txt", stamps, gps)
 
         return outdir
+
+    def to_flat_params(self, dir: Path, module=0):
+        outdir = dir / self.name
+        dir_cal = outdir / "calibration"
+        dir_noise = outdir / "noise"
+        outdir.mkdir(exist_ok=True)
+        dir_cal.mkdir(exist_ok=True)
+        dir_noise.mkdir(exist_ok=True)
+
+        # ------------------------- save extrinsics ------------------------- #
+        np.savetxt(
+            dir_cal / "ext_wheel.txt", self.extrinsics(Sensor.WHEEL).matrix()[:3]
+        )
+        np.savetxt(
+            dir_cal / "ext_cam.txt",
+            self.extrinsics(Sensor.CAM, module).matrix()[:3],
+        )
+        np.savetxt(dir_cal / "ext_gt.txt", self.extrinsics(Sensor.GT).matrix()[:3])
+
+        # ------------------------- save intrinsics & noise------------------------- #
+        # intrinsics
+        self.saveyaml(
+            dir_cal / "int_cam.yaml", self.intrinsics(Sensor.CAM, module).dict()
+        )
+        self.saveyaml(dir_cal / "int_wheel.yaml", self.intrinsics(Sensor.WHEEL).dict())
+
+        # noise
+        self.saveyaml(dir_noise / "cam.yaml", self.noise(Sensor.CAM).dict())
+        self.saveyaml(dir_noise / "imu.yaml", self.noise(Sensor.IMU).dict())
+        self.saveyaml(dir_noise / "wheel.yaml", self.noise(Sensor.WHEEL).dict())
+        self.saveyaml(dir_noise / "prior.yaml", self.noise(Sensor.PRIOR).dict())
+
+    def to_flat(self, dir: Path, module=0):
+        self.to_flat_params(dir, module)
+        self.to_flat_data(dir, module)
 
     def savetxt(self, file: Path, stamps: np.ndarray, data: np.ndarray):
         assert stamps.shape[0] == data.shape[0]

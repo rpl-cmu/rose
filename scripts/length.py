@@ -5,9 +5,9 @@ from pathlib import Path
 import gtsam
 import jrl
 import numpy as np
-import robust.jrl
+import rose.jrl
 from gtsam.symbol_shorthand import B, X
-from robust.plot import (
+from rose.plot import (
     plot_3d_trajectory,
     plot_error_state,
     plot_state,
@@ -41,7 +41,7 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     # ------------------------- Load gt values ------------------------- #
-    jrl_parser = robust.jrl.makeRobustParser()
+    jrl_parser = rose.jrl.makeRoseParser()
 
     trajs = {}
     if args.traj:

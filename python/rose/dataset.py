@@ -12,13 +12,13 @@ import jrl
 import numpy as np
 import yaml
 from gtsam.symbol_shorthand import B, I, L, M, S, V, W, X
-from robust.jrl import (
-    makeRobustParser,
-    makeRobustWriter,
+from rose.jrl import (
+    makeRoseParser,
+    makeRoseWriter,
     values2results,
     values2typedvalues,
 )
-from robust.robust_python import (
+from rose.rose_python import (
     PlanarPriorFactor,
     PlanarPriorTag,
     PreintegratedWheelCov,
@@ -703,8 +703,8 @@ class Dataset2JRL:
             Sensor.FEAT: self._feat_factor,
         }
 
-        self.writer = makeRobustWriter()
-        self.parser = makeRobustParser()
+        self.writer = makeRoseWriter()
+        self.parser = makeRoseParser()
 
         # Things that should be updated as we go
         self.traj = {}

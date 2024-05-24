@@ -9,7 +9,7 @@ import cv2
 import gtsam
 import numpy as np
 import yaml
-from robust.dataset import (
+from rose.dataset import (
     BaseData,
     BaseIntrinsics,
     BaseNoise,
@@ -26,7 +26,7 @@ from robust.dataset import (
     WheelIntrinsics,
     WheelNoise,
 )
-from robust.robust_python import PreintegratedWheelParams
+from rose.rose_python import PreintegratedWheelParams
 
 
 class FlatDataset(Dataset):

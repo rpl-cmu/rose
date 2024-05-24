@@ -8,7 +8,7 @@ import numpy as np
 import sympy as sy
 from gtsam.symbol_shorthand import L, M, X
 from gtsam.utils.plot import set_axes_equal
-from robust.dataset import (
+from rose.dataset import (
     CameraData,
     CamNoise,
     FeatData,

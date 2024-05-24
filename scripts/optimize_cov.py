@@ -7,10 +7,10 @@ from typing import Optional
 import gtsam
 import jrl
 import numpy as np
-from robust.dataset import CamNoise, Dataset2JRL, Sensor, WheelNoise
-from robust.flat import FlatDataset
-from robust.kaist import KaistDataset
-from robust.robust_python import (
+from rose.dataset import CamNoise, Dataset2JRL, Sensor, WheelNoise
+from rose.flat import FlatDataset
+from rose.kaist import KaistDataset
+from rose.rose_python import (
     PlanarPriorTag,
     PriorFactorIntrinsicsTag,
     WheelCovIntrSlipTag,
@@ -21,7 +21,7 @@ from robust.robust_python import (
     ZPriorTag,
     makeFrontend,
 )
-from robust.ros import GrizzlyBag
+from rose.ros import GrizzlyBag
 from scipy.optimize import basinhopping, brute, direct, dual_annealing, minimize, shgo
 from tabulate import tabulate
 from tqdm import tqdm

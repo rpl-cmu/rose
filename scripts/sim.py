@@ -3,13 +3,13 @@ import jrl
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-import robust.plot
+import rose.plot
 import seaborn as sns
 import sympy as sy
 from gtsam.symbol_shorthand import B, I, L, S
-from robust.dataset import Dataset2JRL, Sensor, WheelNoise
-from robust.jrl import values2results
-from robust.robust_python import (
+from rose.dataset import Dataset2JRL, Sensor, WheelNoise
+from rose.jrl import values2results
+from rose.rose_python import (
     PlanarPriorTag,
     PriorFactorIntrinsicsTag,
     WheelCovIntrSlipTag,
@@ -20,7 +20,7 @@ from robust.robust_python import (
     ZPriorTag,
     makeFrontend,
 )
-from robust.sim import SimParameters, Simulation, symp
+from rose.sim import SimParameters, Simulation, symp
 from tabulate import tabulate
 from tqdm import tqdm, trange
 
@@ -66,7 +66,7 @@ if __name__ == "__main__":
     dataset.add_factors(Sensor.FEAT)
     gt = dataset.get_ground_truth()
 
-    writer = robust.robust_python.makeRobustWriter()
+    writer = rose.rose_python.makeRoseWriter()
     writer.writeResults(values2results(gt), "figures/data/gt.jrr", False)
 
     traj = {"GT": dataset.traj[Sensor.GT], "Wheel": dataset.traj[Sensor.WHEEL]}
@@ -127,9 +127,7 @@ if __name__ == "__main__":
     print(tabulate(data, headers="firstrow", tablefmt="github"))
 
     # ------------------------- Plot States ------------------------- #
-    # fig, ax = robust.plot.plot_error_state(GT=gt, **traj)
+    # fig, ax = rose.plot.plot_error_state(GT=gt, **traj)
     # plt.savefig("sim_error.png")
-    # fig, ax = robust.plot.plot_xy_trajectory(states="rpis", show=True, **traj)
-    fig, ax = robust.plot.plot_state(
-        states="rpis", show=True, filename="sim.png", **traj
-    )
+    # fig, ax = rose.plot.plot_xy_trajectory(states="rpis", show=True, **traj)
+    fig, ax = rose.plot.plot_state(states="rpis", show=True, filename="sim.png", **traj)

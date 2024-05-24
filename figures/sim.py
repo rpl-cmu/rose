@@ -2,12 +2,12 @@ from pathlib import Path
 
 import jrl
 import matplotlib.pyplot as plt
-import robust.jrl
-import robust.plot as plot
+import rose.jrl
+import rose.plot as plot
 import seaborn as sns
 from matplotlib.patches import ConnectionPatch, Rectangle
 from mpl_toolkits.axes_grid1.inset_locator import mark_inset
-from robust.robust_python import WheelCovIntrSlipTag
+from rose.rose_python import WheelCovIntrSlipTag
 
 
 # https://stackoverflow.com/a/73308476
@@ -43,7 +43,7 @@ if __name__ == "__main__":
     # ------------------------- Load all data ------------------------- #
     tags_to_names = plot.tags_to_names()
     result_files = [p for p in Path("figures/data").glob("*.jrr")]
-    jrl_parser = robust.jrl.makeRobustParser()
+    jrl_parser = rose.jrl.makeRoseParser()
 
     results = {}
     for p in result_files:

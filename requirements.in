@@ -1,0 +1,10 @@
+# Not included: C++ builds of
+# gtsam
+# jrl
+
+numpy
+opencv
+pyyaml
+matplotlib
+tqdm
+yourdfpy

@@ -39,7 +39,7 @@ po::variables_map handle_args(int argc, const char *argv[]) {
 
     // Handle help special case
     if (var_map.count("help") || argc == 1) {
-        std::cout << "run-experiment: Main entry point to run robust VIO methods on JRL datasets. Please provide "
+        std::cout << "run-experiment: Main entry point to run rose methods on JRL datasets. Please provide "
                      "required arguments: "
                   << std::endl;
         std::cout << options << "\n";
@@ -142,7 +142,7 @@ int main(int argc, const char *argv[]) {
 
     // Load in data
     bool use_cbor = (data_path.find("cbor") != std::string::npos);
-    jrl::Parser parser = makeRobustParser();
+    jrl::Parser parser = makeRoseParser();
     jrl::Dataset dataset = parser.parseDataset(data_path, use_cbor);
 
     // Make backend

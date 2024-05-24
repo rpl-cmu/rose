@@ -7,8 +7,8 @@ import jrl
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-import robust.jrl
-import robust.plot as plot
+import rose.jrl
+import rose.plot as plot
 import seaborn as sns
 from gtsam.symbol_shorthand import X
 from tabulate import tabulate
@@ -50,7 +50,7 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     # ------------------------- Load gt values ------------------------- #
-    jrl_parser = robust.jrl.makeRobustParser()
+    jrl_parser = rose.jrl.makeRoseParser()
 
     trajs = {}
 

@@ -19,7 +19,7 @@ using namespace pybind11::literals;
 PYBIND11_DECLARE_HOLDER_TYPE(TYPE_PLACEHOLDER_DONOTUSE, boost::shared_ptr<TYPE_PLACEHOLDER_DONOTUSE>);
 PYBIND11_DECLARE_HOLDER_TYPE(TYPE_PLACEHOLDER_DONOTUSE, std::shared_ptr<TYPE_PLACEHOLDER_DONOTUSE>);
 
-PYBIND11_MODULE(robust_python, m) {
+PYBIND11_MODULE(rose_python, m) {
     // Import gtsam to ensure that python has access to return types
     py::module gtsam = py::module::import("gtsam");
     py::module jrl = py::module::import("jrl");
@@ -34,8 +34,8 @@ PYBIND11_MODULE(robust_python, m) {
     m.attr("PlanarPriorTag") = py::str(PlanarPriorTag);
     m.attr("ZPriorTag") = py::str(ZPriorTag);
 
-    m.def("makeRobustParser", makeRobustParser);
-    m.def("makeRobustWriter", makeRobustWriter);
+    m.def("makeRoseParser", makeRoseParser);
+    m.def("makeRoseWriter", makeRoseWriter);
 
     // ------------------------- Frontend ------------------------- //
     py::class_<JRLFrontend, boost::shared_ptr<JRLFrontend>>(m, "JRLFrontend")

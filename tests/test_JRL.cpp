@@ -42,11 +42,11 @@ TEST(JRL, WheelFactorDang) {
     jrl::DatasetBuilder builder("test", {'a'});
     builder.addEntry('a', 0, graph, {WheelDangTag});
 
-    jrl::Writer writer = makeRobustWriter();
+    jrl::Writer writer = makeRoseWriter();
     writer.writeDataset(builder.build(), "wheel_dang.jrl");
 
     // Load it back in!
-    jrl::Parser parser = makeRobustParser();
+    jrl::Parser parser = makeRoseParser();
     jrl::Dataset dataset = parser.parseDataset("wheel_dang.jrl");
     WheelFactor2::shared_ptr read_factor = boost::dynamic_pointer_cast<WheelFactor2>(dataset.factorGraph('a')[0]);
 
@@ -75,11 +75,11 @@ TEST(JRL, WheelFactorCov) {
     jrl::DatasetBuilder builder("test", {'a'});
     builder.addEntry('a', 0, graph, {WheelCovTag});
 
-    jrl::Writer writer = makeRobustWriter();
+    jrl::Writer writer = makeRoseWriter();
     writer.writeDataset(builder.build(), "wheel_cov.jrl");
 
     // Load it back in!
-    jrl::Parser parser = makeRobustParser();
+    jrl::Parser parser = makeRoseParser();
     jrl::Dataset dataset = parser.parseDataset("wheel_cov.jrl");
     WheelFactor2::shared_ptr read_factor = boost::dynamic_pointer_cast<WheelFactor2>(dataset.factorGraph('a')[0]);
 
@@ -110,11 +110,11 @@ TEST(JRL, WheelFactorCov3) {
     jrl::DatasetBuilder builder("test", {'a'});
     builder.addEntry('a', 0, graph, {WheelCovSlipTag});
 
-    jrl::Writer writer = makeRobustWriter();
+    jrl::Writer writer = makeRoseWriter();
     writer.writeDataset(builder.build(), "wheel_cov_slip.jrl");
 
     // Load it back in!
-    jrl::Parser parser = makeRobustParser();
+    jrl::Parser parser = makeRoseParser();
     jrl::Dataset dataset = parser.parseDataset("wheel_cov_slip.jrl");
     WheelFactor3::shared_ptr read_factor = boost::dynamic_pointer_cast<WheelFactor3>(dataset.factorGraph('a')[0]);
 
@@ -145,11 +145,11 @@ TEST(JRL, WheelFactorCov4) {
     jrl::DatasetBuilder builder("test", {'a'});
     builder.addEntry('a', 0, graph, {WheelCovIntrTag});
 
-    jrl::Writer writer = makeRobustWriter();
+    jrl::Writer writer = makeRoseWriter();
     writer.writeDataset(builder.build(), "wheel_cov_intr.jrl");
 
     // Load it back in!
-    jrl::Parser parser = makeRobustParser();
+    jrl::Parser parser = makeRoseParser();
     jrl::Dataset dataset = parser.parseDataset("wheel_cov_intr.jrl");
     WheelFactor4Intrinsics::shared_ptr read_factor =
         boost::dynamic_pointer_cast<WheelFactor4Intrinsics>(dataset.factorGraph('a')[0]);
@@ -181,11 +181,11 @@ TEST(JRL, WheelFactorCov5) {
     jrl::DatasetBuilder builder("test", {'a'});
     builder.addEntry('a', 0, graph, {WheelCovIntrSlipTag});
 
-    jrl::Writer writer = makeRobustWriter();
+    jrl::Writer writer = makeRoseWriter();
     writer.writeDataset(builder.build(), "wheel_cov_intr_slip.jrl");
 
     // Load it back in!
-    jrl::Parser parser = makeRobustParser();
+    jrl::Parser parser = makeRoseParser();
     jrl::Dataset dataset = parser.parseDataset("wheel_cov_intr_slip.jrl");
     WheelFactor5::shared_ptr read_factor = boost::dynamic_pointer_cast<WheelFactor5>(dataset.factorGraph('a')[0]);
     EXPECT_MATRICES_EQ(write_factor.evaluateError(x0, intr, x1, intr, slip),
@@ -205,11 +205,11 @@ TEST(JRL, PlanarPriorFactor) {
     jrl::DatasetBuilder builder("test", {'a'});
     builder.addEntry('a', 0, graph, {PlanarPriorTag});
 
-    jrl::Writer writer = makeRobustWriter();
+    jrl::Writer writer = makeRoseWriter();
     writer.writeDataset(builder.build(), "planar_prior.jrl");
 
     // Load it back in!
-    jrl::Parser parser = makeRobustParser();
+    jrl::Parser parser = makeRoseParser();
     jrl::Dataset dataset = parser.parseDataset("planar_prior.jrl");
     PlanarPriorFactor::shared_ptr read_factor =
         boost::dynamic_pointer_cast<PlanarPriorFactor>(dataset.factorGraph('a')[0]);
@@ -230,11 +230,11 @@ TEST(JRL, ZPriorFactor) {
     jrl::DatasetBuilder builder("test", {'a'});
     builder.addEntry('a', 0, graph, {ZPriorTag});
 
-    jrl::Writer writer = makeRobustWriter();
+    jrl::Writer writer = makeRoseWriter();
     writer.writeDataset(builder.build(), "z_prior.jrl");
 
     // Load it back in!
-    jrl::Parser parser = makeRobustParser();
+    jrl::Parser parser = makeRoseParser();
     jrl::Dataset dataset = parser.parseDataset("z_prior.jrl");
     ZPriorFactor::shared_ptr read_factor = boost::dynamic_pointer_cast<ZPriorFactor>(dataset.factorGraph('a')[0]);
 

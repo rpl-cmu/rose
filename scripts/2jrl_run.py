@@ -6,10 +6,10 @@ import cv2
 import gtsam
 import jrl
 import numpy as np
-from robust.dataset import CamNoise, Dataset2JRL, Sensor, WheelNoise
-from robust.flat import FlatDataset
-from robust.kaist import KaistDataset
-from robust.robust_python import (
+from rose.dataset import CamNoise, Dataset2JRL, Sensor, WheelNoise
+from rose import FlatDataset
+from rose import KaistDataset
+from rose.rose_python import (
     PlanarPriorTag,
     WheelCovIntrSlipTag,
     WheelCovIntrTag,
@@ -19,8 +19,8 @@ from robust.robust_python import (
     ZPriorTag,
     makeFrontend,
 )
-from robust.grizzly import GrizzlyBag
-from robust.sabercat import SabercatBag
+from rose import GrizzlyBag
+from rose import SabercatBag
 from tqdm import tqdm
 
 np.set_printoptions(suppress=False, precision=4, linewidth=400)

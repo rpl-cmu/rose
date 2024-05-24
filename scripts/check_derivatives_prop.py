@@ -1,7 +1,7 @@
 from functools import partial
 
 import numpy as np
-from robust.robust_python import (
+from rose.rose_python import (
     PreintegratedWheelMeasurements,
     PreintegratedWheelParams,
 )

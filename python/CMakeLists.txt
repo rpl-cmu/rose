@@ -19,22 +19,22 @@ set(PYTHON_BUILD_DIRECTORY ${PROJECT_BINARY_DIR}/python)
 # TODO: README?
 configure_file(${PROJECT_SOURCE_DIR}/python/setup.py.in
                 ${PYTHON_BUILD_DIRECTORY}/setup.py)
-create_symlinks("${CMAKE_CURRENT_SOURCE_DIR}/robust" "${PYTHON_BUILD_DIRECTORY}/robust")
+create_symlinks("${CMAKE_CURRENT_SOURCE_DIR}/rose" "${PYTHON_BUILD_DIRECTORY}/rose")
 
 # ------------------------- Setup pybind target ------------------------- #
-pybind11_add_module(robust_python bindings.cpp)
-target_link_libraries(robust_python PUBLIC robust)
-target_include_directories(robust_python PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include")
+pybind11_add_module(rose_python bindings.cpp)
+target_link_libraries(rose_python PUBLIC rose)
+target_include_directories(rose_python PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include")
 
-set_target_properties(robust_python PROPERTIES
+set_target_properties(rose_python PROPERTIES
   INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib"
   INSTALL_RPATH_USE_LINK_PATH TRUE
-  OUTPUT_NAME "robust_python"
-  LIBRARY_OUTPUT_DIRECTORY "${PYTHON_BUILD_DIRECTORY}/robust"
+  OUTPUT_NAME "rose_python"
+  LIBRARY_OUTPUT_DIRECTORY "${PYTHON_BUILD_DIRECTORY}/rose"
   DEBUG_POSTFIX "" # Otherwise you will have a wrong name
   RELWITHDEBINFO_POSTFIX "" # Otherwise you will have a wrong name
 )
-target_compile_features(robust_python PUBLIC cxx_std_17)
+target_compile_features(rose_python PUBLIC cxx_std_17)
 
 # ------------------------- Setup Python install instructions ------------------------- #
 
@@ -42,10 +42,10 @@ target_compile_features(robust_python PUBLIC cxx_std_17)
 find_package(Python COMPONENTS Interpreter Development REQUIRED)
 add_custom_target(python-install
         COMMAND ${Python_EXECUTABLE} -m pip install -e .
-        DEPENDS robust_python
+        DEPENDS rose_python
         WORKING_DIRECTORY ${JRL_PYTHON_BUILD_DIRECTORY})
 
 # Setup uninstall command. This can also be done with pip
 add_custom_target(python-uninstall
-        COMMAND pip uninstall robust
+        COMMAND pip uninstall rose
         WORKING_DIRECTORY ${JRL_PYTHON_BUILD_DIRECTORY})

@@ -3,11 +3,11 @@ import jrl
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-import robust.plot
+import rose.plot
 import seaborn as sns
 import sympy as sy
-from robust.dataset import Dataset2JRL, Sensor
-from robust.robust_python import (
+from rose.dataset import Dataset2JRL, Sensor
+from rose.rose_python import (
     PlanarPriorTag,
     PriorFactorManifoldTag,
     WheelCovIntrSlipTag,
@@ -19,7 +19,7 @@ from robust.robust_python import (
     ZPriorTag,
     makeFrontend,
 )
-from robust.sim import SimParameters, Simulation, symp
+from rose.sim import SimParameters, Simulation, symp
 from tqdm import tqdm, trange
 
 
@@ -121,7 +121,7 @@ if __name__ == "__main__":
                 traj[name] = sol
                 # print(f"\tFinished {name}...")
 
-            robust.plot.plot_state(
+            rose.plot.plot_state(
                 GT=gt,
                 states="rpis",
                 show=False,

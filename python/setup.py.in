@@ -1,4 +1,4 @@
-"""Setup file to install the robust package."""
+"""Setup file to install the rose package."""
 
 try:
     from setuptools import setup, find_packages
@@ -16,12 +16,12 @@ package_data = {
 }
 
 setup(
-    name='robust',
+    name='rose',
     version='0.0.1',
-    description='Robust Multi-Sensor Odometry',
+    description='Robust Off-road wheel odometry with Slip Estimation',
     author='Easton Potokar',
     author_email='epotokar@cmu.edu',
-    keywords='slam sam robotics vio robust localization optimization',
+    keywords='slam sam robotics vio rose localization optimization',
     # https://pypi.org/pypi?%3Aaction=list_classifiers
     packages=packages,
     include_package_data=True,

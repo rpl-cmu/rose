@@ -10,7 +10,7 @@ import pandas as pd
 import seaborn as sns
 from gtsam.symbol_shorthand import B, I, M, S, V, X
 from matplotlib.lines import Line2D
-from robust.robust_python import WheelCovIntrSlipTag, WheelCovTag, WheelDangTag
+from rose.rose_python import WheelCovIntrSlipTag, WheelCovTag, WheelDangTag
 
 
 # https://stackoverflow.com/a/43343934

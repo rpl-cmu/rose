@@ -8,11 +8,11 @@ import jrl
 import matplotlib.pyplot as plt
 import numpy as np
 import seaborn as sns
-from robust.dataset import Dataset2JRL, Sensor, WheelData, WheelIntrinsics
-from robust.flat import FlatDataset
-from robust.kaist import KaistDataset
-from robust.robust_python import PreintegratedWheelCov, PreintegratedWheelParams
-from robust.ros import GrizzlyBag
+from rose.dataset import Dataset2JRL, Sensor, WheelData, WheelIntrinsics
+from rose.flat import FlatDataset
+from rose.kaist import KaistDataset
+from rose.rose_python import PreintegratedWheelCov, PreintegratedWheelParams
+from rose.ros import GrizzlyBag
 
 np.set_printoptions(suppress=True, precision=4)
 

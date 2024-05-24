@@ -1,9 +1,9 @@
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-import robust.plot as plot
+import rose.plot as plot
 import seaborn as sns
-from robust.robust_python import (
+from rose.rose_python import (
     WheelCovIntrSlipTag,
     WheelCovSlipTag,
     WheelCovTag,

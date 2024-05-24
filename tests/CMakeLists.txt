@@ -11,10 +11,10 @@ enable_testing() # enable ctest
 
 # Make test target
 file(GLOB_RECURSE tests_srcs *.cpp)
-add_executable(robust-tests ${tests_srcs})
-target_link_libraries(robust-tests PUBLIC robust gtsam gtest)
-add_test(NAME robust-tests COMMAND robust-tests)
+add_executable(rose-tests ${tests_srcs})
+target_link_libraries(rose-tests PUBLIC rose gtsam gtest)
+add_test(NAME rose-tests COMMAND rose-tests)
 
 # Make runnable from "make check" or "make test"
-add_custom_target(check COMMAND robust-tests)
-add_custom_target(test COMMAND robust-tests)
+add_custom_target(check COMMAND rose-tests)
+add_custom_target(test COMMAND rose-tests)

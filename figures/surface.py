@@ -3,12 +3,12 @@ import jrl
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-import robust.plot
+import rose.plot
 import seaborn as sns
 import sympy as sy
 from gtsam.symbol_shorthand import B, I, L, S
-from robust.dataset import Dataset2JRL, Sensor, WheelNoise
-from robust.sim import SimParameters, Simulation, symp
+from rose.dataset import Dataset2JRL, Sensor, WheelNoise
+from rose.sim import SimParameters, Simulation, symp
 from tabulate import tabulate
 from tqdm import tqdm, trange
 
@@ -45,8 +45,8 @@ if __name__ == "__main__":
     gt = dataset.get_ground_truth()
 
     # ------------------------- Plot 3D Grid ------------------------- #
-    c = robust.plot.setup_plot()
-    state = robust.plot.load_full_state(gt, dataset.N, pandas=False)
+    c = rose.plot.setup_plot()
+    state = rose.plot.load_full_state(gt, dataset.N, pandas=False)
 
     # Load data
     x = np.linspace(-5, state[:, 3].max() + 5)
@@ -75,7 +75,7 @@ if __name__ == "__main__":
         lw=0.01,
         cmap=sns.color_palette("crest", as_cmap=True),
     )
-    black = c[robust.plot.WheelType.GT.value]
+    black = c[rose.plot.WheelType.GT.value]
     ax.plot(state[:, 3], state[:, 4], state[:, 5] - minZ, lw=3, c=black)
 
     # This changes the aspect ratio by changing the axis-box size (rather than  just the limits)

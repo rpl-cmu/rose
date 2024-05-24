@@ -5,13 +5,13 @@ import jrl
 import matplotlib.pyplot as plt
 import numpy as np
 import rasterio
-import robust.jrl
-import robust.plot as plot
+import rose.jrl
+import rose.plot as plot
 import seaborn as sns
 from rasterio.warp import Resampling, calculate_default_transform, reproject
-from robust.dataset import Dataset2JRL, Sensor
-from robust.flat import FlatDataset
-from robust.sabercat import SabercatBag
+from rose.dataset import Dataset2JRL, Sensor
+from rose.flat import FlatDataset
+from rose.sabercat import SabercatBag
 
 if __name__ == "__main__":
     traj = "all_2024-02-09-14-08-29"
@@ -71,7 +71,7 @@ if __name__ == "__main__":
     results = {}
     for name, filename in types.items():
         values = (
-            robust.jrl.makeRobustParser()
+            rose.jrl.makeRoseParser()
             .parseResults(str(RESULTS / filename), False)
             .robot_solutions["a"]
             .values

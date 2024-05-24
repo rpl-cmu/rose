@@ -48,7 +48,7 @@ gtsam::Values JRLFrontend::run(jrl::Dataset &dataset, std::vector<std::string> s
     bar.set_theme_basic();
     if (use_tqdm) {
     }
-    jrl::Writer writer = makeRobustWriter();
+    jrl::Writer writer = makeRoseWriter();
     n_steps = (n_steps == 0 || n_steps > measurements.size()) ? measurements.size() : n_steps;
     gtsam::Values finalValues;
 

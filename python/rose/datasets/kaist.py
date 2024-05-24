@@ -7,7 +7,7 @@ from typing import Union
 import cv2
 import gtsam
 import numpy as np
-from robust.dataset import (
+from rose.dataset import (
     BaseIntrinsics,
     BaseNoise,
     CameraData,
@@ -22,7 +22,7 @@ from robust.dataset import (
     WheelIntrinsics,
     WheelNoise,
 )
-from robust.robust_python import PreintegratedWheelParams
+from rose.rose_python import PreintegratedWheelParams
 
 # https://www.xsens.com/hubfs/Downloads/Leaflets/MTi-300.pdf
 SIGMA_A = 60 * (1 / 10**6) * (1 / 9.81)
@@ -251,9 +251,7 @@ class KaistDataset(Dataset):
             )
 
     @functools.cache
-    def noise(
-        self, sensor: Sensor
-    ) -> Union[
+    def noise(self, sensor: Sensor) -> Union[
         gtsam.PreintegratedCombinedMeasurements,
         gtsam.noiseModel.Base,
         PreintegratedWheelParams,

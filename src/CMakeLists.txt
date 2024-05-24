@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.11)
 
 # Create Library
-add_library(robust 
+add_library(rose 
     JRLFrontend.cpp
     FixedLagBackend.cpp
     LMBackend.cpp
@@ -12,9 +12,9 @@ add_library(robust
 ) 
 
 # Set Library Properties
-target_include_directories(robust PUBLIC
+target_include_directories(rose PUBLIC
   $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
   $<INSTALL_INTERFACE:include>
   )  
-target_link_libraries(robust PUBLIC gtsam jrl ${OpenCV_LIBRARIES})
-set_target_properties(robust PROPERTIES POSITION_INDEPENDENT_CODE TRUE)
+target_link_libraries(rose PUBLIC gtsam jrl ${OpenCV_LIBRARIES})
+set_target_properties(rose PROPERTIES POSITION_INDEPENDENT_CODE TRUE)
