@@ -7,6 +7,7 @@
 #include <pybind11/pybind11.h>
 #include <pybind11/stl.h>
 
+#include "backend/JRL-custom.h"
 #include "backend/JRL.h"
 #include "backend/MEstBackend.h"
 #include "backend/WheelRose.h"
@@ -25,12 +26,22 @@ PYBIND11_MODULE(rose_python, m) {
     py::module jrl = py::module::import("jrl");
 
     // ------------------------- Custom JRL bindings for the below ------------------------- //
+    m.attr("IMUBiasTag") = py::str(jrl_rose::IMUBiasTag);
+    m.attr("StereoPoint2Tag") = py::str(jrl_rose::StereoPoint2Tag);
+    m.attr("StereoFactorPose3Point3Tag") = py::str(jrl_rose::StereoFactorPose3Point3Tag);
+    m.attr("CombinedIMUTag") = py::str(jrl_rose::CombinedIMUTag);
+    m.attr("PriorFactorIMUBiasTag") = py::str(jrl_rose::PriorFactorIMUBiasTag);
+
+    m.def("computeATEPose2", py::overload_cast<gtsam::Values, gtsam::Values, bool, bool>(&jrl_rose::computeATE<gtsam::Pose2>), py::return_value_policy::copy,
+        py::arg("ref"), py::arg("est"), py::arg("align") = true, py::arg("align_with_scale") = false);
+    m.def("computeATEPose3", py::overload_cast<gtsam::Values, gtsam::Values, bool, bool>(&jrl_rose::computeATE<gtsam::Pose3>), py::return_value_policy::copy,
+        py::arg("ref"), py::arg("est"), py::arg("align") = true, py::arg("align_with_scale") = false);
+
     m.attr("WheelRoseTag") = py::str(WheelRoseTag);
     m.attr("WheelRoseSlipTag") = py::str(WheelRoseSlipTag);
     m.attr("WheelRoseIntrTag") = py::str(WheelRoseIntrTag);
     m.attr("WheelRoseIntrSlipTag") = py::str(WheelRoseIntrSlipTag);
     m.attr("WheelBaselineTag") = py::str(WheelBaselineTag);
-    m.attr("PriorFactorIntrinsicsTag") = py::str(PriorFactorIntrinsicsTag);
     m.attr("PlanarPriorTag") = py::str(PlanarPriorTag);
     m.attr("ZPriorTag") = py::str(ZPriorTag);
 

@@ -72,19 +72,19 @@ std::set<std::string> parseFactors(std::vector<std::string> sensors) {
     std::set<std::string> outSensors{jrl::PriorFactorPose3Tag};
 
     if (sensors.size() == 0) {
-        outSensors.insert(jrl::StereoFactorPose3Point3Tag);
+        outSensors.insert(jrl_rose::StereoFactorPose3Point3Tag);
         outSensors.insert(jrl::BetweenFactorPose3Tag);
-        outSensors.insert(jrl::CombinedIMUTag);
+        outSensors.insert(jrl_rose::CombinedIMUTag);
         outSensors.insert(jrl::PriorFactorPoint3Tag);
-        outSensors.insert(jrl::PriorFactorIMUBiasTag);
+        outSensors.insert(jrl_rose::PriorFactorIMUBiasTag);
     }
     if (std::find(sensors.begin(), sensors.end(), "imu") != sensors.end()) {
-        outSensors.insert(jrl::CombinedIMUTag);
+        outSensors.insert(jrl_rose::CombinedIMUTag);
         outSensors.insert(jrl::PriorFactorPoint3Tag);
-        outSensors.insert(jrl::PriorFactorIMUBiasTag);
+        outSensors.insert(jrl_rose::PriorFactorIMUBiasTag);
     }
     if (std::find(sensors.begin(), sensors.end(), "cam") != sensors.end()) {
-        outSensors.insert(jrl::StereoFactorPose3Point3Tag);
+        outSensors.insert(jrl_rose::StereoFactorPose3Point3Tag);
     }
     if (std::find(sensors.begin(), sensors.end(), "wheel_baseline") != sensors.end()) {
         outSensors.insert(WheelBaselineTag);
@@ -95,9 +95,6 @@ std::set<std::string> parseFactors(std::vector<std::string> sensors) {
     if (std::find(sensors.begin(), sensors.end(), "wheel_intr") != sensors.end()) {
         outSensors.insert(WheelRoseIntrTag);
         outSensors.insert(jrl::PriorFactorPoint3Tag);
-    }
-    if (std::find(sensors.begin(), sensors.end(), "intr_prior") != sensors.end()) {
-        outSensors.insert(PriorFactorIntrinsicsTag);
     }
     if (std::find(sensors.begin(), sensors.end(), "wheel_slip") != sensors.end()) {
         outSensors.insert(WheelRoseSlipTag);

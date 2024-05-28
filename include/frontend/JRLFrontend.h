@@ -6,6 +6,7 @@
 #include <jrl/Writer.h>
 
 #include "backend/FixedLagBackend.h"
+#include "backend/JRL-custom.h"
 #include "backend/JRL.h"
 #include "utils/tqdm.h"
 

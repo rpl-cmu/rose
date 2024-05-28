@@ -7,7 +7,6 @@ set(CMAKE_CXX_STANDARD 17)
 #################### IMPORT DEPENDENCIES ####################
 find_package(jrl REQUIRED)
 find_package(GTSAM REQUIRED)
-find_package(OpenCV 4 REQUIRED)
 
 #################### ADD TARGETS ####################
 add_subdirectory(src)

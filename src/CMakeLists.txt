@@ -16,5 +16,5 @@ target_include_directories(rose PUBLIC
   $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
   $<INSTALL_INTERFACE:include>
   )  
-target_link_libraries(rose PUBLIC gtsam jrl ${OpenCV_LIBRARIES})
+target_link_libraries(rose PUBLIC gtsam jrl)
 set_target_properties(rose PROPERTIES POSITION_INDEPENDENT_CODE TRUE)

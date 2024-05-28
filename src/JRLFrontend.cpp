@@ -26,7 +26,7 @@ jrl::TypedValues JRLFrontend::makeTypedValues(gtsam::Values values) {
         } else if (key.chr() == 'v') {
             types[key] = jrl::Point3Tag;
         } else if (key.chr() == 'b') {
-            types[key] = jrl::IMUBiasTag;
+            types[key] = jrl_rose::IMUBiasTag;
         } else if (key.chr() == 'l') {
             types[key] = jrl::Point3Tag;
         } else if (key.chr() == 's') {
@@ -62,7 +62,7 @@ gtsam::Values JRLFrontend::run(jrl::Dataset &dataset, std::vector<std::string> s
 
         // Print each timestep of results
         if (use_tqdm) {
-            auto ate = jrl::metrics::computeATE<gtsam::Pose3>(gt, backend_->getState(), false);
+            auto ate = jrl_rose::computeATE<gtsam::Pose3>(gt, backend_->getState(), false);
             bar.progress(i, n_steps);
             bar.set_label("#F: " + std::to_string(backend_->getGraph().nrFactors()) +
                           //   ", #RF: " + std::to_string(backend_->getCurrNumRegframes()) +
