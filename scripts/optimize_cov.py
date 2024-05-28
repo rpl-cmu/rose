@@ -12,7 +12,6 @@ from rose.flat import FlatDataset
 from rose.kaist import KaistDataset
 from rose.rose_python import (
     PlanarPriorTag,
-    PriorFactorIntrinsicsTag,
     WheelRoseIntrSlipTag,
     WheelRoseIntrTag,
     WheelRoseSlipTag,

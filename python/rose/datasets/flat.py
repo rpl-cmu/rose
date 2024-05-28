@@ -26,7 +26,6 @@ from rose.dataset import (
     WheelIntrinsics,
     WheelNoise,
 )
-from rose.rose_python import PreintegratedWheelParams
 
 
 class FlatDataset(Dataset):

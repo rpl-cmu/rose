@@ -8,6 +8,9 @@ import seaborn as sns
 import sympy as sy
 from rose.dataset import Dataset2JRL, Sensor
 from rose.rose_python import (
+    PriorFactorIMUBiasTag,
+    CombinedIMUTag,
+    StereoFactorPose3Point3Tag,
     PlanarPriorTag,
     PriorFactorManifoldTag,
     WheelRoseIntrSlipTag,
@@ -86,7 +89,7 @@ if __name__ == "__main__":
                 # continue
                 sensors = [
                     jrl.PriorFactorPose3Tag,
-                    jrl.StereoFactorPose3Point3Tag,
+                    StereoFactorPose3Point3Tag,
                 ]
                 if tag != "stereo":
                     sensors.append(tag)
@@ -106,8 +109,8 @@ if __name__ == "__main__":
                     sensors.extend(
                         [
                             jrl.PriorFactorPoint3Tag,
-                            jrl.PriorFactorIMUBiasTag,
-                            jrl.CombinedIMUTag,
+                            PriorFactorIMUBiasTag,
+                            CombinedIMUTag,
                         ]
                     )
 

@@ -3,7 +3,12 @@ import jrl
 
 
 # ------------------------- Helpers for Wrapping GTSAM containers ------------------------- #
-from rose.rose_python import makeRoseParser, makeRoseWriter
+from rose.rose_python import (
+    makeRoseParser,
+    makeRoseWriter,
+    computeATEPose3,
+    computeATEPose2,
+)
 
 
 def values2results(

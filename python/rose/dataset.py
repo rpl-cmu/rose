@@ -19,12 +19,14 @@ from rose.jrl import (
     values2typedvalues,
 )
 from rose.rose_python import (
+    CombinedIMUTag,
     PlanarPriorFactor,
     PlanarPriorTag,
+    PriorFactorIMUBiasTag,
     PreintegratedWheelRose,
     PreintegratedWheelBaseline,
     PreintegratedWheelParams,
-    PriorFactorIntrinsicsTag,
+    StereoFactorPose3Point3Tag,
     WheelRoseIntrSlipTag,
     WheelRoseIntrTag,
     WheelRoseSlipTag,
@@ -899,7 +901,7 @@ class Dataset2JRL:
 
         self.factor_tags[0].append(jrl.PriorFactorPose3Tag)
         self.factor_tags[0].append(jrl.PriorFactorPoint3Tag)
-        self.factor_tags[0].append(jrl.PriorFactorIMUBiasTag)
+        self.factor_tags[0].append(PriorFactorIMUBiasTag)
         self.factor_tags[0].append(jrl.PriorFactorPoint3Tag)
 
         self.vio_T_x0 = vio_T_x0
@@ -930,7 +932,7 @@ class Dataset2JRL:
                 X(i - 1), V(i - 1), X(i), V(i), B(i - 1), B(i), pim
             )
             self.factor_graphs[i].push_back(imu_factor)
-            self.factor_tags[i].append(jrl.CombinedIMUTag)
+            self.factor_tags[i].append(CombinedIMUTag)
             pim.resetIntegrationAndSetBias(self.bias0)
             if imu_data_idx >= imu_data.shape:
                 break
@@ -982,7 +984,7 @@ class Dataset2JRL:
                         cam_data.extrinsics,
                     )
                     self.factor_graphs[i].push_back(factor_prev)
-                    self.factor_tags[i].append(jrl.StereoFactorPose3Point3Tag)
+                    self.factor_tags[i].append(StereoFactorPose3Point3Tag)
 
                 factor_curr = gtsam.GenericStereoFactor3D(
                     stereo_curr[kp_idx_curr],
@@ -993,7 +995,7 @@ class Dataset2JRL:
                     cam_data.extrinsics,
                 )
                 self.factor_graphs[i].push_back(factor_curr)
-                self.factor_tags[i].append(jrl.StereoFactorPose3Point3Tag)
+                self.factor_tags[i].append(StereoFactorPose3Point3Tag)
 
             prev = curr
             prev.fill_out_kps()
@@ -1108,21 +1110,6 @@ class Dataset2JRL:
             self.factor_graphs[i].push_back(z)
             self.factor_tags[i].append(ZPriorTag)
 
-            # Intrinsics Prior
-            intrinsics_prior = gtsam.PriorFactorPoint3(
-                I(i),
-                data.intrinsics,
-                gtsam.noiseModel.Diagonal.Sigmas(
-                    [
-                        data.noise.sig_intr_prior_baseline,
-                        data.noise.sig_intr_prior_radius,
-                        data.noise.sig_intr_prior_radius,
-                    ]
-                ),
-            )
-            self.factor_graphs[i].push_back(intrinsics_prior)
-            self.factor_tags[i].append(PriorFactorIntrinsicsTag)
-
             # Slip prior
             slip_robust = gtsam.noiseModel.Robust.Create(
                 gtsam.noiseModel.mEstimator.Tukey.Create(data.noise.slip_prior_kernel),
@@ -1158,7 +1145,7 @@ class Dataset2JRL:
                 # If it's been seen before
                 if id in id_seen:
                     self.factor_graphs[i].push_back(factor_cam)
-                    self.factor_tags[i].append(jrl.StereoFactorPose3Point3Tag)
+                    self.factor_tags[i].append(StereoFactorPose3Point3Tag)
                 # If this is the second time it's been seen
                 elif id in feat_waiting.keys():
                     factor_cam_og = feat_waiting.pop(id)
@@ -1169,8 +1156,8 @@ class Dataset2JRL:
                     else:
                         self.factor_graphs[i].push_back(factor_cam)
                         self.factor_graphs[i].push_back(factor_cam_og)
-                        self.factor_tags[i].append(jrl.StereoFactorPose3Point3Tag)
-                        self.factor_tags[i].append(jrl.StereoFactorPose3Point3Tag)
+                        self.factor_tags[i].append(StereoFactorPose3Point3Tag)
+                        self.factor_tags[i].append(StereoFactorPose3Point3Tag)
                         id_seen.add(id)
                 else:
                     feat_waiting[id] = factor_cam

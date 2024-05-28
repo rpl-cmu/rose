@@ -10,7 +10,10 @@ from rose.dataset import CamNoise, Dataset2JRL, Sensor, WheelNoise
 from rose import FlatDataset
 from rose import KaistDataset
 from rose.rose_python import (
+    PriorFactorIMUBiasTag,
+    CombinedIMUTag,
     PlanarPriorTag,
+    StereoFactorPose3Point3Tag,
     WheelRoseIntrSlipTag,
     WheelRoseIntrTag,
     WheelRoseSlipTag,
@@ -18,6 +21,7 @@ from rose.rose_python import (
     WheelBaselineTag,
     ZPriorTag,
     makeFrontend,
+    computeATEPose3,
 )
 from rose import GrizzlyBag
 from rose import SabercatBag
@@ -196,11 +200,11 @@ if __name__ == "__main__":
 
     def run(*kinds):
         factors = {
-            "base": [jrl.PriorFactorPose3Tag, jrl.StereoFactorPose3Point3Tag],
+            "base": [jrl.PriorFactorPose3Tag, StereoFactorPose3Point3Tag],
             "imu": [
                 jrl.PriorFactorPoint3Tag,
-                jrl.PriorFactorIMUBiasTag,
-                jrl.CombinedIMUTag,
+                PriorFactorIMUBiasTag,
+                CombinedIMUTag,
             ],
             "wheel_rose": [WheelRoseTag],
             "wheel_intr": [WheelRoseIntrTag, jrl.PriorFactorPoint3Tag],
@@ -226,10 +230,10 @@ if __name__ == "__main__":
                 0,
                 True,
             )
-            ate = jrl.computeATEPose3(gt, sol, False, False)[0] / km
+            ate = computeATEPose3(gt, sol, False, False)[0] / km
             print(f"{kinds} got {ate}")
-        except:
-            print(f"{kinds} Failed")
+        except Exception as e:
+            print(f"{kinds} Failed. {e}")
 
     # run("base")
 

@@ -8,3 +8,6 @@ pyyaml
 matplotlib
 tqdm
 yourdfpy
+pandas
+seaborn
+tabulate

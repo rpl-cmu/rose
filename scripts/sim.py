@@ -10,8 +10,10 @@ from gtsam.symbol_shorthand import B, I, L, S
 from rose.dataset import Dataset2JRL, Sensor, WheelNoise
 from rose.jrl import values2results
 from rose.rose_python import (
+    PriorFactorIMUBiasTag,
+    CombinedIMUTag,
+    StereoFactorPose3Point3Tag,
     PlanarPriorTag,
-    PriorFactorIntrinsicsTag,
     WheelRoseIntrSlipTag,
     WheelRoseIntrTag,
     WheelRoseSlipTag,
@@ -88,11 +90,11 @@ if __name__ == "__main__":
         None,
     ]:
         sensors = [
-            jrl.StereoFactorPose3Point3Tag,
+            StereoFactorPose3Point3Tag,
             jrl.PriorFactorPose3Tag,
             # jrl.PriorFactorPoint3Tag,
-            # jrl.PriorFactorIMUBiasTag,
-            # jrl.CombinedIMUTag,
+            # PriorFactorIMUBiasTag,
+            # CombinedIMUTag,
         ]
         if tag is not None:
             sensors.append(tag)
