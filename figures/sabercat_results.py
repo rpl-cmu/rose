@@ -114,7 +114,7 @@ if __name__ == "__main__":
                     wheel_type += "_planar"
                 has_imu = "imu" in sensors
 
-            error = jrl.computeATEPose3(runs["_gt"], values, align=args.align)
+            error = rose.jrl.computeATEPose3(runs["_gt"], values, align=args.align)
 
             data.append(
                 [

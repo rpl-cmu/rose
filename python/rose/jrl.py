@@ -1,9 +1,12 @@
 import gtsam
 import jrl
 
-
 # ------------------------- Helpers for Wrapping GTSAM containers ------------------------- #
 from rose.rose_python import (
+    IMUBiasTag,
+    StereoPoint2Tag,
+    CombinedIMUTag,
+    StereoFactorPose3Point3Tag,
     makeRoseParser,
     makeRoseWriter,
     computeATEPose3,
@@ -27,7 +30,7 @@ def values2typedvalues(values: gtsam.Values) -> jrl.TypedValues:
         elif char in ["l", "v", "i"]:
             types[k] = jrl.Point3Tag
         elif char == "b":
-            types[k] = jrl.IMUBiasTag
+            types[k] = IMUBiasTag
         elif char == "s":
             types[k] = jrl.Point2Tag
         else:

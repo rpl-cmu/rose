@@ -69,7 +69,7 @@ if __name__ == "__main__":
     gt = dataset.get_ground_truth()
 
     writer = rose.rose_python.makeRoseWriter()
-    writer.writeResults(values2results(gt), "figures/data/gt.jrr", False)
+    writer.writeResults(values2results(gt), "figures/data/GT.jrr", False)
 
     traj = {"GT": dataset.traj[Sensor.GT], "Wheel": dataset.traj[Sensor.WHEEL]}
     data = [["Kind", "ATEt", "ATEr"]]
@@ -120,7 +120,7 @@ if __name__ == "__main__":
 
         # Compute error
         km = compute_traj_length(gt) / 1000
-        et, er = jrl.computeATEPose3(gt, sol, False)
+        et, er = rose.jrl.computeATEPose3(gt, sol, False)
         data.append([names[tag], et, er * 180 / np.pi])
         traj[names[tag]] = sol
         print(f"\tFinished {tag}, e: {graph.error(sol):.2E}...")

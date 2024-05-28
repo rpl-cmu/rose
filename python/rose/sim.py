@@ -130,9 +130,7 @@ class Simulation:
         self.gravity = np.array([0, 0, 9.81])
 
         self.vw_last = x0.rotation().matrix() @ np.array([v, 0, 0])
-        self.state = State(
-            x0, self._m(x0), velocity=self.vw_last, w_intr=self.params.w_intr
-        )
+        self.state = State(x0, velocity=self.vw_last, w_intr=self.params.w_intr)
 
         self.measurements = [
             {
@@ -204,7 +202,6 @@ class Simulation:
         return (
             State(
                 pose,
-                self._m(pose),
                 R @ v_body,
                 bias_w,
                 bias_a,
@@ -238,12 +235,6 @@ class Simulation:
 
         R = gtsam.Rot3(np.column_stack((x_basis, y_basis, z_basis)))
         return gtsam.Pose3(R, p0)
-
-    def _m(self, pose):
-        p = pose.translation()
-        R = pose.rotation().matrix()
-        m_new = R.T @ self.gradM2(p) @ R / np.linalg.norm(self.gradM(p))
-        return Manifold(np.array([m_new[0, 0], m_new[0, 1], m_new[1, 1]]))
 
     # ------------------------- Wheel Utilities ------------------------- #
     def _setup_wheels(self):

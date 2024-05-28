@@ -8,8 +8,8 @@ import gtsam
 import jrl
 import numpy as np
 from rose.dataset import CamNoise, Dataset2JRL, Sensor, WheelNoise
-from rose.flat import FlatDataset
-from rose.kaist import KaistDataset
+import rose
+from rose.datasets import FlatDataset, KaistDataset
 from rose.rose_python import (
     PlanarPriorTag,
     WheelRoseIntrSlipTag,
@@ -211,7 +211,7 @@ if __name__ == "__main__":
                     0,
                     True,
                 )
-                ate_none = jrl.computeATEPose3(gt, sol, False, False)[0] / km
+                ate_none = rose.jrl.computeATEPose3(gt, sol, False, False)[0] / km
             except:
                 ate_none = 500
 
