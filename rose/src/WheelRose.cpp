@@ -1,5 +1,7 @@
 #include "rose/WheelRose.h"
 
+namespace rose {
+
 // ------------------------- Preintegrated Wheel Measurements ------------------------- //
 PreintegratedWheelRose::PreintegratedWheelRose(const boost::shared_ptr<PreintegratedWheelParams> p) : Base(p) {
     resetIntegration();
@@ -260,3 +262,5 @@ gtsam::Vector PreintegratedWheelRose::evaluateError(const gtsam::Pose3 &pose_i, 
 
     return error;
 }
+
+} // namespace rose

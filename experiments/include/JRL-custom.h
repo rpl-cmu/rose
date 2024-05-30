@@ -16,6 +16,8 @@
 #include "rose/WheelFactorBase.h"
 #include "rose/WheelRose.h"
 
+using namespace rose;
+
 namespace jrl_rose {
 
 static const std::string IMUBiasTag = "IMUBias";

@@ -16,6 +16,7 @@
 
 namespace py = pybind11;
 using namespace pybind11::literals;
+using namespace rose;
 
 // Holder type for pybind11
 PYBIND11_DECLARE_HOLDER_TYPE(TYPE_PLACEHOLDER_DONOTUSE, boost::shared_ptr<TYPE_PLACEHOLDER_DONOTUSE>);

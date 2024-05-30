@@ -14,6 +14,7 @@
 using gtsam::symbol_shorthand::M;
 using gtsam::symbol_shorthand::V;
 using gtsam::symbol_shorthand::X;
+using namespace rose;
 
 #define EXPECT_MATRICES_EQ(M_actual, M_expected)                                                                       \
     EXPECT_TRUE(M_actual.isApprox(M_expected, 1e-1)) << "  Actual:\n" << M_actual << "\nExpected:\n" << M_expected

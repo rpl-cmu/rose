@@ -17,7 +17,7 @@ void FixedLagBackend::addIMUEstimate(gtsam::CombinedImuFactor::shared_ptr factor
     state_.insert(B(newStateIdx), prevB);
 }
 
-void FixedLagBackend::addWheel2Estimate(WheelFactor2::shared_ptr factor) {
+void FixedLagBackend::addWheel2Estimate(rose::WheelFactor2::shared_ptr factor) {
     uint64_t prevStateIdx = gtsam::Symbol(factor->key1()).index();
     uint64_t newStateIdx = gtsam::Symbol(factor->key2()).index();
 
@@ -28,7 +28,7 @@ void FixedLagBackend::addWheel2Estimate(WheelFactor2::shared_ptr factor) {
     }
 }
 
-void FixedLagBackend::addWheel3Estimate(WheelFactor3::shared_ptr factor) {
+void FixedLagBackend::addWheel3Estimate(rose::WheelFactor3::shared_ptr factor) {
     uint64_t prevStateIdx = gtsam::Symbol(factor->key1()).index();
     uint64_t newStateIdx = gtsam::Symbol(factor->key2()).index();
     gtsam::Key slipKey = factor->key3();
@@ -45,7 +45,7 @@ void FixedLagBackend::addWheel3Estimate(WheelFactor3::shared_ptr factor) {
     }
 }
 
-void FixedLagBackend::addWheel4IntrEstimate(WheelFactor4Intrinsics::shared_ptr factor) {
+void FixedLagBackend::addWheel4IntrEstimate(rose::WheelFactor4Intrinsics::shared_ptr factor) {
     uint64_t prevStateIdx = gtsam::Symbol(factor->key1()).index();
     uint64_t newStateIdx = gtsam::Symbol(factor->key3()).index();
 
@@ -63,7 +63,7 @@ void FixedLagBackend::addWheel4IntrEstimate(WheelFactor4Intrinsics::shared_ptr f
     }
 }
 
-void FixedLagBackend::addWheel5Estimate(WheelFactor5::shared_ptr factor) {
+void FixedLagBackend::addWheel5Estimate(rose::WheelFactor5::shared_ptr factor) {
     uint64_t prevStateIdx = gtsam::Symbol(factor->key1()).index();
     uint64_t newStateIdx = gtsam::Symbol(factor->key3()).index();
     gtsam::Key slipKey = factor->key5();
@@ -287,10 +287,10 @@ void FixedLagBackend::addMeasurements(gtsam::NonlinearFactorGraph graph, uint64_
         // Try cast to all types of factors we use
         auto preint = boost::dynamic_pointer_cast<gtsam::CombinedImuFactor>(factor);
         auto stereo = boost::dynamic_pointer_cast<StereoFactor>(factor);
-        auto wheel5 = boost::dynamic_pointer_cast<WheelFactor5>(factor);
-        auto wheel4intr = boost::dynamic_pointer_cast<WheelFactor4Intrinsics>(factor);
-        auto wheel3 = boost::dynamic_pointer_cast<WheelFactor3>(factor);
-        auto wheel2 = boost::dynamic_pointer_cast<WheelFactor2>(factor);
+        auto wheel5 = boost::dynamic_pointer_cast<rose::WheelFactor5>(factor);
+        auto wheel4intr = boost::dynamic_pointer_cast<rose::WheelFactor4Intrinsics>(factor);
+        auto wheel3 = boost::dynamic_pointer_cast<rose::WheelFactor3>(factor);
+        auto wheel2 = boost::dynamic_pointer_cast<rose::WheelFactor2>(factor);
         auto priorX = boost::dynamic_pointer_cast<gtsam::PriorFactor<gtsam::Pose3>>(factor);
         auto priorV = boost::dynamic_pointer_cast<gtsam::PriorFactor<gtsam::Velocity3>>(factor);
         auto priorB = boost::dynamic_pointer_cast<gtsam::PriorFactor<gtsam::imuBias::ConstantBias>>(factor);

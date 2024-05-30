@@ -9,6 +9,8 @@
 #include "gtsam/nonlinear/NonlinearFactor.h"
 
 // ------------------------- Preintegration Base ------------------------- //
+namespace rose {
+
 class NotImplemented : public std::logic_error {
   public:
     NotImplemented() : std::logic_error("Function not yet implemented"){};
@@ -283,3 +285,5 @@ class WheelFactor5
     gtsam::Pose3 body_T_sensor() const { return body_T_sensor_; }
     gtsam::Pose3 predict(const gtsam::Pose3 &, const gtsam::Vector3 &, const gtsam::Vector2 &) const;
 };
+
+}  // namespace rose

@@ -10,6 +10,8 @@ Modified from PlanarPriorFactor from gtsam
 
 #include <string>
 
+namespace rose {
+
 /**
  * A class for a soft prior on any Value type
  * @ingroup SLAM
@@ -61,7 +63,7 @@ class PlanarPriorFactor : public gtsam::NoiseModelFactor1<gtsam::Pose3> {
     bool equals(const gtsam::NonlinearFactor &expected, double tol = 1e-9) const override {
         const This *e = dynamic_cast<const This *>(&expected);
         return e != nullptr && Base::equals(*e, tol) &&
-               gtsam::traits<gtsam::Pose3>::Equals(body_T_sensor_, e->body_T_sensor_, tol);
+              gtsam::traits<gtsam::Pose3>::Equals(body_T_sensor_, e->body_T_sensor_, tol);
     }
 
     /** implement functions needed to derive from Factor */
@@ -90,4 +92,6 @@ class PlanarPriorFactor : public gtsam::NoiseModelFactor1<gtsam::Pose3> {
     template <class ARCHIVE> void serialize(ARCHIVE &ar, const unsigned int /*version*/) {
         ar &boost::serialization::make_nvp("NoiseModelFactor1", boost::serialization::base_object<Base>(*this));
     }
-}; /// namespace gtsam
+};
+
+}

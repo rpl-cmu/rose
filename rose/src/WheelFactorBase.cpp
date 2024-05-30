@@ -1,5 +1,7 @@
 #include "rose/WheelFactorBase.h"
 
+namespace rose {
+
 // ------------------------- Preintegration Base ------------------------- //
 PreintegratedWheelBase::PreintegratedWheelBase(gtsam::Vector6 preint, Eigen::Matrix<double, 12, 12> preintMeasCov,
                                                double deltaTij)
@@ -309,3 +311,5 @@ void WheelFactor5::print(const std::string &s, const gtsam::KeyFormatter &keyFor
               << " measured: " << pwm_->preint().transpose() << "\n";
     this->noiseModel_->print("  noise model: ");
 }
+
+} // namespace rose

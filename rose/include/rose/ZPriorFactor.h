@@ -10,6 +10,7 @@ Modified from ZPriorFactor from gtsam
 
 #include <string>
 
+namespace rose {
 /**
  * A class for a soft prior on any Value type
  * @ingroup SLAM
@@ -92,4 +93,6 @@ class ZPriorFactor : public gtsam::NoiseModelFactor1<gtsam::Pose3> {
     template <class ARCHIVE> void serialize(ARCHIVE &ar, const unsigned int /*version*/) {
         ar &boost::serialization::make_nvp("NoiseModelFactor1", boost::serialization::base_object<Base>(*this));
     }
-}; /// namespace gtsam
+};
+
+}  // namespace rose

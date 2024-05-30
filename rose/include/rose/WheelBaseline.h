@@ -15,7 +15,8 @@
 
 // ------------------------- Wheel Factors ------------------------- //
 
-// TODO: Make equals functions for these classes
+namespace rose {
+
 class PreintegratedWheelBaseline : public PreintegratedWheelBase {
   public:
     typedef PreintegratedWheelBaseline This;
@@ -39,3 +40,5 @@ class PreintegratedWheelBaseline : public PreintegratedWheelBase {
 
     GTSAM_MAKE_ALIGNED_OPERATOR_NEW
 };
+
+}
