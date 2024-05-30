@@ -11,7 +11,7 @@ import gtsam
 import jrl
 import numpy as np
 import yaml
-from gtsam.symbol_shorthand import B, I, L, M, S, V, W, X
+from gtsam.symbol_shorthand import B, I, L, S, V, W, X
 from rose.jrl import (
     CombinedIMUTag,
     PlanarPriorTag,
@@ -213,13 +213,13 @@ class WheelIntrinsics(BaseIntrinsics):
     radius_r: float
 
     def __mul__(self, other):
-        if type(other) is float:
+        if isinstance(other, (int, float)):
             return WheelIntrinsics(
                 baseline=self.baseline * other,
                 radius_l=self.radius_l * other,
                 radius_r=self.radius_r * other,
             )
-        elif type(other) is np.ndarray and other.size == 3:
+        elif isinstance(other, np.ndarray) and other.size == 3:
             return WheelIntrinsics(
                 baseline=self.baseline * other[0],
                 radius_l=self.radius_l * other[1],
@@ -337,7 +337,7 @@ class GTData(BaseData):
 
 @dataclass(kw_only=True)
 class StereoPic:
-    l: np.ndarray
+    l: np.ndarray  # noqa: E741
     r: np.ndarray
     disparity: np.ndarray
     intrinsics: gtsam.Cal3_S2Stereo
@@ -567,12 +567,12 @@ class CameraData(BaseData):
     total = 0
 
     def __getitem__(self, idx) -> StereoPic:
-        l = cv2.imread(str(self.left[idx]), cv2.IMREAD_GRAYSCALE)
+        l = cv2.imread(str(self.left[idx]), cv2.IMREAD_GRAYSCALE)  # noqa: E741
         r = cv2.imread(str(self.right[idx]), cv2.IMREAD_GRAYSCALE)
 
         # Rectify them
         if not self.intrinsics.is_rect:
-            l = cv2.remap(
+            l = cv2.remap(  # noqa: E741
                 l, self.intrinsics.mapx_l, self.intrinsics.mapy_l, cv2.INTER_LINEAR
             )
             r = cv2.remap(

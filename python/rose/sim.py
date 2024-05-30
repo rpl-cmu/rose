@@ -1,13 +1,11 @@
 import functools
-from dataclasses import dataclass, field, replace
-from enum import Enum
-from typing import ClassVar, Union
+from dataclasses import dataclass, field
+from typing import Union
 
 import gtsam
 import numpy as np
 import sympy as sy
-from gtsam.symbol_shorthand import L, M, X
-from gtsam.utils.plot import set_axes_equal
+from gtsam.symbol_shorthand import X
 from rose.dataset import (
     CameraData,
     CamNoise,
@@ -21,8 +19,7 @@ from rose.dataset import (
     WheelIntrinsics,
     WheelNoise,
 )
-from tabulate import tabulate
-from tqdm import tqdm, trange
+from tqdm import tqdm
 
 np.set_printoptions(suppress=False, precision=3, linewidth=200)
 
@@ -286,7 +283,7 @@ class Simulation:
             # Project onto image
             try:
                 mm = cam.project(p)
-            except:
+            except Exception as _:
                 pts_done.add(id_feat)
                 continue
 
@@ -393,10 +390,10 @@ class Simulation:
 
         if type(w) in [int, float]:
             w_before = w
-            w = lambda t: w_before
+            w = lambda t: w_before  # noqa: E731
         if type(v) in [int, float]:
             v_before = v
-            v = lambda t: v_before
+            v = lambda t: v_before  # noqa: E731
 
         # Collect all data
         loop = tqdm(total=self.params.time * 1e9 // self.dt, leave=False)
@@ -435,9 +432,9 @@ class Simulation:
             mm = [i["cam"][:, 1:] for i in self.measurements if "cam" in i]
 
             # Perturb intrinsics slightly for practicality
-            intr_perturb = np.random.multivariate_normal(
-                mean=np.zeros(6), cov=np.diag([2, 2, 2, 2, 0, 1e-4])
-            )
+            # intr_perturb = np.random.multivariate_normal(
+            #     mean=np.zeros(6), cov=np.diag([2, 2, 2, 2, 0, 1e-4])
+            # )
             intr = self.params.K  # .retract(intr_perturb)
 
             return FeatData(

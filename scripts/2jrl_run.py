@@ -18,7 +18,6 @@ from rose.jrl import (
     ZPriorTag,
     computeATEPose3,
 )
-from tqdm import tqdm
 
 from rose import FlatDataset, GrizzlyBag, KaistDataset, SabercatBag, makeFrontend
 

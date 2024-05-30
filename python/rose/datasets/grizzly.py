@@ -79,7 +79,7 @@ class GrizzlyBag:
         topic = self.sensor2topic[sensor]
         if f is None:
             if just_stamp:
-                f = lambda msg, t, stamp, data: stamp.append(msg.header.stamp.to_nsec())
+                f = lambda msg, t, stamp, data: stamp.append(msg.header.stamp.to_nsec())  # noqa: E731
             else:
                 f = self.sensor2parser[sensor]
 

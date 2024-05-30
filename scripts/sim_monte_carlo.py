@@ -55,7 +55,7 @@ def main(ideal: bool):
     params.sigma_pix = 1
 
     v = 2
-    w = lambda t: np.cos(t * 1.5)
+    w = lambda t: np.cos(t * 1.5)  # noqa: E731
 
     traj = {}
     data = []
@@ -129,7 +129,7 @@ def main(ideal: bool):
             )
             plt.close()
 
-    print(f"\nDist\t", km, "\n")
+    print("\nDist\t", km, "\n")
 
     # ------------------------- Plot States ------------------------- #
     df = pd.DataFrame(

@@ -1,7 +1,6 @@
 from pathlib import Path
 
 import earthpy.spatial as es
-import jrl
 import matplotlib.pyplot as plt
 import numpy as np
 import rasterio
@@ -11,7 +10,6 @@ import seaborn as sns
 from rasterio.warp import Resampling, calculate_default_transform, reproject
 from rose.dataset import Dataset2JRL, Sensor
 from rose.flat import FlatDataset
-from rose.sabercat import SabercatBag
 
 if __name__ == "__main__":
     traj = "all_2024-02-09-14-08-29"
@@ -152,7 +150,7 @@ if __name__ == "__main__":
 
     fig.legend(loc="lower center", ncol=4, bbox_to_anchor=(0.5, -0.07))
 
-    plt.savefig(f"figures/header.png", bbox_inches="tight", dpi=300)
-    plt.savefig(f"figures/header.pdf", bbox_inches="tight", dpi=300)
+    plt.savefig("figures/header.png", bbox_inches="tight", dpi=300)
+    plt.savefig("figures/header.pdf", bbox_inches="tight", dpi=300)
 
     # plt.show()

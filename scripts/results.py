@@ -2,10 +2,9 @@ import argparse
 import os
 
 import gtsam
-import jrl
 import numpy as np
 import rose.jrl
-from gtsam.symbol_shorthand import B, X
+from gtsam.symbol_shorthand import X
 from rose.plot import (
     plot_3d_trajectory,
     plot_error_state,
@@ -38,7 +37,9 @@ def get_subset(values: gtsam.Values, N: int):
     return values_pose3
 
 
-cbor = lambda s: "cbor" in s
+def cbor(s):
+    return "cbor" in s
+
 
 if __name__ == "__main__":
     func = {

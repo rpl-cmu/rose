@@ -1,16 +1,10 @@
 import gtsam
-import jrl
 import matplotlib.pyplot as plt
 import numpy as np
-import pandas as pd
 import rose.plot
 import seaborn as sns
-import sympy as sy
-from gtsam.symbol_shorthand import B, I, L, S
-from rose.dataset import Dataset2JRL, Sensor, WheelNoise
-from rose.sim import SimParameters, Simulation, symp
-from tabulate import tabulate
-from tqdm import tqdm, trange
+from rose.dataset import Dataset2JRL, Sensor
+from rose.sim import SimParameters, Simulation
 
 np.set_printoptions(suppress=False, precision=3)
 
@@ -36,7 +30,7 @@ if __name__ == "__main__":
     params.num_feats = 50
 
     v = 2
-    w = lambda t: np.cos(t * 1.5)
+    w = lambda t: np.cos(t * 1.5)  # noqa: E731
     sim = Simulation(params, np.pi / 6, v=2)
     sim.run_all(w, v)
 

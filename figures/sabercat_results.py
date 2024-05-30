@@ -1,19 +1,19 @@
 import argparse
-import os
 from pathlib import Path
 
 import gtsam
-import jrl
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 import rose.jrl
 import rose.plot as plot
 import seaborn as sns
-from gtsam.symbol_shorthand import X
 from tabulate import tabulate
 
-cbor = lambda s: "cbor" in str(s)
+
+def cbor(s):
+    return s.endswith("cbor")
+
 
 np.set_printoptions(suppress=True, precision=4)
 
@@ -77,7 +77,7 @@ if __name__ == "__main__":
 
                 trajs[traj_name][result_name] = results.robot_solutions["a"].values
                 # print(f"\n\t{traj_name} - {result_name}...", end="")
-            except:
+            except Exception as _:
                 print(f"\n\tFailed {f}", end="")
 
     for k, v in trajs.items():
@@ -148,7 +148,7 @@ if __name__ == "__main__":
         "cam_only": plot.WheelType.SVO.value,
         "wheel_only": plot.WheelType.WHEEL.value,
     }
-    df_no_imu = df[df["Uses IMU"] == False].copy()
+    df_no_imu = df[not df["Uses IMU"]].copy()
     df_no_imu["Wheel Type"] = df_no_imu["Wheel Type"].replace(alias)
     df_no_imu = df_no_imu[df_no_imu["Wheel Type"] != plot.WheelType.WHEEL_UNDER.value]
     df_no_imu["Wheel Type"] = pd.Categorical(
@@ -191,7 +191,7 @@ if __name__ == "__main__":
 
     # With IMU
     alias = {k: v.replace("SVO", "SVIO") for k, v in alias.items()}
-    df_with_imu = df[df["Uses IMU"] == True].copy()
+    df_with_imu = df[df["Uses IMU"]].copy()
     df_with_imu["Wheel Type"] = df_with_imu["Wheel Type"].replace(alias)
     df_with_imu = df_with_imu[
         df_with_imu["Wheel Type"] != plot.WheelType.WHEEL.value.replace("SVO", "SVIO")

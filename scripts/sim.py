@@ -50,7 +50,7 @@ if __name__ == "__main__":
     params.sigma_pix = 1
 
     v = 2
-    w = lambda t: np.cos(t * 1.5)
+    w = lambda t: np.cos(t * 1.5)  # noqa: E731
     sim = Simulation(params, np.pi / 6, v=2)
     sim.run_all(w, v)
 
@@ -118,7 +118,7 @@ if __name__ == "__main__":
         traj[names[tag]] = sol
         print(f"\tFinished {tag}, e: {graph.error(sol):.2E}...")
 
-    print(f"\nDist\t", km, "\n")
+    print("\nDist\t", km, "\n")
     print(tabulate(data, headers="firstrow", tablefmt="github"))
 
     # ------------------------- Plot States ------------------------- #

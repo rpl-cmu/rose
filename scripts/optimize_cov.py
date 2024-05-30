@@ -1,5 +1,4 @@
 import argparse
-import multiprocessing
 import os
 from pathlib import Path
 from typing import Optional
@@ -7,22 +6,15 @@ from typing import Optional
 import gtsam
 import jrl
 import numpy as np
-from rose.dataset import CamNoise, Dataset2JRL, Sensor, WheelNoise
+from rose.dataset import Dataset2JRL, Sensor, WheelNoise
 from rose.datasets import FlatDataset, KaistDataset
 from rose.ros import GrizzlyBag
 from rose.rose_python import (
-    PlanarPriorTag,
-    WheelBaselineTag,
     WheelRoseIntrSlipTag,
-    WheelRoseIntrTag,
-    WheelRoseSlipTag,
-    WheelRoseTag,
-    ZPriorTag,
     makeFrontend,
 )
-from scipy.optimize import basinhopping, brute, direct, dual_annealing, minimize, shgo
+from scipy.optimize import shgo
 from tabulate import tabulate
-from tqdm import tqdm
 
 import rose
 
@@ -208,12 +200,12 @@ if __name__ == "__main__":
                         jrl.PriorFactorPose3Tag,  # pose prior
                         jrl.StereoFactorPose3Point3Tag,
                     ],
-                    f"opt.jrr",
+                    "opt.jrr",
                     0,
                     True,
                 )
                 ate_none = rose.jrl.computeATEPose3(gt, sol, False, False)[0] / km
-            except:
+            except Exception as _:
                 ate_none = 500
 
             ate_total += ate_none

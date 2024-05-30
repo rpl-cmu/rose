@@ -1,6 +1,4 @@
 import functools
-from dataclasses import dataclass
-from enum import Enum
 from pathlib import Path
 from typing import Union
 
@@ -9,7 +7,6 @@ import gtsam
 import numpy as np
 from rose.dataset import (
     BaseIntrinsics,
-    BaseNoise,
     CameraData,
     CameraIntrinsics,
     CamNoise,
