@@ -12,13 +12,11 @@ from rose.rose_python import (
     CombinedIMUTag,
     StereoFactorPose3Point3Tag,
     PlanarPriorTag,
-    PriorFactorManifoldTag,
     WheelRoseIntrSlipTag,
     WheelRoseIntrTag,
     WheelRoseSlipTag,
     WheelRoseTag,
     WheelBaselineTag,
-    WheelManifoldTag,
     ZPriorTag,
     makeFrontend,
 )
@@ -39,17 +37,20 @@ def compute_traj_length(values: gtsam.Values):
     return dist
 
 
-if __name__ == "__main__":
+def main(ideal: bool):
+    kind = "ideal" if ideal else "real"
+    print(f"Running Monte Carlo for {kind}...")
+
     np.random.seed(0)
     params = SimParameters()
 
-    runs = 50
+    runs = 10
 
-    params.slip_num = 10
+    params.slip_num = 0 if ideal else 10
     params.slip_length = 0.5
     params.slip_duration = 0.5
 
-    params.w_intr_init_perturb = 1.1
+    params.w_intr_init_perturb = 1.0 if ideal else 1.1
     params.time = 100
     params.num_feats = 50
     params.sigma_pix = 1
@@ -73,20 +74,16 @@ if __name__ == "__main__":
         km = compute_traj_length(gt) / 1000
 
         wheel = dataset.traj[Sensor.WHEEL]
-        et, er = jrl.computeATEPose3(gt, wheel, False)
+        et, er = rose.jrl.computeATEPose3(gt, wheel, False)
         data.append(["wheel", False, et, er * 180 / np.pi])
 
         for use_imu in [False]:
             for tag in [
                 WheelBaselineTag,
                 WheelRoseTag,
-                WheelRoseSlipTag,
-                WheelRoseIntrTag,
                 WheelRoseIntrSlipTag,
                 "stereo",
             ]:
-                # if not use_imu and tag == "None":
-                # continue
                 sensors = [
                     jrl.PriorFactorPose3Tag,
                     StereoFactorPose3Point3Tag,
@@ -96,8 +93,6 @@ if __name__ == "__main__":
                 if WheelBaselineTag in sensors:
                     sensors.append(PlanarPriorTag)
                     sensors.append(ZPriorTag)
-                if WheelManifoldTag in sensors:
-                    sensors.append(PriorFactorManifoldTag)
                 if WheelRoseSlipTag in sensors:
                     sensors.append(jrl.PriorFactorPoint2Tag)
                 if WheelRoseIntrTag in sensors:
@@ -119,7 +114,7 @@ if __name__ == "__main__":
 
                 # Compute error
                 name = f"{tag}{i}"
-                et, er = jrl.computeATEPose3(gt, sol, False)
+                et, er = rose.jrl.computeATEPose3(gt, sol, False)
                 data.append([tag, use_imu, et, er * 180 / np.pi])
                 traj[name] = sol
                 # print(f"\tFinished {name}...")
@@ -129,10 +124,9 @@ if __name__ == "__main__":
                 states="rpis",
                 show=False,
                 filename=f"sim_{i}.png",
-                cov=traj[f"{WheelRoseTag}{i}"],
-                slip=traj[f"{WheelRoseSlipTag}{i}"],
-                intr=traj[f"{WheelRoseIntrTag}{i}"],
-                intrslip=traj[f"{WheelRoseIntrSlipTag}{i}"],
+                baseline=traj[f"{WheelBaselineTag}{i}"],
+                rose_minus=traj[f"{WheelRoseTag}{i}"],
+                rose=traj[f"{WheelRoseIntrSlipTag}{i}"],
             )
             plt.close()
 
@@ -143,4 +137,9 @@ if __name__ == "__main__":
         data,
         columns=["WheelFactor", "IMU", "ATEt", "ATEr"],
     )
-    df.to_pickle("figures/data/sim_monte_carlo_real.pkl")
+    df.to_pickle(f"figures/data/sim_monte_carlo_{kind}.pkl")
+
+
+if __name__ == "__main__":
+    # main(True)
+    main(False)
