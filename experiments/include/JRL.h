@@ -22,7 +22,7 @@ namespace jrl_rose {
         // clang-format off
         parser.registerMeasurementParser(WheelRoseTag,         [](const json& input){ return parseWheelFactor2(input, parsePWMRose); });
         parser.registerMeasurementParser(WheelRoseSlipTag,     [](const json& input){ return parseWheelFactor3(input, parsePWMRose); });
-        parser.registerMeasurementParser(WheelRoseIntrTag,     [](const json& input){ return parseWheelFactor4Intrinsics(input, parsePWMRose); });
+        parser.registerMeasurementParser(WheelRoseIntrTag,     [](const json& input){ return parseWheelFactor4(input, parsePWMRose); });
         parser.registerMeasurementParser(WheelRoseIntrSlipTag, [](const json& input){ return parseWheelFactor5(input, parsePWMRose); });
 
         parser.registerMeasurementParser(WheelBaselineTag,     [](const json& input){ return parseWheelFactor2(input, parsePWMBaseline); });
@@ -46,7 +46,7 @@ namespace jrl_rose {
         // clang-format off
         writer.registerMeasurementSerializer(WheelRoseTag,         [](gtsam::NonlinearFactor::shared_ptr factor) { return serializeWheelFactor2(WheelRoseTag, serializePWMRose, factor); });
         writer.registerMeasurementSerializer(WheelRoseSlipTag,     [](gtsam::NonlinearFactor::shared_ptr factor) { return serializeWheelFactor3(WheelRoseSlipTag, serializePWMRose, factor); });
-        writer.registerMeasurementSerializer(WheelRoseIntrTag,     [](gtsam::NonlinearFactor::shared_ptr factor) { return serializeWheelFactor4Intrinsics(WheelRoseIntrTag, serializePWMRose, factor); });
+        writer.registerMeasurementSerializer(WheelRoseIntrTag,     [](gtsam::NonlinearFactor::shared_ptr factor) { return serializeWheelFactor4(WheelRoseIntrTag, serializePWMRose, factor); });
         writer.registerMeasurementSerializer(WheelRoseIntrSlipTag, [](gtsam::NonlinearFactor::shared_ptr factor) { return serializeWheelFactor5(WheelRoseIntrSlipTag, serializePWMRose, factor); });
 
         writer.registerMeasurementSerializer(WheelBaselineTag,     [](gtsam::NonlinearFactor::shared_ptr factor) { return serializeWheelFactor2(WheelBaselineTag, serializePWBase, factor); });

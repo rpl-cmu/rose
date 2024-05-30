@@ -38,7 +38,7 @@ class FixedLagBackend {
     void addLandmarkEstimate(StereoFactor::shared_ptr factor);
     void addWheel2Estimate(rose::WheelFactor2::shared_ptr factor);
     void addWheel3Estimate(rose::WheelFactor3::shared_ptr factor);
-    void addWheel4IntrEstimate(rose::WheelFactor4Intrinsics::shared_ptr factor);
+    void addWheel4Estimate(rose::WheelFactor4::shared_ptr factor);
     void addWheel5Estimate(rose::WheelFactor5::shared_ptr factor);
 
     bool isDegenerate(gtsam::NonlinearFactor::shared_ptr factor);

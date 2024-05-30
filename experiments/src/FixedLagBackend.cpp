@@ -45,7 +45,7 @@ void FixedLagBackend::addWheel3Estimate(rose::WheelFactor3::shared_ptr factor) {
     }
 }
 
-void FixedLagBackend::addWheel4IntrEstimate(rose::WheelFactor4Intrinsics::shared_ptr factor) {
+void FixedLagBackend::addWheel4Estimate(rose::WheelFactor4::shared_ptr factor) {
     uint64_t prevStateIdx = gtsam::Symbol(factor->key1()).index();
     uint64_t newStateIdx = gtsam::Symbol(factor->key3()).index();
 
@@ -288,7 +288,7 @@ void FixedLagBackend::addMeasurements(gtsam::NonlinearFactorGraph graph, uint64_
         auto preint = boost::dynamic_pointer_cast<gtsam::CombinedImuFactor>(factor);
         auto stereo = boost::dynamic_pointer_cast<StereoFactor>(factor);
         auto wheel5 = boost::dynamic_pointer_cast<rose::WheelFactor5>(factor);
-        auto wheel4intr = boost::dynamic_pointer_cast<rose::WheelFactor4Intrinsics>(factor);
+        auto wheel4intr = boost::dynamic_pointer_cast<rose::WheelFactor4>(factor);
         auto wheel3 = boost::dynamic_pointer_cast<rose::WheelFactor3>(factor);
         auto wheel2 = boost::dynamic_pointer_cast<rose::WheelFactor2>(factor);
         auto priorX = boost::dynamic_pointer_cast<gtsam::PriorFactor<gtsam::Pose3>>(factor);
@@ -304,7 +304,7 @@ void FixedLagBackend::addMeasurements(gtsam::NonlinearFactorGraph graph, uint64_
         } else if (wheel5) {
             addWheel5Estimate(wheel5);
         } else if (wheel4intr) {
-            addWheel4IntrEstimate(wheel4intr);
+            addWheel4Estimate(wheel4intr);
         } else if (wheel3) {
             addWheel3Estimate(wheel3);
         } else if (wheel2) {

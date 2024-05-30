@@ -145,14 +145,14 @@ void WheelFactor3::print(const std::string &s, const gtsam::KeyFormatter &keyFor
 }
 
 // ------------------------- Factor between 2 poses / 2 intrinsics ------------------------- //
-WheelFactor4Intrinsics::WheelFactor4Intrinsics(gtsam::Key pose_i, gtsam::Key intr_i, gtsam::Key pose_j,
+WheelFactor4::WheelFactor4(gtsam::Key pose_i, gtsam::Key intr_i, gtsam::Key pose_j,
                                                gtsam::Key intr_j, PreintegratedWheelBase::shared_ptr pwm,
                                                gtsam::Pose3 body_T_sensor)
     : pwm_(pwm), body_T_sensor_(body_T_sensor), Base(gtsam::noiseModel::Gaussian::Covariance(pwm->preintMeasCov().block(
                                                          0, 0, pwm->dimension4(), pwm->dimension4())),
                                                      pose_i, intr_i, pose_j, intr_j) {}
 
-gtsam::Vector WheelFactor4Intrinsics::evaluateError(const gtsam::Pose3 &pose_i, const gtsam::Vector3 &intr_i,
+gtsam::Vector WheelFactor4::evaluateError(const gtsam::Pose3 &pose_i, const gtsam::Vector3 &intr_i,
                                                     const gtsam::Pose3 &pose_j, const gtsam::Vector3 &intr_j,
                                                     boost::optional<gtsam::Matrix &> H1,
                                                     boost::optional<gtsam::Matrix &> H2,
@@ -212,13 +212,13 @@ gtsam::Vector WheelFactor4Intrinsics::evaluateError(const gtsam::Pose3 &pose_i, 
     return e;
 }
 
-gtsam::Pose3 WheelFactor4Intrinsics::predict(const gtsam::Pose3 &x_i, const gtsam::Vector3 &intr) const {
+gtsam::Pose3 WheelFactor4::predict(const gtsam::Pose3 &x_i, const gtsam::Vector3 &intr) const {
     gtsam::Pose3 predict = pwm_->predict(x_i.compose(body_T_sensor_), intr);
     return predict * body_T_sensor_.inverse();
 }
 
-void WheelFactor4Intrinsics::print(const std::string &s, const gtsam::KeyFormatter &keyFormatter) const {
-    std::cout << s << "WheelFactor4Intrinsics(" << keyFormatter(this->key1()) << "," << keyFormatter(this->key2())
+void WheelFactor4::print(const std::string &s, const gtsam::KeyFormatter &keyFormatter) const {
+    std::cout << s << "WheelFactor4(" << keyFormatter(this->key1()) << "," << keyFormatter(this->key2())
               << "," << keyFormatter(this->key3()) << "," << keyFormatter(this->key4()) << ")\n"
               << " measured: " << pwm_->preint().transpose() << "\n";
     this->noiseModel_->print("  noise model: ");

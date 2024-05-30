@@ -307,7 +307,7 @@ TEST(Jacobians, Wheel4Factor_Cov) {
     gtsam::Pose3 x1 = gtsam::Pose3(gtsam::Rot3::RzRyRx(1, 2, 3), {1, 2, 3});
     gtsam::Vector3 intr_i = gtsam::Vector3(3.1, 0.2, 0.2);
     gtsam::Vector3 intr_j = pwm_params->intrinsics;
-    WheelFactor4Intrinsics factor(X(0), I(0), X(1), I(1), pwm.copy(), b_T_s);
+    WheelFactor4 factor(X(0), I(0), X(1), I(1), pwm.copy(), b_T_s);
 
     // Setup lambda
     std::function<gtsam::Vector(const gtsam::Pose3 &, const gtsam::Vector3 &, const gtsam::Pose3 &,

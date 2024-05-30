@@ -296,7 +296,7 @@ nlohmann::json serializeWheelFactor3(std::string tag, PWSerializer pwser,
     return output;
 }
 
-gtsam::NonlinearFactor::shared_ptr parseWheelFactor4Intrinsics(const nlohmann::json &input_json,
+gtsam::NonlinearFactor::shared_ptr parseWheelFactor4(const nlohmann::json &input_json,
                                                                       PWParser pwparser) {
     // Get all required fields
     uint64_t key1 = input_json["key1"].get<uint64_t>();
@@ -306,15 +306,15 @@ gtsam::NonlinearFactor::shared_ptr parseWheelFactor4Intrinsics(const nlohmann::j
     PreintegratedWheelBase::shared_ptr pwm = pwparser(input_json);
     gtsam::Pose3 body_T_sensor = jrl::io_values::parse<gtsam::Pose3>(input_json["body_T_sensor"]);
 
-    typename WheelFactor4Intrinsics::shared_ptr factor =
-        boost::make_shared<WheelFactor4Intrinsics>(key1, key2, key3, key4, pwm, body_T_sensor);
+    typename WheelFactor4::shared_ptr factor =
+        boost::make_shared<WheelFactor4>(key1, key2, key3, key4, pwm, body_T_sensor);
     return factor;
 }
 
-nlohmann::json serializeWheelFactor4Intrinsics(std::string tag, PWSerializer pwser,
+nlohmann::json serializeWheelFactor4(std::string tag, PWSerializer pwser,
                                                       gtsam::NonlinearFactor::shared_ptr factor) {
-    typename WheelFactor4Intrinsics::shared_ptr wheelFactor =
-        boost::dynamic_pointer_cast<WheelFactor4Intrinsics>(factor);
+    typename WheelFactor4::shared_ptr wheelFactor =
+        boost::dynamic_pointer_cast<WheelFactor4>(factor);
     json output = pwser(wheelFactor->pwm());
     output["key1"] = wheelFactor->keys()[0];
     output["key2"] = wheelFactor->keys()[1];

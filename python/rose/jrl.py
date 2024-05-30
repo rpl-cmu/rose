@@ -5,12 +5,20 @@ import jrl
 from rose.rose_python import (
     IMUBiasTag,
     StereoPoint2Tag,
-    CombinedIMUTag,
     StereoFactorPose3Point3Tag,
+    CombinedIMUTag,
+    PriorFactorIMUBiasTag,
+    WheelRoseTag,
+    WheelRoseSlipTag,
+    WheelRoseIntrTag,
+    WheelRoseIntrSlipTag,
+    WheelBaselineTag,
+    PlanarPriorTag,
+    ZPriorTag,
     makeRoseParser,
     makeRoseWriter,
-    computeATEPose3,
     computeATEPose2,
+    computeATEPose3,
 )
 
 

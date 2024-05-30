@@ -3,12 +3,6 @@ import numpy as np
 import pandas as pd
 import rose.plot as plot
 import seaborn as sns
-from rose.rose_python import (
-    WheelRoseIntrSlipTag,
-    WheelRoseSlipTag,
-    WheelRoseTag,
-    WheelBaselineTag,
-)
 
 
 def plot_bars(file):

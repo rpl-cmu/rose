@@ -109,13 +109,13 @@ PYBIND11_MODULE(rose_python, m) {
         .def("pwm", &WheelFactor3::pwm)
         .def("predict", &WheelFactor3::predict);
 
-    py::class_<WheelFactor4Intrinsics, gtsam::NoiseModelFactor, boost::shared_ptr<WheelFactor4Intrinsics>>(
-        m, "WheelFactor4Intrinsics")
+    py::class_<WheelFactor4, gtsam::NoiseModelFactor, boost::shared_ptr<WheelFactor4>>(
+        m, "WheelFactor4")
         .def(py::init<gtsam::Key, gtsam::Key, gtsam::Key, gtsam::Key, boost::shared_ptr<PreintegratedWheelBase>,
                       gtsam::Pose3>(),
              "x_i"_a, "i_i"_a, "x_j"_a, "i_j"_a, "pwm"_a, "body_T_sensor"_a = gtsam::Pose3::Identity())
-        .def("pwm", &WheelFactor4Intrinsics::pwm)
-        .def("predict", &WheelFactor4Intrinsics::predict);
+        .def("pwm", &WheelFactor4::pwm)
+        .def("predict", &WheelFactor4::predict);
 
     py::class_<WheelFactor5, gtsam::NoiseModelFactor, boost::shared_ptr<WheelFactor5>>(m, "WheelFactor5")
         .def(py::init<gtsam::Key, gtsam::Key, gtsam::Key, gtsam::Key, gtsam::Key,

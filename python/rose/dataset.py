@@ -17,28 +17,18 @@ from rose.jrl import (
     makeRoseWriter,
     values2results,
     values2typedvalues,
-)
-from rose.rose_python import (
     CombinedIMUTag,
-    PlanarPriorFactor,
     PlanarPriorTag,
-    PriorFactorIMUBiasTag,
-    PreintegratedWheelRose,
-    PreintegratedWheelBaseline,
-    PreintegratedWheelParams,
-    StereoFactorPose3Point3Tag,
     WheelRoseIntrSlipTag,
     WheelRoseIntrTag,
     WheelRoseSlipTag,
     WheelRoseTag,
     WheelBaselineTag,
-    WheelFactor2,
-    WheelFactor3,
-    WheelFactor4Intrinsics,
-    WheelFactor5,
-    ZPriorFactor,
+    StereoFactorPose3Point3Tag,
+    PriorFactorIMUBiasTag,
     ZPriorTag,
 )
+import rose
 from tqdm import tqdm
 
 STEREO_MATCHER = cv2.StereoSGBM_create(
@@ -135,7 +125,7 @@ class WheelNoise(BaseNoise):
     sig_intr_prior_radius: float = 1e-2
 
     def gtsam(self, intrinsics: WheelIntrinsics):
-        pwmParams = PreintegratedWheelParams()
+        pwmParams = rose.PreintegratedWheelParams()
 
         pwmParams.intrinsics = intrinsics.vector()
         pwmParams.setWVCovFromWheel(
@@ -1019,22 +1009,26 @@ class Dataset2JRL:
         data.interp(self.stamps)
 
         allPWMs = [
-            PreintegratedWheelBaseline(pwmParamsBaseline),
-            PreintegratedWheelRose(pwmParams),
-            PreintegratedWheelRose(pwmParams),
-            PreintegratedWheelRose(pwmParams),
-            PreintegratedWheelRose(pwmParams),
+            rose.PreintegratedWheelBaseline(pwmParamsBaseline),
+            rose.PreintegratedWheelRose(pwmParams),
+            rose.PreintegratedWheelRose(pwmParams),
+            rose.PreintegratedWheelRose(pwmParams),
+            rose.PreintegratedWheelRose(pwmParams),
         ]
         pwmFactors = [
-            lambda i, pwm: WheelFactor2(X(i - 1), X(i), pwm.copy(), data.extrinsics),
-            lambda i, pwm: WheelFactor2(X(i - 1), X(i), pwm.copy(), data.extrinsics),
-            lambda i, pwm: WheelFactor3(
+            lambda i, pwm: rose.WheelFactor2(
+                X(i - 1), X(i), pwm.copy(), data.extrinsics
+            ),
+            lambda i, pwm: rose.WheelFactor2(
+                X(i - 1), X(i), pwm.copy(), data.extrinsics
+            ),
+            lambda i, pwm: rose.WheelFactor3(
                 X(i - 1), X(i), S(i), pwm.copy(), data.extrinsics
             ),
-            lambda i, pwm: WheelFactor4Intrinsics(
+            lambda i, pwm: rose.WheelFactor4(
                 X(i - 1), I(i - 1), X(i), I(i), pwm.copy(), data.extrinsics
             ),
-            lambda i, pwm: WheelFactor5(
+            lambda i, pwm: rose.WheelFactor5(
                 X(i - 1), I(i - 1), X(i), I(i), S(i), pwm.copy(), data.extrinsics
             ),
         ]
@@ -1101,12 +1095,14 @@ class Dataset2JRL:
                 break
 
             # RP Prior Factor
-            planar = PlanarPriorFactor(X(i), np.eye(2) * data.noise.sig_rp_prior**2)
+            planar = rose.PlanarPriorFactor(
+                X(i), np.eye(2) * data.noise.sig_rp_prior**2
+            )
             self.factor_graphs[i].push_back(planar)
             self.factor_tags[i].append(PlanarPriorTag)
 
             # Z Prior Factor
-            z = ZPriorFactor(X(i), np.eye(1) * data.noise.sig_z_prior**2)
+            z = rose.ZPriorFactor(X(i), np.eye(1) * data.noise.sig_z_prior**2)
             self.factor_graphs[i].push_back(z)
             self.factor_tags[i].append(ZPriorTag)
 

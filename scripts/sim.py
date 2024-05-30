@@ -1,17 +1,9 @@
 import gtsam
 import jrl
-import matplotlib.pyplot as plt
 import numpy as np
-import pandas as pd
-import rose.plot
-import seaborn as sns
-import sympy as sy
-from gtsam.symbol_shorthand import B, I, L, S
-from rose.dataset import Dataset2JRL, Sensor, WheelNoise
-from rose.jrl import values2results
-from rose.rose_python import (
-    PriorFactorIMUBiasTag,
-    CombinedIMUTag,
+from rose.dataset import Dataset2JRL, Sensor
+from rose.jrl import (
+    values2results,
     StereoFactorPose3Point3Tag,
     PlanarPriorTag,
     WheelRoseIntrSlipTag,
@@ -20,11 +12,11 @@ from rose.rose_python import (
     WheelRoseTag,
     WheelBaselineTag,
     ZPriorTag,
-    makeFrontend,
+    makeRoseWriter,
 )
-from rose.sim import SimParameters, Simulation, symp
+import rose
+from rose.sim import SimParameters, Simulation
 from tabulate import tabulate
-from tqdm import tqdm, trange
 
 np.set_printoptions(suppress=False, precision=3)
 
@@ -68,7 +60,7 @@ if __name__ == "__main__":
     dataset.add_factors(Sensor.FEAT)
     gt = dataset.get_ground_truth()
 
-    writer = rose.rose_python.makeRoseWriter()
+    writer = makeRoseWriter()
     writer.writeResults(values2results(gt), "figures/data/GT.jrr", False)
 
     traj = {"GT": dataset.traj[Sensor.GT], "Wheel": dataset.traj[Sensor.WHEEL]}
@@ -108,7 +100,7 @@ if __name__ == "__main__":
         if WheelRoseIntrSlipTag in sensors:
             sensors.append(jrl.PriorFactorPoint2Tag)
             sensors.append(jrl.PriorFactorPoint3Tag)
-        frontend = makeFrontend(kf=5)
+        frontend = rose.makeFrontend(kf=5)
         sol = frontend.run(
             dataset.to_dataset(), sensors, f"figures/data/{tag}.jrr", 0, False
         )

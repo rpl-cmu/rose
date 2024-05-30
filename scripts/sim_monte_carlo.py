@@ -4,10 +4,8 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 import rose.plot
-import seaborn as sns
-import sympy as sy
 from rose.dataset import Dataset2JRL, Sensor
-from rose.rose_python import (
+from rose.jrl import (
     PriorFactorIMUBiasTag,
     CombinedIMUTag,
     StereoFactorPose3Point3Tag,
@@ -18,10 +16,10 @@ from rose.rose_python import (
     WheelRoseTag,
     WheelBaselineTag,
     ZPriorTag,
-    makeFrontend,
 )
-from rose.sim import SimParameters, Simulation, symp
-from tqdm import tqdm, trange
+from rose import makeFrontend
+from rose.sim import SimParameters, Simulation
+from tqdm import trange
 
 
 def compute_traj_length(values: gtsam.Values):

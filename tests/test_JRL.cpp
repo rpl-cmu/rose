@@ -137,7 +137,7 @@ TEST(JRL, WheelRose4) {
     auto pwm_params = PreintegratedWheelParams::MakeShared();
     PreintegratedWheelRose pwm(pwm_params);
     pwm.integrateMeasurements(wl, wr, dt);
-    WheelFactor4Intrinsics write_factor(X(0), I(0), X(1), I(1), pwm.copy(), b_T_w);
+    WheelFactor4 write_factor(X(0), I(0), X(1), I(1), pwm.copy(), b_T_w);
 
     // Save it
     gtsam::NonlinearFactorGraph graph;
@@ -152,8 +152,8 @@ TEST(JRL, WheelRose4) {
     // Load it back in!
     jrl::Parser parser = jrl_rose::makeRoseParser();
     jrl::Dataset dataset = parser.parseDataset("wheel_rose_intr.jrl");
-    WheelFactor4Intrinsics::shared_ptr read_factor =
-        boost::dynamic_pointer_cast<WheelFactor4Intrinsics>(dataset.factorGraph('a')[0]);
+    WheelFactor4::shared_ptr read_factor =
+        boost::dynamic_pointer_cast<WheelFactor4>(dataset.factorGraph('a')[0]);
     EXPECT_MATRICES_EQ(write_factor.evaluateError(x0, intr, x1, intr), read_factor->evaluateError(x0, intr, x1, intr));
 }
 

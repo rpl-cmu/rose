@@ -8,9 +8,9 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 import seaborn as sns
-from gtsam.symbol_shorthand import B, I, M, S, V, X
+from gtsam.symbol_shorthand import B, I, S, V, X
 from matplotlib.lines import Line2D
-from rose.rose_python import WheelRoseIntrSlipTag, WheelRoseTag, WheelBaselineTag
+from rose.jrl import WheelRoseIntrSlipTag, WheelRoseTag, WheelBaselineTag
 
 
 # https://stackoverflow.com/a/43343934

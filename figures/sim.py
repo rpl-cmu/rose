@@ -1,13 +1,9 @@
 from pathlib import Path
 
-import jrl
 import matplotlib.pyplot as plt
 import rose.jrl
 import rose.plot as plot
-import seaborn as sns
 from matplotlib.patches import ConnectionPatch, Rectangle
-from mpl_toolkits.axes_grid1.inset_locator import mark_inset
-from rose.rose_python import WheelRoseIntrSlipTag
 
 
 # https://stackoverflow.com/a/73308476

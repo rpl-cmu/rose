@@ -223,20 +223,20 @@ class WheelFactor3 : public gtsam::NoiseModelFactor3<gtsam::Pose3, gtsam::Pose3,
     gtsam::Pose3 predict(const gtsam::Pose3 &, const gtsam::Vector2 &) const;
 };
 
-class WheelFactor4Intrinsics
+class WheelFactor4
     : public gtsam::NoiseModelFactor4<gtsam::Pose3, gtsam::Vector3, gtsam::Pose3, gtsam::Vector3> {
   private:
     PreintegratedWheelBase::shared_ptr pwm_;
     gtsam::Pose3 body_T_sensor_;
 
-    typedef WheelFactor4Intrinsics This;
+    typedef WheelFactor4 This;
     typedef gtsam::NoiseModelFactor4<gtsam::Pose3, gtsam::Vector3, gtsam::Pose3, gtsam::Vector3> Base;
 
   public:
     // shorthand for a smart pointer to a factor
-    typedef typename boost::shared_ptr<WheelFactor4Intrinsics> shared_ptr;
+    typedef typename boost::shared_ptr<WheelFactor4> shared_ptr;
 
-    WheelFactor4Intrinsics(gtsam::Key pose_i, gtsam::Key intr_i, gtsam::Key pose_j, gtsam::Key intr_j,
+    WheelFactor4(gtsam::Key pose_i, gtsam::Key intr_i, gtsam::Key pose_j, gtsam::Key intr_j,
                            PreintegratedWheelBase::shared_ptr pwm,
                            gtsam::Pose3 body_T_sensor = gtsam::Pose3::Identity());
 

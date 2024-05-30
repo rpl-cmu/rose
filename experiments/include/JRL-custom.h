@@ -93,10 +93,10 @@ gtsam::NonlinearFactor::shared_ptr parseWheelFactor3(const nlohmann::json &input
 nlohmann::json serializeWheelFactor3(std::string tag, PWSerializer pwser,
                                             gtsam::NonlinearFactor::shared_ptr factor);
 
-gtsam::NonlinearFactor::shared_ptr parseWheelFactor4Intrinsics(const nlohmann::json &input_json,
+gtsam::NonlinearFactor::shared_ptr parseWheelFactor4(const nlohmann::json &input_json,
                                                                       PWParser pwparser);
 
-nlohmann::json serializeWheelFactor4Intrinsics(std::string tag, PWSerializer pwser,
+nlohmann::json serializeWheelFactor4(std::string tag, PWSerializer pwser,
                                                       gtsam::NonlinearFactor::shared_ptr factor);
 
 gtsam::NonlinearFactor::shared_ptr parseWheelFactor5(const nlohmann::json &input_json, PWParser pwparser);
