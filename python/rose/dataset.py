@@ -411,7 +411,7 @@ class StereoPic:
                     k
                     for k in kps
                     if (
-                        self.disparity[int(k.pt[1]) + row, int(k.pt[0]) + col] > 2
+                        self.disparity[int(k.pt[1]) + row, int(k.pt[0]) + col] >= 2
                         and self.mask[int(k.pt[1]) + row, int(k.pt[0]) + col]
                     )
                 ]
@@ -522,6 +522,8 @@ class StereoPic:
             ),
         )
         nextPic.kps = propped_kp.squeeze()
+        if nextPic.kps.ndim == 1:
+            nextPic.kps = nextPic.kps.reshape((-1, 2))
         nextPic._reset_vec()
         st = st.flatten().astype(bool)
 
@@ -533,7 +535,7 @@ class StereoPic:
                 nextPic.kps[:, 0] < nextPic.w - FEATURE_BORDER,
                 FEATURE_BORDER < nextPic.kps[:, 1],
                 nextPic.kps[:, 1] < nextPic.h - FEATURE_BORDER,
-                nextPic.kpdisparity > 2,
+                nextPic.kpdisparity >= 2,
                 self.kpmask,
             )
         )
@@ -541,6 +543,8 @@ class StereoPic:
 
         # Store everything
         nextPic.kps = nextPic.kps[good_propped_feat]
+        if nextPic.kps.ndim == 1:
+            nextPic.kps = nextPic.kps.reshape((-1, 2))
         nextPic.ids = np.zeros(nextPic.kps.shape[0], dtype=np.uint64)
         nextPic._reset_vec()
 
@@ -833,6 +837,7 @@ class Dataset2JRL:
 
     def _prior_factor(self, use_gt_orien=False):
         prior_noise: PriorNoise = self.data.noise(Sensor.PRIOR)
+        prior_noise.sig_vel = 1e-1
 
         # GT Orientation Initialization
         if use_gt_orien:
@@ -881,7 +886,7 @@ class Dataset2JRL:
             vel0 = np.zeros(3)
 
         # TODO: Do some sort of sanity check on initial bias values
-        # print("Initial Bias: ", self.bias0)
+        print("Initial Bias: ", self.bias0)
 
         intr0 = self.data.data(Sensor.WHEEL).intrinsics.vector()
         self.factor_graphs[0].addPriorPose3(
