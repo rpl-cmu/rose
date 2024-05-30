@@ -95,4 +95,4 @@ class ZPriorFactor : public gtsam::NoiseModelFactor1<gtsam::Pose3> {
     }
 };
 
-}  // namespace rose
+} // namespace rose

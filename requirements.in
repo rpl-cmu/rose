@@ -12,3 +12,4 @@ pandas
 seaborn
 tabulate
 sympy
+pre-commit

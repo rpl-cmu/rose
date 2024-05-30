@@ -3,27 +3,27 @@
 #include <gtsam/slam/StereoFactor.h>
 #include <jrl/Dataset.h>
 #include <jrl/DatasetBuilder.h>
+#include <jrl/IOMeasurements.h>
 #include <jrl/Parser.h>
 #include <jrl/Writer.h>
-#include <jrl/IOMeasurements.h>
 
 #include "JRL-custom.h"
 #include "JRL.h"
 
 #include "gtest/gtest.h"
 
-using gtsam::symbol_shorthand::X;
 using gtsam::symbol_shorthand::L;
+using gtsam::symbol_shorthand::X;
 
-#define EXPECT_MATRICES_EQ(M_actual, M_expected) \
-  EXPECT_TRUE(M_actual.isApprox(M_expected, 1e-6)) << "  Actual:\n" << M_actual << "\nExpected:\n" << M_expected
-
+#define EXPECT_MATRICES_EQ(M_actual, M_expected)                                                                       \
+    EXPECT_TRUE(M_actual.isApprox(M_expected, 1e-6)) << "  Actual:\n" << M_actual << "\nExpected:\n" << M_expected
 
 typedef typename gtsam::GenericStereoFactor<gtsam::Pose3, gtsam::Point3> StereoFactor;
 
-TEST(Factor, StereoFactor){
+TEST(Factor, StereoFactor) {
     // Make everything for the stereo factor
-    gtsam::Cal3_S2Stereo::shared_ptr m_stereoCalibration = boost::make_shared<gtsam::Cal3_S2Stereo>(6, 8, 0.0, 3, 4, 0.1);
+    gtsam::Cal3_S2Stereo::shared_ptr m_stereoCalibration =
+        boost::make_shared<gtsam::Cal3_S2Stereo>(6, 8, 0.0, 3, 4, 0.1);
     auto m_stereoNoiseModel = gtsam::noiseModel::Isotropic::Sigma(3, 1);
     gtsam::Symbol landmarkKey = L(0);
     gtsam::Symbol poseKey = X(0);
@@ -33,7 +33,7 @@ TEST(Factor, StereoFactor){
 
     StereoFactor write_factor(stereoPoint, m_stereoNoiseModel, poseKey, landmarkKey, m_stereoCalibration);
 
-    // Save it 
+    // Save it
     gtsam::NonlinearFactorGraph graph;
     graph.push_back(write_factor);
 
@@ -47,7 +47,6 @@ TEST(Factor, StereoFactor){
     jrl::Parser parser = jrl_rose::makeRoseParser();
     jrl::Dataset dataset = parser.parseDataset("stereo.jrl");
     StereoFactor::shared_ptr read_factor = boost::dynamic_pointer_cast<StereoFactor>(dataset.factorGraph()[0]);
-
 
     gtsam::Pose3 x0 = gtsam::Pose3::Identity();
     gtsam::Point3 l0(3, 2, 1);

@@ -251,7 +251,9 @@ class KaistDataset(Dataset):
             )
 
     @functools.cache
-    def noise(self, sensor: Sensor) -> Union[
+    def noise(
+        self, sensor: Sensor
+    ) -> Union[
         gtsam.PreintegratedCombinedMeasurements,
         gtsam.noiseModel.Base,
         PreintegratedWheelParams,

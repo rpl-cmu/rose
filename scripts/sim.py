@@ -3,20 +3,21 @@ import jrl
 import numpy as np
 from rose.dataset import Dataset2JRL, Sensor
 from rose.jrl import (
-    values2results,
-    StereoFactorPose3Point3Tag,
     PlanarPriorTag,
+    StereoFactorPose3Point3Tag,
+    WheelBaselineTag,
     WheelRoseIntrSlipTag,
     WheelRoseIntrTag,
     WheelRoseSlipTag,
     WheelRoseTag,
-    WheelBaselineTag,
     ZPriorTag,
     makeRoseWriter,
+    values2results,
 )
-import rose
 from rose.sim import SimParameters, Simulation
 from tabulate import tabulate
+
+import rose
 
 np.set_printoptions(suppress=False, precision=3)
 

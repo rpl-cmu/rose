@@ -6,15 +6,15 @@
 
 #include "gtsam/base/types.h"
 #include <gtsam/geometry/StereoPoint2.h>
-#include <gtsam/navigation/ImuBias.h>
 #include <gtsam/navigation/CombinedImuFactor.h>
+#include <gtsam/navigation/ImuBias.h>
 #include <gtsam/slam/StereoFactor.h>
 
 #include "rose/PlanarPriorFactor.h"
-#include "rose/ZPriorFactor.h"
 #include "rose/WheelBaseline.h"
 #include "rose/WheelFactorBase.h"
 #include "rose/WheelRose.h"
+#include "rose/ZPriorFactor.h"
 
 using namespace rose;
 
@@ -38,17 +38,17 @@ static const std::string WheelRoseIntrSlipTag = "WheelRoseIntrinsicsSlip";
 
 // ------------------------- Values ------------------------- //
 // StereoPoint2
-gtsam::StereoPoint2 parseStereoPoint2(const json& input_json);
+gtsam::StereoPoint2 parseStereoPoint2(const json &input_json);
 
 json serializeStereoPoint2(gtsam::StereoPoint2 point);
 
 // ConstantBias
-gtsam::imuBias::ConstantBias parseIMUBias(const json& input_json);
+gtsam::imuBias::ConstantBias parseIMUBias(const json &input_json);
 
 json serializeIMUBias(gtsam::imuBias::ConstantBias point);
 
 // ------------------------- Matrices ------------------------- //
-gtsam::Matrix parseMatrix(const json& input_json, int row, int col);
+gtsam::Matrix parseMatrix(const json &input_json, int row, int col);
 
 json serializeMatrix(gtsam::Matrix mat);
 
@@ -57,14 +57,14 @@ gtsam::Matrix parseCovariance(json input_json, int d);
 json serializeCovariance(gtsam::Matrix covariance);
 
 // ------------------------- IMUFactor ------------------------- //
-gtsam::NonlinearFactor::shared_ptr parseCombinedIMUFactor(const json& input_json);
+gtsam::NonlinearFactor::shared_ptr parseCombinedIMUFactor(const json &input_json);
 
-json serializeCombinedIMUFactor(std::string type_tag, gtsam::NonlinearFactor::shared_ptr& factor);
+json serializeCombinedIMUFactor(std::string type_tag, gtsam::NonlinearFactor::shared_ptr &factor);
 
 // ------------------------- StereoFactor ------------------------- //
-gtsam::NonlinearFactor::shared_ptr parseStereoFactor(const json& input_json);
+gtsam::NonlinearFactor::shared_ptr parseStereoFactor(const json &input_json);
 
-json serializeStereoFactor(std::string type_tag, gtsam::NonlinearFactor::shared_ptr& factor);
+json serializeStereoFactor(std::string type_tag, gtsam::NonlinearFactor::shared_ptr &factor);
 
 // ------------------------- PlanarPrior ------------------------- //
 gtsam::NonlinearFactor::shared_ptr parsePlanarPriorFactor(const nlohmann::json &input_json);
@@ -85,24 +85,19 @@ nlohmann::json serializePWBase(PreintegratedWheelBase::shared_ptr pwm);
 
 gtsam::NonlinearFactor::shared_ptr parseWheelFactor2(const nlohmann::json &input_json, PWParser pwparser);
 
-nlohmann::json serializeWheelFactor2(std::string tag, PWSerializer pwser,
-                                            gtsam::NonlinearFactor::shared_ptr factor);
+nlohmann::json serializeWheelFactor2(std::string tag, PWSerializer pwser, gtsam::NonlinearFactor::shared_ptr factor);
 
 gtsam::NonlinearFactor::shared_ptr parseWheelFactor3(const nlohmann::json &input_json, PWParser pwparser);
 
-nlohmann::json serializeWheelFactor3(std::string tag, PWSerializer pwser,
-                                            gtsam::NonlinearFactor::shared_ptr factor);
+nlohmann::json serializeWheelFactor3(std::string tag, PWSerializer pwser, gtsam::NonlinearFactor::shared_ptr factor);
 
-gtsam::NonlinearFactor::shared_ptr parseWheelFactor4(const nlohmann::json &input_json,
-                                                                      PWParser pwparser);
+gtsam::NonlinearFactor::shared_ptr parseWheelFactor4(const nlohmann::json &input_json, PWParser pwparser);
 
-nlohmann::json serializeWheelFactor4(std::string tag, PWSerializer pwser,
-                                                      gtsam::NonlinearFactor::shared_ptr factor);
+nlohmann::json serializeWheelFactor4(std::string tag, PWSerializer pwser, gtsam::NonlinearFactor::shared_ptr factor);
 
 gtsam::NonlinearFactor::shared_ptr parseWheelFactor5(const nlohmann::json &input_json, PWParser pwparser);
 
-nlohmann::json serializeWheelFactor5(std::string tag, PWSerializer pwser,
-                                            gtsam::NonlinearFactor::shared_ptr factor);
+nlohmann::json serializeWheelFactor5(std::string tag, PWSerializer pwser, gtsam::NonlinearFactor::shared_ptr factor);
 
 // ------------------------- Baseline ------------------------- //
 PreintegratedWheelBase::shared_ptr parsePWMBaseline(nlohmann::json input_json);
@@ -112,28 +107,28 @@ PreintegratedWheelRose::shared_ptr parsePWMRose(const nlohmann::json &input_json
 
 nlohmann::json serializePWMRose(PreintegratedWheelBase::shared_ptr pwm);
 
-
 // ------------------------- Metrics ------------------------- //
 template <class POSE_TYPE>
-std::pair<double, double> computeATE(gtsam::Values ref, gtsam::Values est, bool align=false, bool align_with_scale=false){
-  est = est.filter<POSE_TYPE>();
-  if (align) {
-    est = jrl::alignment::align<POSE_TYPE>(est, ref, align_with_scale);
-  }
+std::pair<double, double> computeATE(gtsam::Values ref, gtsam::Values est, bool align = false,
+                                     bool align_with_scale = false) {
+    est = est.filter<POSE_TYPE>();
+    if (align) {
+        est = jrl::alignment::align<POSE_TYPE>(est, ref, align_with_scale);
+    }
 
-  double squared_translation_error = 0.0;
-  double squared_rotation_error = 0.0;
-  for (auto& key : est.keys()) {
-    std::pair<double, double> squared_pose_error =
-        jrl::metrics::internal::squaredPoseError<POSE_TYPE>(est.at<POSE_TYPE>(key), ref.at<POSE_TYPE>(key));
+    double squared_translation_error = 0.0;
+    double squared_rotation_error = 0.0;
+    for (auto &key : est.keys()) {
+        std::pair<double, double> squared_pose_error =
+            jrl::metrics::internal::squaredPoseError<POSE_TYPE>(est.at<POSE_TYPE>(key), ref.at<POSE_TYPE>(key));
 
-    squared_translation_error += squared_pose_error.first;
-    squared_rotation_error += squared_pose_error.second;
-  }
+        squared_translation_error += squared_pose_error.first;
+        squared_rotation_error += squared_pose_error.second;
+    }
 
-  // Return the RMSE of the pose errors
-  return std::make_pair(std::sqrt(squared_translation_error / est.size()),
-                        std::sqrt(squared_rotation_error / est.size()));
+    // Return the RMSE of the pose errors
+    return std::make_pair(std::sqrt(squared_translation_error / est.size()),
+                          std::sqrt(squared_rotation_error / est.size()));
 }
 
-}
+} // namespace jrl_rose

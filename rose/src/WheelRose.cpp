@@ -9,7 +9,7 @@ PreintegratedWheelRose::PreintegratedWheelRose(const boost::shared_ptr<Preintegr
 }
 
 PreintegratedWheelRose::PreintegratedWheelRose(Base base, gtsam::Matrix62 H_slip, gtsam::Matrix63 H_intr,
-                                             gtsam::Vector3 intr_est)
+                                               gtsam::Vector3 intr_est)
     : Base(base), H_slip_(H_slip), H_intr_(H_intr), intr_est_(intr_est) {}
 
 void PreintegratedWheelRose::resetIntegration() {
@@ -70,8 +70,8 @@ gtsam::Pose3 PreintegratedWheelRose::predict(const gtsam::Pose3 &x_i, boost::opt
 }
 
 gtsam::Vector PreintegratedWheelRose::evaluateError(const gtsam::Pose3 &pose_i, const gtsam::Pose3 &pose_j,
-                                                   boost::optional<gtsam::Matrix &> H1,
-                                                   boost::optional<gtsam::Matrix &> H2) const {
+                                                    boost::optional<gtsam::Matrix &> H1,
+                                                    boost::optional<gtsam::Matrix &> H2) const {
     gtsam::Pose3 pose_j_est = predict(pose_i, H1);
     gtsam::Matrix H1_comp;
     gtsam::Vector error = pose_j_est.localCoordinates(pose_j, H1_comp, H2);
@@ -84,8 +84,8 @@ gtsam::Vector PreintegratedWheelRose::evaluateError(const gtsam::Pose3 &pose_i, 
 
 // ------------------------- For WheelFactor3 ------------------------- //
 gtsam::Pose3 PreintegratedWheelRose::predict(const gtsam::Pose3 &x_i, const gtsam::Vector2 &slip,
-                                            boost::optional<gtsam::Matrix &> H1,
-                                            boost::optional<gtsam::Matrix &> H2) const {
+                                             boost::optional<gtsam::Matrix &> H1,
+                                             boost::optional<gtsam::Matrix &> H2) const {
 
     gtsam::Matrix H_comp, H_exp;
 
@@ -101,9 +101,9 @@ gtsam::Pose3 PreintegratedWheelRose::predict(const gtsam::Pose3 &x_i, const gtsa
 }
 
 gtsam::Vector PreintegratedWheelRose::evaluateError(const gtsam::Pose3 &pose_i, const gtsam::Vector2 &slip,
-                                                   const gtsam::Pose3 &pose_j, boost::optional<gtsam::Matrix &> H1,
-                                                   boost::optional<gtsam::Matrix &> H2,
-                                                   boost::optional<gtsam::Matrix &> H3) const {
+                                                    const gtsam::Pose3 &pose_j, boost::optional<gtsam::Matrix &> H1,
+                                                    boost::optional<gtsam::Matrix &> H2,
+                                                    boost::optional<gtsam::Matrix &> H3) const {
     gtsam::Matrix H1_comp;
 
     gtsam::Pose3 pose_j_est = predict(pose_i, slip, H1, H2);
@@ -121,8 +121,8 @@ gtsam::Vector PreintegratedWheelRose::evaluateError(const gtsam::Pose3 &pose_i, 
 
 // ------------------------- For WheelFactor4 ------------------------- //
 gtsam::Pose3 PreintegratedWheelRose::predict(const gtsam::Pose3 &x_i, const gtsam::Vector3 &intr,
-                                            boost::optional<gtsam::Matrix &> H1,
-                                            boost::optional<gtsam::Matrix &> H2) const {
+                                             boost::optional<gtsam::Matrix &> H1,
+                                             boost::optional<gtsam::Matrix &> H2) const {
     gtsam::Matrix H_comp, H_exp;
 
     gtsam::Vector6 preintCorr = preint_ + H_intr_ * (intr - intr_est_);
@@ -137,11 +137,11 @@ gtsam::Pose3 PreintegratedWheelRose::predict(const gtsam::Pose3 &x_i, const gtsa
 }
 
 gtsam::Vector PreintegratedWheelRose::evaluateError(const gtsam::Pose3 &pose_i, const gtsam::Vector3 &intr_i,
-                                                   const gtsam::Pose3 &pose_j, const gtsam::Vector3 &intr_j,
-                                                   boost::optional<gtsam::Matrix &> H1,
-                                                   boost::optional<gtsam::Matrix &> H2,
-                                                   boost::optional<gtsam::Matrix &> H3,
-                                                   boost::optional<gtsam::Matrix &> H4) const {
+                                                    const gtsam::Pose3 &pose_j, const gtsam::Vector3 &intr_j,
+                                                    boost::optional<gtsam::Matrix &> H1,
+                                                    boost::optional<gtsam::Matrix &> H2,
+                                                    boost::optional<gtsam::Matrix &> H3,
+                                                    boost::optional<gtsam::Matrix &> H4) const {
     gtsam::Matrix H1_comp;
 
     gtsam::Vector9 error;
@@ -186,9 +186,9 @@ gtsam::Vector PreintegratedWheelRose::evaluateError(const gtsam::Pose3 &pose_i, 
 
 // ------------------------- For WheelFactor5 ------------------------- //
 gtsam::Pose3 PreintegratedWheelRose::predict(const gtsam::Pose3 &x_i, const gtsam::Vector3 &intr,
-                                            const gtsam::Vector2 &slip, boost::optional<gtsam::Matrix &> H1,
-                                            boost::optional<gtsam::Matrix &> H2,
-                                            boost::optional<gtsam::Matrix &> H3) const {
+                                             const gtsam::Vector2 &slip, boost::optional<gtsam::Matrix &> H1,
+                                             boost::optional<gtsam::Matrix &> H2,
+                                             boost::optional<gtsam::Matrix &> H3) const {
     gtsam::Matrix H_comp, H_exp;
 
     gtsam::Vector6 preintCorr = preint_ + H_intr_ * (intr - intr_est_) - H_slip_ * slip;
@@ -206,12 +206,12 @@ gtsam::Pose3 PreintegratedWheelRose::predict(const gtsam::Pose3 &x_i, const gtsa
 }
 
 gtsam::Vector PreintegratedWheelRose::evaluateError(const gtsam::Pose3 &pose_i, const gtsam::Vector3 &intr_i,
-                                                   const gtsam::Pose3 &pose_j, const gtsam::Vector3 &intr_j,
-                                                   const gtsam::Vector2 &slip, boost::optional<gtsam::Matrix &> H1,
-                                                   boost::optional<gtsam::Matrix &> H2,
-                                                   boost::optional<gtsam::Matrix &> H3,
-                                                   boost::optional<gtsam::Matrix &> H4,
-                                                   boost::optional<gtsam::Matrix &> H5) const {
+                                                    const gtsam::Pose3 &pose_j, const gtsam::Vector3 &intr_j,
+                                                    const gtsam::Vector2 &slip, boost::optional<gtsam::Matrix &> H1,
+                                                    boost::optional<gtsam::Matrix &> H2,
+                                                    boost::optional<gtsam::Matrix &> H3,
+                                                    boost::optional<gtsam::Matrix &> H4,
+                                                    boost::optional<gtsam::Matrix &> H5) const {
     gtsam::Matrix H1_comp;
 
     gtsam::Vector9 error;

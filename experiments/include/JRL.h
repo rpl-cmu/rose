@@ -13,13 +13,12 @@
 
 #include "JRL-custom.h"
 
-
 // ------------------------- Register Custom Options ------------------------- //
 namespace jrl_rose {
-    inline jrl::Parser makeRoseParser() {
-        jrl::Parser parser;
+inline jrl::Parser makeRoseParser() {
+    jrl::Parser parser;
 
-        // clang-format off
+    // clang-format off
         parser.registerMeasurementParser(WheelRoseTag,         [](const json& input){ return parseWheelFactor2(input, parsePWMRose); });
         parser.registerMeasurementParser(WheelRoseSlipTag,     [](const json& input){ return parseWheelFactor3(input, parsePWMRose); });
         parser.registerMeasurementParser(WheelRoseIntrTag,     [](const json& input){ return parseWheelFactor4(input, parsePWMRose); });
@@ -35,15 +34,15 @@ namespace jrl_rose {
         parser.registerMeasurementParser(PriorFactorIMUBiasTag,      [](const json& input) { return jrl::io_measurements::parsePrior<gtsam::imuBias::ConstantBias>(&parseIMUBias, input); });
         parser.registerValueParser(IMUBiasTag,      [](const json& input, gtsam::Key key, gtsam::Values& accum) { return jrl::io_values::valueAccumulator<gtsam::imuBias::ConstantBias>(&parseIMUBias, input, key, accum); });
         parser.registerValueParser(StereoPoint2Tag, [](const json& input, gtsam::Key key, gtsam::Values& accum) { return jrl::io_values::valueAccumulator<gtsam::StereoPoint2>(&parseStereoPoint2, input, key, accum); });
-        // clang-format on
+    // clang-format on
 
-        return parser;
-    }
+    return parser;
+}
 
-    inline jrl::Writer makeRoseWriter() {
-        jrl::Writer writer;
+inline jrl::Writer makeRoseWriter() {
+    jrl::Writer writer;
 
-        // clang-format off
+    // clang-format off
         writer.registerMeasurementSerializer(WheelRoseTag,         [](gtsam::NonlinearFactor::shared_ptr factor) { return serializeWheelFactor2(WheelRoseTag, serializePWMRose, factor); });
         writer.registerMeasurementSerializer(WheelRoseSlipTag,     [](gtsam::NonlinearFactor::shared_ptr factor) { return serializeWheelFactor3(WheelRoseSlipTag, serializePWMRose, factor); });
         writer.registerMeasurementSerializer(WheelRoseIntrTag,     [](gtsam::NonlinearFactor::shared_ptr factor) { return serializeWheelFactor4(WheelRoseIntrTag, serializePWMRose, factor); });
@@ -59,8 +58,8 @@ namespace jrl_rose {
         writer.registerMeasurementSerializer(PriorFactorIMUBiasTag,         [](gtsam::NonlinearFactor::shared_ptr& factor) { return jrl::io_measurements::serializePrior<gtsam::imuBias::ConstantBias>(&serializeIMUBias, PriorFactorIMUBiasTag, factor); });
         writer.registerValueSerializer(IMUBiasTag,      [](gtsam::Key key, gtsam::Values& vals) { return serializeIMUBias(vals.at<gtsam::imuBias::ConstantBias>(key)); });
         writer.registerValueSerializer(StereoPoint2Tag, [](gtsam::Key key, gtsam::Values& vals) { return serializeStereoPoint2(vals.at<gtsam::StereoPoint2>(key)); });
-        // clang-format on
+    // clang-format on
 
-        return writer;
-    }
+    return writer;
 }
+} // namespace jrl_rose

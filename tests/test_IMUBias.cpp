@@ -3,29 +3,28 @@
 #include <gtsam/slam/StereoFactor.h>
 #include <jrl/Dataset.h>
 #include <jrl/DatasetBuilder.h>
-#include <jrl/Parser.h>
-#include <jrl/Writer.h>
 #include <jrl/IOMeasurements.h>
+#include <jrl/Parser.h>
 #include <jrl/Types.h>
+#include <jrl/Writer.h>
 
 #include "JRL-custom.h"
 #include "JRL.h"
 
 #include "gtest/gtest.h"
 
-using gtsam::symbol_shorthand::X;
-using gtsam::symbol_shorthand::V;
 using gtsam::symbol_shorthand::B;
+using gtsam::symbol_shorthand::V;
+using gtsam::symbol_shorthand::X;
 
-#define EXPECT_MATRICES_EQ(M_actual, M_expected) \
-  EXPECT_TRUE(M_actual.isApprox(M_expected, 1e-6)) << "  Actual:\n" << M_actual << "\nExpected:\n" << M_expected
+#define EXPECT_MATRICES_EQ(M_actual, M_expected)                                                                       \
+    EXPECT_TRUE(M_actual.isApprox(M_expected, 1e-6)) << "  Actual:\n" << M_actual << "\nExpected:\n" << M_expected
 
-
-TEST(Value, IMUBias){
+TEST(Value, IMUBias) {
     // Item to save
     gtsam::imuBias::ConstantBias b(gtsam::Vector3::Constant(6), gtsam::Vector3::Constant(7));
 
-    // Save it 
+    // Save it
     gtsam::NonlinearFactorGraph graph;
     gtsam::Values theta;
     jrl::ValueTypes types;

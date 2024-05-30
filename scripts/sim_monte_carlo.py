@@ -6,20 +6,21 @@ import pandas as pd
 import rose.plot
 from rose.dataset import Dataset2JRL, Sensor
 from rose.jrl import (
-    PriorFactorIMUBiasTag,
     CombinedIMUTag,
-    StereoFactorPose3Point3Tag,
     PlanarPriorTag,
+    PriorFactorIMUBiasTag,
+    StereoFactorPose3Point3Tag,
+    WheelBaselineTag,
     WheelRoseIntrSlipTag,
     WheelRoseIntrTag,
     WheelRoseSlipTag,
     WheelRoseTag,
-    WheelBaselineTag,
     ZPriorTag,
 )
-from rose import makeFrontend
 from rose.sim import SimParameters, Simulation
 from tqdm import trange
+
+from rose import makeFrontend
 
 
 def compute_traj_length(values: gtsam.Values):

@@ -63,7 +63,7 @@ class PlanarPriorFactor : public gtsam::NoiseModelFactor1<gtsam::Pose3> {
     bool equals(const gtsam::NonlinearFactor &expected, double tol = 1e-9) const override {
         const This *e = dynamic_cast<const This *>(&expected);
         return e != nullptr && Base::equals(*e, tol) &&
-              gtsam::traits<gtsam::Pose3>::Equals(body_T_sensor_, e->body_T_sensor_, tol);
+               gtsam::traits<gtsam::Pose3>::Equals(body_T_sensor_, e->body_T_sensor_, tol);
     }
 
     /** implement functions needed to derive from Factor */
@@ -94,4 +94,4 @@ class PlanarPriorFactor : public gtsam::NoiseModelFactor1<gtsam::Pose3> {
     }
 };
 
-}
+} // namespace rose

@@ -10,7 +10,6 @@ import rosbag
 import yaml
 import yourdfpy
 from cv_bridge import CvBridge
-
 from rose.dataset import (
     CameraIntrinsics,
     CamNoise,

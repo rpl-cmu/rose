@@ -152,8 +152,7 @@ TEST(JRL, WheelRose4) {
     // Load it back in!
     jrl::Parser parser = jrl_rose::makeRoseParser();
     jrl::Dataset dataset = parser.parseDataset("wheel_rose_intr.jrl");
-    WheelFactor4::shared_ptr read_factor =
-        boost::dynamic_pointer_cast<WheelFactor4>(dataset.factorGraph('a')[0]);
+    WheelFactor4::shared_ptr read_factor = boost::dynamic_pointer_cast<WheelFactor4>(dataset.factorGraph('a')[0]);
     EXPECT_MATRICES_EQ(write_factor.evaluateError(x0, intr, x1, intr), read_factor->evaluateError(x0, intr, x1, intr));
 }
 

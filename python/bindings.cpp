@@ -9,10 +9,10 @@
 
 #include "JRL-custom.h"
 #include "JRL.h"
+#include "JRLFrontend.h"
 #include "MEstBackend.h"
 #include "rose/WheelBaseline.h"
 #include "rose/WheelRose.h"
-#include "JRLFrontend.h"
 
 namespace py = pybind11;
 using namespace pybind11::literals;
@@ -34,10 +34,14 @@ PYBIND11_MODULE(rose_python, m) {
     m.attr("CombinedIMUTag") = py::str(jrl_rose::CombinedIMUTag);
     m.attr("PriorFactorIMUBiasTag") = py::str(jrl_rose::PriorFactorIMUBiasTag);
 
-    m.def("computeATEPose2", py::overload_cast<gtsam::Values, gtsam::Values, bool, bool>(&jrl_rose::computeATE<gtsam::Pose2>), py::return_value_policy::copy,
-        py::arg("ref"), py::arg("est"), py::arg("align") = true, py::arg("align_with_scale") = false);
-    m.def("computeATEPose3", py::overload_cast<gtsam::Values, gtsam::Values, bool, bool>(&jrl_rose::computeATE<gtsam::Pose3>), py::return_value_policy::copy,
-        py::arg("ref"), py::arg("est"), py::arg("align") = true, py::arg("align_with_scale") = false);
+    m.def("computeATEPose2",
+          py::overload_cast<gtsam::Values, gtsam::Values, bool, bool>(&jrl_rose::computeATE<gtsam::Pose2>),
+          py::return_value_policy::copy, py::arg("ref"), py::arg("est"), py::arg("align") = true,
+          py::arg("align_with_scale") = false);
+    m.def("computeATEPose3",
+          py::overload_cast<gtsam::Values, gtsam::Values, bool, bool>(&jrl_rose::computeATE<gtsam::Pose3>),
+          py::return_value_policy::copy, py::arg("ref"), py::arg("est"), py::arg("align") = true,
+          py::arg("align_with_scale") = false);
 
     m.attr("WheelRoseTag") = py::str(jrl_rose::WheelRoseTag);
     m.attr("WheelRoseSlipTag") = py::str(jrl_rose::WheelRoseSlipTag);
@@ -109,8 +113,7 @@ PYBIND11_MODULE(rose_python, m) {
         .def("pwm", &WheelFactor3::pwm)
         .def("predict", &WheelFactor3::predict);
 
-    py::class_<WheelFactor4, gtsam::NoiseModelFactor, boost::shared_ptr<WheelFactor4>>(
-        m, "WheelFactor4")
+    py::class_<WheelFactor4, gtsam::NoiseModelFactor, boost::shared_ptr<WheelFactor4>>(m, "WheelFactor4")
         .def(py::init<gtsam::Key, gtsam::Key, gtsam::Key, gtsam::Key, boost::shared_ptr<PreintegratedWheelBase>,
                       gtsam::Pose3>(),
              "x_i"_a, "i_i"_a, "x_j"_a, "i_j"_a, "pwm"_a, "body_T_sensor"_a = gtsam::Pose3::Identity())
@@ -139,7 +142,8 @@ PYBIND11_MODULE(rose_python, m) {
         .def(py::init<PreintegratedWheelBase>(), "base"_a)
         .def("integrateVelocities", &PreintegratedWheelBaseline::integrateVelocities)
         .def(
-            "predict", [](PreintegratedWheelBaseline *self, const gtsam::Pose3 &x1) { return self->predict(x1); }, "x1"_a)
+            "predict", [](PreintegratedWheelBaseline *self, const gtsam::Pose3 &x1) { return self->predict(x1); },
+            "x1"_a)
         .def("copy", &PreintegratedWheelBaseline::copy);
 
     py::class_<PreintegratedWheelRose, boost::shared_ptr<PreintegratedWheelRose>, PreintegratedWheelBase>(

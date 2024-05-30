@@ -41,4 +41,4 @@ class PreintegratedWheelBaseline : public PreintegratedWheelBase {
     GTSAM_MAKE_ALIGNED_OPERATOR_NEW
 };
 
-}
+} // namespace rose

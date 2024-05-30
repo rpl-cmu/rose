@@ -54,8 +54,8 @@ gtsam::Pose3 PreintegratedWheelBaseline::predict(const gtsam::Pose3 &x_i, boost:
 }
 
 gtsam::Vector PreintegratedWheelBaseline::evaluateError(const gtsam::Pose3 &pose_i, const gtsam::Pose3 &pose_j,
-                                                    boost::optional<gtsam::Matrix &> H1,
-                                                    boost::optional<gtsam::Matrix &> H2) const {
+                                                        boost::optional<gtsam::Matrix &> H1,
+                                                        boost::optional<gtsam::Matrix &> H2) const {
     gtsam::Pose3 measured = pose_i.inverse() * predict(pose_i);
     gtsam::Pose3 pose_ij = pose_i.between(pose_j);
 
