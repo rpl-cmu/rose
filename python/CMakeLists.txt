@@ -13,6 +13,9 @@ if(NOT pybind11_FOUND)
   FetchContent_MakeAvailable(pybind11)
 endif()
 
+# ------------------------- Fix other targets ------------------------- #
+set_target_properties(rose PROPERTIES POSITION_INDEPENDENT_CODE TRUE)
+set_target_properties(experiments PROPERTIES POSITION_INDEPENDENT_CODE TRUE)
 
 # ------------------------- Setup python package ------------------------- #
 set(PYTHON_BUILD_DIRECTORY ${PROJECT_BINARY_DIR}/python)
@@ -23,7 +26,7 @@ create_symlinks("${CMAKE_CURRENT_SOURCE_DIR}/rose" "${PYTHON_BUILD_DIRECTORY}/ro
 
 # ------------------------- Setup pybind target ------------------------- #
 pybind11_add_module(rose_python bindings.cpp)
-target_link_libraries(rose_python PUBLIC rose)
+target_link_libraries(rose_python PUBLIC experiments)
 target_include_directories(rose_python PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include")
 
 set_target_properties(rose_python PROPERTIES

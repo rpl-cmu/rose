@@ -1,4 +1,4 @@
-#include "frontend/JRLFrontend.h"
+#include "JRLFrontend.h"
 // #include <chrono>
 
 // using time_point = std::chrono::time_point<std::chrono::high_resolution_clock>;
@@ -48,7 +48,7 @@ gtsam::Values JRLFrontend::run(jrl::Dataset &dataset, std::vector<std::string> s
     bar.set_theme_basic();
     if (use_tqdm) {
     }
-    jrl::Writer writer = makeRoseWriter();
+    jrl::Writer writer = jrl_rose::makeRoseWriter();
     n_steps = (n_steps == 0 || n_steps > measurements.size()) ? measurements.size() : n_steps;
     gtsam::Values finalValues;
 

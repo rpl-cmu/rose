@@ -4,9 +4,9 @@
 #include "jrl/Dataset.h"
 #include "jrl/DatasetBuilder.h"
 
-#include "backend/JRL.h"
-#include "backend/WheelBaseline.h"
-#include "backend/WheelRose.h"
+#include "JRL.h"
+#include "rose/WheelBaseline.h"
+#include "rose/WheelRose.h"
 
 #include "gtest/gtest.h"
 
@@ -20,7 +20,7 @@ using gtsam::symbol_shorthand::X;
 #define EXPECT_MATRICES_EQ(M_actual, M_expected)                                                                       \
     EXPECT_TRUE(M_actual.isApprox(M_expected, 1e-6)) << "  Actual:\n" << M_actual << "\nExpected:\n" << M_expected
 
-TEST(JRL, WheelFactorDang) {
+TEST(JRL, WheelFactorBaseline) {
     double w = 1;
     double v = 1;
     double dt = 0.1;
@@ -40,13 +40,13 @@ TEST(JRL, WheelFactorDang) {
     graph.push_back(write_factor);
 
     jrl::DatasetBuilder builder("test", {'a'});
-    builder.addEntry('a', 0, graph, {WheelBaselineTag});
+    builder.addEntry('a', 0, graph, {jrl_rose::WheelBaselineTag});
 
-    jrl::Writer writer = makeRoseWriter();
+    jrl::Writer writer = jrl_rose::makeRoseWriter();
     writer.writeDataset(builder.build(), "wheel_baseline.jrl");
 
     // Load it back in!
-    jrl::Parser parser = makeRoseParser();
+    jrl::Parser parser = jrl_rose::makeRoseParser();
     jrl::Dataset dataset = parser.parseDataset("wheel_baseline.jrl");
     WheelFactor2::shared_ptr read_factor = boost::dynamic_pointer_cast<WheelFactor2>(dataset.factorGraph('a')[0]);
 
@@ -73,13 +73,13 @@ TEST(JRL, WheelRose) {
     graph.push_back(write_factor);
 
     jrl::DatasetBuilder builder("test", {'a'});
-    builder.addEntry('a', 0, graph, {WheelRoseTag});
+    builder.addEntry('a', 0, graph, {jrl_rose::WheelRoseTag});
 
-    jrl::Writer writer = makeRoseWriter();
+    jrl::Writer writer = jrl_rose::makeRoseWriter();
     writer.writeDataset(builder.build(), "wheel_rose.jrl");
 
     // Load it back in!
-    jrl::Parser parser = makeRoseParser();
+    jrl::Parser parser = jrl_rose::makeRoseParser();
     jrl::Dataset dataset = parser.parseDataset("wheel_rose.jrl");
     WheelFactor2::shared_ptr read_factor = boost::dynamic_pointer_cast<WheelFactor2>(dataset.factorGraph('a')[0]);
 
@@ -108,13 +108,13 @@ TEST(JRL, WheelRose3) {
     graph.push_back(write_factor);
 
     jrl::DatasetBuilder builder("test", {'a'});
-    builder.addEntry('a', 0, graph, {WheelRoseSlipTag});
+    builder.addEntry('a', 0, graph, {jrl_rose::WheelRoseSlipTag});
 
-    jrl::Writer writer = makeRoseWriter();
+    jrl::Writer writer = jrl_rose::makeRoseWriter();
     writer.writeDataset(builder.build(), "wheel_rose_slip.jrl");
 
     // Load it back in!
-    jrl::Parser parser = makeRoseParser();
+    jrl::Parser parser = jrl_rose::makeRoseParser();
     jrl::Dataset dataset = parser.parseDataset("wheel_rose_slip.jrl");
     WheelFactor3::shared_ptr read_factor = boost::dynamic_pointer_cast<WheelFactor3>(dataset.factorGraph('a')[0]);
 
@@ -143,13 +143,13 @@ TEST(JRL, WheelRose4) {
     graph.push_back(write_factor);
 
     jrl::DatasetBuilder builder("test", {'a'});
-    builder.addEntry('a', 0, graph, {WheelRoseIntrTag});
+    builder.addEntry('a', 0, graph, {jrl_rose::WheelRoseIntrTag});
 
-    jrl::Writer writer = makeRoseWriter();
+    jrl::Writer writer = jrl_rose::makeRoseWriter();
     writer.writeDataset(builder.build(), "wheel_rose_intr.jrl");
 
     // Load it back in!
-    jrl::Parser parser = makeRoseParser();
+    jrl::Parser parser = jrl_rose::makeRoseParser();
     jrl::Dataset dataset = parser.parseDataset("wheel_rose_intr.jrl");
     WheelFactor4Intrinsics::shared_ptr read_factor =
         boost::dynamic_pointer_cast<WheelFactor4Intrinsics>(dataset.factorGraph('a')[0]);
@@ -179,13 +179,13 @@ TEST(JRL, WheelRose5) {
     graph.push_back(write_factor);
 
     jrl::DatasetBuilder builder("test", {'a'});
-    builder.addEntry('a', 0, graph, {WheelRoseIntrSlipTag});
+    builder.addEntry('a', 0, graph, {jrl_rose::WheelRoseIntrSlipTag});
 
-    jrl::Writer writer = makeRoseWriter();
+    jrl::Writer writer = jrl_rose::makeRoseWriter();
     writer.writeDataset(builder.build(), "wheel_rose_intr_slip.jrl");
 
     // Load it back in!
-    jrl::Parser parser = makeRoseParser();
+    jrl::Parser parser = jrl_rose::makeRoseParser();
     jrl::Dataset dataset = parser.parseDataset("wheel_rose_intr_slip.jrl");
     WheelFactor5::shared_ptr read_factor = boost::dynamic_pointer_cast<WheelFactor5>(dataset.factorGraph('a')[0]);
     EXPECT_MATRICES_EQ(write_factor.evaluateError(x0, intr, x1, intr, slip),
@@ -203,13 +203,13 @@ TEST(JRL, PlanarPriorFactor) {
     graph.push_back(write_factor);
 
     jrl::DatasetBuilder builder("test", {'a'});
-    builder.addEntry('a', 0, graph, {PlanarPriorTag});
+    builder.addEntry('a', 0, graph, {jrl_rose::PlanarPriorTag});
 
-    jrl::Writer writer = makeRoseWriter();
+    jrl::Writer writer = jrl_rose::makeRoseWriter();
     writer.writeDataset(builder.build(), "planar_prior.jrl");
 
     // Load it back in!
-    jrl::Parser parser = makeRoseParser();
+    jrl::Parser parser = jrl_rose::makeRoseParser();
     jrl::Dataset dataset = parser.parseDataset("planar_prior.jrl");
     PlanarPriorFactor::shared_ptr read_factor =
         boost::dynamic_pointer_cast<PlanarPriorFactor>(dataset.factorGraph('a')[0]);
@@ -228,13 +228,13 @@ TEST(JRL, ZPriorFactor) {
     graph.push_back(write_factor);
 
     jrl::DatasetBuilder builder("test", {'a'});
-    builder.addEntry('a', 0, graph, {ZPriorTag});
+    builder.addEntry('a', 0, graph, {jrl_rose::ZPriorTag});
 
-    jrl::Writer writer = makeRoseWriter();
+    jrl::Writer writer = jrl_rose::makeRoseWriter();
     writer.writeDataset(builder.build(), "z_prior.jrl");
 
     // Load it back in!
-    jrl::Parser parser = makeRoseParser();
+    jrl::Parser parser = jrl_rose::makeRoseParser();
     jrl::Dataset dataset = parser.parseDataset("z_prior.jrl");
     ZPriorFactor::shared_ptr read_factor = boost::dynamic_pointer_cast<ZPriorFactor>(dataset.factorGraph('a')[0]);
 

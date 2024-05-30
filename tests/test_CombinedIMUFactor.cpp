@@ -7,8 +7,8 @@
 #include <jrl/Writer.h>
 #include <jrl/IOMeasurements.h>
 
-#include "backend/JRL-custom.h"
-#include "backend/JRL.h"
+#include "JRL-custom.h"
+#include "JRL.h"
 
 #include "gtest/gtest.h"
 
@@ -51,11 +51,11 @@ TEST(Factor, CombinedIMU){
     jrl::DatasetBuilder builder("test", {'a'});
     builder.addEntry('a', 0, graph, {jrl_rose::CombinedIMUTag});
 
-    jrl::Writer writer = makeRoseWriter();
+    jrl::Writer writer = jrl_rose::makeRoseWriter();
     writer.writeDataset(builder.build(), "combined_imu.jrl");
 
     // Load it back in!
-    jrl::Parser parser = makeRoseParser();
+    jrl::Parser parser = jrl_rose::makeRoseParser();
     jrl::Dataset dataset = parser.parseDataset("combined_imu.jrl");
     gtsam::CombinedImuFactor::shared_ptr read_factor = boost::dynamic_pointer_cast<gtsam::CombinedImuFactor>(dataset.factorGraph()[0]);
 

@@ -4,12 +4,16 @@ project(ROSE VERSION 0.1 LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 17)
 
+option(EXPERIMENTS "Build experiments" OFF)
+
 #################### IMPORT DEPENDENCIES ####################
-find_package(jrl REQUIRED)
 find_package(GTSAM REQUIRED)
 
 #################### ADD TARGETS ####################
-add_subdirectory(src)
-add_subdirectory(exe)
-add_subdirectory(python)
-add_subdirectory(tests)
+add_subdirectory(rose)
+
+if(EXPERIMENTS)   
+    add_subdirectory(experiments)
+    add_subdirectory(python)
+    add_subdirectory(tests)
+endif(EXPERIMENTS)

@@ -6,9 +6,9 @@
 #include <gtsam/nonlinear/LevenbergMarquardtOptimizer.h>
 #include <gtsam/nonlinear/LevenbergMarquardtParams.h>
 
-#include "backend/PlanarPriorFactor.h"
-#include "backend/WheelRose.h"
-#include "backend/ZPriorFactor.h"
+#include "rose/PlanarPriorFactor.h"
+#include "rose/WheelRose.h"
+#include "rose/ZPriorFactor.h"
 
 #include "gtest/gtest.h"
 

@@ -1,6 +1,7 @@
 .vscode
 build
 data
+data-new
 /*.png
 __pycache__
 *.jrr

@@ -1,4 +1,4 @@
-#include "backend/WheelBaseline.h"
+#include "rose/WheelBaseline.h"
 
 // ------------------------- Preintegrated Wheel Measurements ------------------------- //
 PreintegratedWheelBaseline::PreintegratedWheelBaseline(const boost::shared_ptr<PreintegratedWheelParams> p) : Base(p) {

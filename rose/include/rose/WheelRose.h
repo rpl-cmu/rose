@@ -8,11 +8,7 @@
 #include "gtsam/navigation/NavState.h"
 #include "gtsam/nonlinear/NonlinearFactor.h"
 
-#include "jrl/IOMeasurements.h"
-#include "jrl/IOValues.h"
-
-#include "backend/JRL-custom.h"
-#include "backend/WheelFactorBase.h"
+#include "rose/WheelFactorBase.h"
 
 // ------------------------- Wheel Factors ------------------------- //
 
@@ -91,35 +87,3 @@ class PreintegratedWheelRose : public PreintegratedWheelBase {
 
     GTSAM_MAKE_ALIGNED_OPERATOR_NEW
 };
-
-// ------------------------- JRL WRAPPER ------------------------- //
-static const std::string WheelRoseTag = "WheelRose";
-static const std::string WheelRoseSlipTag = "WheelRoseSlip";
-static const std::string WheelRoseIntrTag = "WheelRoseIntrinsics";
-static const std::string WheelRoseIntrSlipTag = "WheelRoseIntrinsicsSlip";
-
-inline PreintegratedWheelRose::shared_ptr parsePWMCov(const nlohmann::json &input_json) {
-    // Get unique things to this factor
-    json H_slip_json = input_json["H_slip"];
-    gtsam::Matrix62 H_slip = jrl_rose::parseMatrix(H_slip_json, 6, 2);
-
-    json H_intr_json = input_json["H_intr"];
-    gtsam::Matrix63 H_intr = jrl_rose::parseMatrix(H_intr_json, 6, 3);
-
-    json intr_est_json = input_json["intr_est"];
-    gtsam::Vector3 intr_est = jrl::io_values::parse<gtsam::Vector3>(intr_est_json);
-
-    PreintegratedWheelBase::shared_ptr pwmBase = parsePWBase(input_json);
-    return boost::make_shared<PreintegratedWheelRose>(*pwmBase, H_slip, H_intr, intr_est);
-}
-
-inline nlohmann::json serializePWMCov(PreintegratedWheelBase::shared_ptr pwm) {
-    json output = serializePWBase(pwm);
-
-    typename PreintegratedWheelRose::shared_ptr pwmCov = boost::dynamic_pointer_cast<PreintegratedWheelRose>(pwm);
-    output["H_slip"] = jrl_rose::serializeMatrix(pwmCov->preint_H_slip());
-    output["H_intr"] = jrl_rose::serializeMatrix(pwmCov->preint_H_intr());
-    output["intr_est"] = jrl::io_values::serialize<gtsam::Vector3>(pwmCov->intr_est());
-
-    return output;
-}

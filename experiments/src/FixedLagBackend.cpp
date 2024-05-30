@@ -1,4 +1,4 @@
-#include "backend/FixedLagBackend.h"
+#include "FixedLagBackend.h"
 
 // ------------------------- Private Methods ------------------------- //
 void FixedLagBackend::addIMUEstimate(gtsam::CombinedImuFactor::shared_ptr factor) {

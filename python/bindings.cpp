@@ -7,11 +7,12 @@
 #include <pybind11/pybind11.h>
 #include <pybind11/stl.h>
 
-#include "backend/JRL-custom.h"
-#include "backend/JRL.h"
-#include "backend/MEstBackend.h"
-#include "backend/WheelRose.h"
-#include "frontend/JRLFrontend.h"
+#include "JRL-custom.h"
+#include "JRL.h"
+#include "MEstBackend.h"
+#include "rose/WheelBaseline.h"
+#include "rose/WheelRose.h"
+#include "JRLFrontend.h"
 
 namespace py = pybind11;
 using namespace pybind11::literals;
@@ -37,16 +38,16 @@ PYBIND11_MODULE(rose_python, m) {
     m.def("computeATEPose3", py::overload_cast<gtsam::Values, gtsam::Values, bool, bool>(&jrl_rose::computeATE<gtsam::Pose3>), py::return_value_policy::copy,
         py::arg("ref"), py::arg("est"), py::arg("align") = true, py::arg("align_with_scale") = false);
 
-    m.attr("WheelRoseTag") = py::str(WheelRoseTag);
-    m.attr("WheelRoseSlipTag") = py::str(WheelRoseSlipTag);
-    m.attr("WheelRoseIntrTag") = py::str(WheelRoseIntrTag);
-    m.attr("WheelRoseIntrSlipTag") = py::str(WheelRoseIntrSlipTag);
-    m.attr("WheelBaselineTag") = py::str(WheelBaselineTag);
-    m.attr("PlanarPriorTag") = py::str(PlanarPriorTag);
-    m.attr("ZPriorTag") = py::str(ZPriorTag);
+    m.attr("WheelRoseTag") = py::str(jrl_rose::WheelRoseTag);
+    m.attr("WheelRoseSlipTag") = py::str(jrl_rose::WheelRoseSlipTag);
+    m.attr("WheelRoseIntrTag") = py::str(jrl_rose::WheelRoseIntrTag);
+    m.attr("WheelRoseIntrSlipTag") = py::str(jrl_rose::WheelRoseIntrSlipTag);
+    m.attr("WheelBaselineTag") = py::str(jrl_rose::WheelBaselineTag);
+    m.attr("PlanarPriorTag") = py::str(jrl_rose::PlanarPriorTag);
+    m.attr("ZPriorTag") = py::str(jrl_rose::ZPriorTag);
 
-    m.def("makeRoseParser", makeRoseParser);
-    m.def("makeRoseWriter", makeRoseWriter);
+    m.def("makeRoseParser", jrl_rose::makeRoseParser);
+    m.def("makeRoseWriter", jrl_rose::makeRoseWriter);
 
     // ------------------------- Frontend ------------------------- //
     py::class_<JRLFrontend, boost::shared_ptr<JRLFrontend>>(m, "JRLFrontend")

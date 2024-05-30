@@ -8,8 +8,8 @@
 #include <jrl/IOMeasurements.h>
 #include <jrl/Types.h>
 
-#include "backend/JRL-custom.h"
-#include "backend/JRL.h"
+#include "JRL-custom.h"
+#include "JRL.h"
 
 #include "gtest/gtest.h"
 
@@ -36,11 +36,11 @@ TEST(Value, IMUBias){
     jrl::DatasetBuilder builder("test", {'a'});
     builder.addEntry('a', 0, graph, {}, {}, jrl::TypedValues(theta, types));
 
-    jrl::Writer writer = makeRoseWriter();
+    jrl::Writer writer = jrl_rose::makeRoseWriter();
     writer.writeDataset(builder.build(), "imu_bias.jrl");
 
     // Load it back in!
-    jrl::Parser parser = makeRoseParser();
+    jrl::Parser parser = jrl_rose::makeRoseParser();
     jrl::Dataset dataset = parser.parseDataset("imu_bias.jrl");
     gtsam::imuBias::ConstantBias b_read = dataset.initialization('a').at<gtsam::imuBias::ConstantBias>(B(0));
 

@@ -1,6 +1,6 @@
 /* ----------------------------------------------------------------------------
 
-Modified from ZPriorFactor from gtsam
+Modified from PlanarPriorFactor from gtsam
 
  * -------------------------------------------------------------------------- */
 #pragma once
@@ -8,16 +8,13 @@ Modified from ZPriorFactor from gtsam
 #include <gtsam/base/Testable.h>
 #include <gtsam/nonlinear/NonlinearFactor.h>
 
-#include "jrl/IOMeasurements.h"
-#include "jrl/IOValues.h"
-
 #include <string>
 
 /**
  * A class for a soft prior on any Value type
  * @ingroup SLAM
  */
-class ZPriorFactor : public gtsam::NoiseModelFactor1<gtsam::Pose3> {
+class PlanarPriorFactor : public gtsam::NoiseModelFactor1<gtsam::Pose3> {
 
   public:
     typedef gtsam::Pose3 T;
@@ -28,19 +25,19 @@ class ZPriorFactor : public gtsam::NoiseModelFactor1<gtsam::Pose3> {
 
   public:
     /// shorthand for a smart pointer to a factor
-    typedef typename boost::shared_ptr<ZPriorFactor> shared_ptr;
+    typedef typename boost::shared_ptr<PlanarPriorFactor> shared_ptr;
 
     /// Typedef to this class
-    typedef ZPriorFactor This;
+    typedef PlanarPriorFactor This;
 
     /** default constructor - only use for serialization */
-    ZPriorFactor() {}
+    PlanarPriorFactor() {}
 
-    ~ZPriorFactor() override {}
+    ~PlanarPriorFactor() override {}
 
     /** Constructor */
-    ZPriorFactor(gtsam::Key key, const gtsam::Matrix1 &covariance,
-                 gtsam::Pose3 body_T_sensor = gtsam::Pose3::Identity())
+    PlanarPriorFactor(gtsam::Key key, const gtsam::Matrix2 &covariance,
+                      gtsam::Pose3 body_T_sensor = gtsam::Pose3::Identity())
         : Base(gtsam::noiseModel::Gaussian::Covariance(covariance), key), body_T_sensor_(body_T_sensor) {}
 
     /// @return a deep copy of this factor
@@ -53,7 +50,7 @@ class ZPriorFactor : public gtsam::NoiseModelFactor1<gtsam::Pose3> {
     /** print */
     void print(const std::string &s,
                const gtsam::KeyFormatter &keyFormatter = gtsam::DefaultKeyFormatter) const override {
-        std::cout << s << "ZPriorFactor on " << keyFormatter(this->key()) << "\n";
+        std::cout << s << "PlanarPriorFactor on " << keyFormatter(this->key()) << "\n";
         if (this->noiseModel_)
             this->noiseModel_->print("  noise model: ");
         else
@@ -71,17 +68,15 @@ class ZPriorFactor : public gtsam::NoiseModelFactor1<gtsam::Pose3> {
 
     /** vector of errors */
     gtsam::Vector evaluateError(const T &x, boost::optional<gtsam::Matrix &> H = boost::none) const override {
-        gtsam::Matrix H_comp;
-        gtsam::Pose3 x_sensor = x.compose(body_T_sensor_, H_comp);
-        gtsam::Vector e = x_sensor.translation().tail<1>();
+        // manifold equivalent of z-x -> Local(x,z)
+        gtsam::Matrix H_comp, H_log;
+        gtsam::Vector e =
+            gtsam::Rot3::Logmap(x.rotation().compose(body_T_sensor_.rotation(), H_comp), H_log).segment<2>(0);
 
         if (H) {
-            gtsam::Matrix H_z;
-            x_sensor.transformFrom(gtsam::Vector::Zero(3), H_z);
-
-            H->resize(1, 6);
+            H->resize(2, 6);
             H->setZero();
-            *H = H_z.block<1, 6>(2, 0) * H_comp;
+            H->block<2, 3>(0, 0) = (H_log * H_comp).block<2, 3>(0, 0);
         }
 
         return e;
@@ -96,30 +91,3 @@ class ZPriorFactor : public gtsam::NoiseModelFactor1<gtsam::Pose3> {
         ar &boost::serialization::make_nvp("NoiseModelFactor1", boost::serialization::base_object<Base>(*this));
     }
 }; /// namespace gtsam
-
-// ------------------------- JRL Wrapper ------------------------- //
-static const std::string ZPriorTag = "ZPrior";
-
-inline gtsam::NonlinearFactor::shared_ptr parseZPriorFactor(const nlohmann::json &input_json) {
-    // Get all required fields
-    uint64_t key = input_json["key"].get<uint64_t>();
-    gtsam::Matrix1 covariance = jrl::io_measurements::parseCovariance(input_json["covariance"], 1);
-    gtsam::Pose3 body_T_sensor = jrl::io_values::parse<gtsam::Pose3>(input_json["body_T_sensor"]);
-
-    typename ZPriorFactor::shared_ptr factor = boost::make_shared<ZPriorFactor>(key, covariance, body_T_sensor);
-    return factor;
-}
-
-inline nlohmann::json serializeZPriorFactor(gtsam::NonlinearFactor::shared_ptr factor) {
-    typename ZPriorFactor::shared_ptr ppf = boost::dynamic_pointer_cast<ZPriorFactor>(factor);
-    gtsam::noiseModel::Gaussian::shared_ptr noise_model =
-        boost::dynamic_pointer_cast<gtsam::noiseModel::Gaussian>(ppf->noiseModel());
-
-    nlohmann::json output;
-    output["key"] = ppf->keys().front();
-    output["covariance"] = jrl::io_measurements::serializeCovariance(noise_model->covariance());
-    output["body_T_sensor"] = jrl::io_values::serialize<gtsam::Pose3>(ppf->body_T_sensor());
-    output["type"] = ZPriorTag;
-
-    return output;
-}

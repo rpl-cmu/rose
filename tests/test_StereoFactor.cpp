@@ -7,8 +7,8 @@
 #include <jrl/Writer.h>
 #include <jrl/IOMeasurements.h>
 
-#include "backend/JRL-custom.h"
-#include "backend/JRL.h"
+#include "JRL-custom.h"
+#include "JRL.h"
 
 #include "gtest/gtest.h"
 
@@ -40,11 +40,11 @@ TEST(Factor, StereoFactor){
     jrl::DatasetBuilder builder("test", {'a'});
     builder.addEntry('a', 0, graph, {jrl_rose::StereoFactorPose3Point3Tag});
 
-    jrl::Writer writer = makeRoseWriter();
+    jrl::Writer writer = jrl_rose::makeRoseWriter();
     writer.writeDataset(builder.build(), "stereo.jrl");
 
     // Load it back in!
-    jrl::Parser parser = makeRoseParser();
+    jrl::Parser parser = jrl_rose::makeRoseParser();
     jrl::Dataset dataset = parser.parseDataset("stereo.jrl");
     StereoFactor::shared_ptr read_factor = boost::dynamic_pointer_cast<StereoFactor>(dataset.factorGraph()[0]);
 

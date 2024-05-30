@@ -11,7 +11,7 @@
 #include "jrl/IOMeasurements.h"
 #include "jrl/IOValues.h"
 
-#include "backend/WheelFactorBase.h"
+#include "rose/WheelFactorBase.h"
 
 // ------------------------- Wheel Factors ------------------------- //
 
@@ -39,11 +39,3 @@ class PreintegratedWheelBaseline : public PreintegratedWheelBase {
 
     GTSAM_MAKE_ALIGNED_OPERATOR_NEW
 };
-
-// ------------------------- JRL WRAPPER ------------------------- //
-static const std::string WheelBaselineTag = "WheelBaseline";
-
-inline PreintegratedWheelBase::shared_ptr parsePWMDang(nlohmann::json input_json) {
-    PreintegratedWheelBase::shared_ptr pwmBase = parsePWBase(input_json);
-    return boost::make_shared<PreintegratedWheelBaseline>(*pwmBase);
-}

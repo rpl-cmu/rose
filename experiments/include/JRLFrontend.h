@@ -5,10 +5,10 @@
 #include <jrl/Parser.h>
 #include <jrl/Writer.h>
 
-#include "backend/FixedLagBackend.h"
-#include "backend/JRL-custom.h"
-#include "backend/JRL.h"
-#include "utils/tqdm.h"
+#include "FixedLagBackend.h"
+#include "JRL-custom.h"
+#include "JRL.h"
+#include "tqdm.h"
 
 using gtsam::symbol_shorthand::B;
 using gtsam::symbol_shorthand::L;

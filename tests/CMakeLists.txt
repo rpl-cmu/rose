@@ -12,7 +12,7 @@ enable_testing() # enable ctest
 # Make test target
 file(GLOB_RECURSE tests_srcs *.cpp)
 add_executable(rose-tests ${tests_srcs})
-target_link_libraries(rose-tests PUBLIC rose jrl gtsam gtest)
+target_link_libraries(rose-tests PUBLIC experiments gtest)
 add_test(NAME rose-tests COMMAND rose-tests)
 
 # Make runnable from "make check" or "make test"

@@ -6,8 +6,8 @@
 #include <gtsam/nonlinear/LevenbergMarquardtOptimizer.h>
 #include <gtsam/nonlinear/LevenbergMarquardtParams.h>
 
-#include "backend/WheelBaseline.h"
-#include "backend/WheelRose.h"
+#include "rose/WheelBaseline.h"
+#include "rose/WheelRose.h"
 
 #include "gtest/gtest.h"
 
@@ -66,7 +66,7 @@ TEST(Factor, WheelRose) {
     EXPECT_ZERO(factor.evaluateError(x0, x1_final));
 }
 
-TEST(Factor, WheelFactorDang) {
+TEST(Factor, WheelFactorBaseline) {
     double w = 0.1;
     double v = 1;
     double dt = 0.1;

@@ -18,7 +18,7 @@
 #include <gtsam/navigation/CombinedImuFactor.h>
 // clang-format on
 
-#include "backend/WheelFactorBase.h"
+#include "rose/WheelFactorBase.h"
 
 using gtsam::symbol_shorthand::B;
 using gtsam::symbol_shorthand::I;
