@@ -4,6 +4,21 @@ import jrl
 # ------------------------- Helpers for Wrapping GTSAM containers ------------------------- #
 from rose.rose_python import (
     IMUBiasTag,
+    StereoPoint2Tag,
+    StereoFactorPose3Point3Tag,
+    CombinedIMUTag,
+    PriorFactorIMUBiasTag,
+    WheelRoseTag,
+    WheelRoseSlipTag,
+    WheelRoseIntrTag,
+    WheelRoseIntrSlipTag,
+    WheelBaselineTag,
+    PlanarPriorTag,
+    ZPriorTag,
+    makeRoseParser,
+    makeRoseWriter,
+    computeATEPose3,
+    computeATEPose2,
 )
 
 
@@ -30,3 +45,23 @@ def values2typedvalues(values: gtsam.Values) -> jrl.TypedValues:
             raise ValueError(f"Unknown character {char} in values")
 
     return jrl.TypedValues(values, types)
+
+
+__all__ = [
+    "IMUBiasTag",
+    "StereoPoint2Tag",
+    "StereoFactorPose3Point3Tag",
+    "CombinedIMUTag",
+    "PriorFactorIMUBiasTag",
+    "WheelRoseTag",
+    "WheelRoseSlipTag",
+    "WheelRoseIntrTag",
+    "WheelRoseIntrSlipTag",
+    "WheelBaselineTag",
+    "PlanarPriorTag",
+    "ZPriorTag",
+    "makeRoseParser",
+    "makeRoseWriter",
+    "computeATEPose3",
+    "computeATEPose2",
+]

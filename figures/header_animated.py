@@ -1,23 +1,18 @@
 from pathlib import Path
 
-import earthpy.spatial as es
+import matplotlib.animation as animation
 import matplotlib.pyplot as plt
 import numpy as np
 import rasterio
 import rose.jrl
 import rose.plot as plot
-import seaborn as sns
 from rasterio.warp import Resampling, calculate_default_transform, reproject
 from rose.dataset import Dataset2JRL, Sensor
 from rose import FlatDataset
+from tqdm import tqdm
 
-if __name__ == "__main__":
-    traj = "all_2024-02-09-14-08-29"
 
-    is_top = True
-    map_file = "/home/contagon/Downloads/ned19_n40x50_w080x00_pa_southwest_2006.img"
-
-    is_top = False
+def animate(traj):
     map_file = "/home/contagon/catkin_new/src/multicam_frontend_ros/config/gascola_imagery_august_2020/gascola_august_2020.vrt"
 
     # ------------------------- Load in topographical map ------------------------- #
@@ -32,11 +27,9 @@ if __name__ == "__main__":
         {"crs": dst_crs, "transform": transform, "width": width, "height": height}
     )
 
-    depth = 1 if is_top else 3
+    destination = np.zeros((height, width, 3), dtype=src.dtypes[0])
 
-    destination = np.zeros((height, width, depth), dtype=src.dtypes[0])
-
-    for i in range(1, depth + 1):
+    for i in range(1, 4):
         reproject(
             source=rasterio.band(src, i),
             destination=destination[:, :, i - 1],
@@ -48,7 +41,7 @@ if __name__ == "__main__":
         )
     destination[destination < 0] = 200
     destination = destination.squeeze()
-    print("Loaded topographical map")
+    print("----Loaded topographical map")
 
     # ------------------------- Load all data ------------------------- #
     RESULTS = Path(f"data/{traj}")
@@ -76,10 +69,14 @@ if __name__ == "__main__":
         )
         results[name] = plot.load_full_state(values, offset=data.utm_T_vio)
 
-    print("Data Loaded")
+    print("----Data Loaded")
+
     # ------------------------- Plot data ------------------------- #
+    ratio = 16 / 9
+    width = 8
+
     colors = plot.setup_plot()
-    fig, ax = plt.subplots(1, 1, layout="constrained", figsize=(4, 4))
+    fig, ax = plt.subplots(1, 1, layout="constrained", figsize=(width, width / ratio))
 
     min_x, max_x, min_y, max_y = np.inf, -np.inf, np.inf, -np.inf
     for name, values in results.items():
@@ -92,34 +89,41 @@ if __name__ == "__main__":
         if max_y < np.max(values["$p_x$"]):
             max_y = np.max(values["$p_x$"])
 
+    # Give a little padding
     diff = 25
     min_x -= diff
     max_x += diff
     min_y -= diff
     max_y += diff
 
+    # Get the aspect ratio of the map correct
+    height = max_y - min_y
+    width = max_x - min_x
+
+    if width / height > ratio:
+        diff = (width / ratio - height) / 2
+        min_y -= diff
+        max_y += diff
+    else:
+        diff = (height * ratio - width) / 2
+        min_x -= diff
+        max_x += diff
+
     x1, y1 = ~transform * (min_x, min_y)
     x2, y2 = ~transform * (max_x, max_y)
     final_map = destination[int(y2) : int(y1), int(x1) : int(x2)]
     extent = [0, max_x - min_x, 0, max_y - min_y]
 
-    if is_top:
-        cmap = sns.diverging_palette(220, 20, s=40, as_cmap=True)
-        plt.imshow(final_map, extent=extent, cmap=cmap)
-        plt.colorbar()
+    plt.imshow(final_map, extent=extent, cmap="grey", alpha=0.55)
 
-        hillshade = es.hillshade(final_map, azimuth=90, altitude=1)
-        plt.imshow(hillshade, extent=extent, cmap="Greys", alpha=0.2)
-    else:
-        plt.imshow(final_map, extent=extent, cmap="grey", alpha=0.55)
-
-    dark_ones = [plot.WheelType.WHEEL_ROSE_INTR_SLIP.value, plot.WheelType.GT.value]
+    # dark_ones = [plot.WheelType.WHEEL_ROSE_INTR_SLIP.value, plot.WheelType.GT.value]
+    lines = {}
     for name, values in results.items():
-        alpha = 1 if name in dark_ones else 0.9
-        lw = 1.25 if name in dark_ones else 0.8
-        ax.plot(
-            values["$p_y$"] - min_x,
-            values["$p_x$"] - min_y,
+        alpha = 1  # if name in dark_ones else 0.9
+        lw = 1.25  # if name in dark_ones else 0.8
+        (lines[name],) = ax.plot(
+            [],
+            [],
             label=name,
             c=colors[name],
             lw=lw,
@@ -147,10 +151,44 @@ if __name__ == "__main__":
         # label_outline=0.75,
     )
     ax.add_artist(ob)
+    ax.legend(loc="lower right", ncol=1)
 
-    fig.legend(loc="lower center", ncol=4, bbox_to_anchor=(0.5, -0.07))
+    fps = 30
+    t = 5
 
-    plt.savefig("figures/header.png", bbox_inches="tight", dpi=300)
-    plt.savefig("figures/header.pdf", bbox_inches="tight", dpi=300)
+    num_frames = fps * t
+    N = len(results[plot.WheelType.GT.value]["$p_y$"])
+    show_every = N // num_frames
+    loop = tqdm(total=num_frames, leave=False, desc="Animating")
 
-    # plt.show()
+    def update(frame):
+        for name, values in results.items():
+            lines[name].set_data(
+                values["$p_y$"][: show_every * frame + 1] - min_x,
+                values["$p_x$"][: show_every * frame + 1] - min_y,
+            )
+        loop.update(1)
+        return lines.values()
+
+    ani = animation.FuncAnimation(
+        fig,
+        update,
+        frames=num_frames,
+        blit=True,
+        interval=1000 / fps,
+        cache_frame_data=False,
+        repeat=False,
+    )
+    ani.save(f"figures/animations/{traj}.gif", dpi=300)
+
+
+if __name__ == "__main__":
+    trajs = [p.stem for p in Path("/mnt/bags/best/").iterdir()]
+
+    for t in trajs:
+        try:
+            print(t)
+            animate(t)
+        except Exception as _:
+            print(f"Failed on {t}")
+            continue

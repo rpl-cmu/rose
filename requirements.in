@@ -13,3 +13,4 @@ seaborn
 tabulate
 sympy
 pre-commit
+rasterio

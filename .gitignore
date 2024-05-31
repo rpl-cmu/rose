@@ -8,4 +8,5 @@ __pycache__
 *.jrl
 *.yaml
 *.log
-figures/*.png
+*.png
+*.gif
