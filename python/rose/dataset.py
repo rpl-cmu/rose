@@ -66,19 +66,6 @@ class Sensor(Enum):
 
 
 # ------------------------- Noise Wrappers ------------------------- #
-sigma_rad_s = 2e-1
-SIGMA_WX = 0.02
-SIGMA_WY = 0.02
-SIGMA_VY = 0.18
-SIGMA_VZ = 0.05
-SIG_MAN = 0.09
-SIG_MANINIT = 0.11
-SIG_RP_PRIOR = 1e-3
-SIG_Z_PRIOR = 0.003
-SIG_MAN_POS = 1e-2
-SIG_MAN_ORIEN = 1e-2
-
-
 class BaseNoise:
     def __array__(self):
         return np.array(astuple(self))
@@ -99,26 +86,19 @@ class BaseNoise:
 
 @dataclass(kw_only=True)
 class WheelNoise(BaseNoise):
-    sigma_rad_s: float = sigma_rad_s
+    sigma_rad_s: float = 2e-1
 
-    sigma_wx: float = SIGMA_WX
-    sigma_wy: float = SIGMA_WY
-    sigma_vy: float = SIGMA_VY
-    sigma_vz: float = SIGMA_VZ
+    sigma_wx: float = 0.02
+    sigma_wy: float = 0.02
+    sigma_vy: float = 0.18
+    sigma_vz: float = 0.05
 
-    sig_man: float = SIG_MAN
-    sig_maninit: float = SIG_MANINIT
-    sig_man_pos: float = SIG_MAN_POS
-    sig_man_orien: float = SIG_MAN_ORIEN
-
-    sig_rp_prior: float = SIG_RP_PRIOR
-    sig_z_prior: float = SIG_Z_PRIOR
+    sig_rp_prior: float = 1e-3
+    sig_z_prior: float = 0.003
 
     sig_slip_prior: float = 0.4
     slip_prior_kernel: float = 2.7
 
-    # sig_intr_baseline: float = 1e-4
-    # sig_intr_radius: float = 5e-5
     sig_intr_baseline: float = 5e-3
     sig_intr_radius: float = 5e-3
 
@@ -138,11 +118,6 @@ class WheelNoise(BaseNoise):
         pwmParams.wyCov = self.sigma_wy**2
         pwmParams.vyCov = self.sigma_vy**2
         pwmParams.vzCov = self.sigma_vz**2
-
-        pwmParams.manCov = np.eye(3) * self.sig_man**2
-        pwmParams.manInitCov = np.eye(3) * self.sig_maninit**2
-        pwmParams.manPosCov = self.sig_man_pos**2
-        pwmParams.manOrienCov = self.sig_man_pos**2
 
         pwmParams.intrinsicsBetweenCov = (
             np.diag(

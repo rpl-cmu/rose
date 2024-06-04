@@ -24,11 +24,6 @@ struct PreintegratedWheelParams {
 
     gtsam::Matrix2 omegaVelCov = gtsam::I_2x2;
 
-    gtsam::Matrix3 manCov = gtsam::I_3x3;
-    gtsam::Matrix3 manInitCov = gtsam::I_3x3;
-    double manPosCov = 1;
-    double manOrienCov = 1;
-
     // baseline, radiusL, radiusR
     gtsam::Vector3 intrinsics = gtsam::Vector3::Ones();
     gtsam::Matrix3 intrinsicsBetweenCov = gtsam::Matrix3::Identity();
@@ -55,9 +50,9 @@ struct PreintegratedWheelParams {
 
     void setWVCovFromWV(double wCov, double vCov) { omegaVelCov << wCov, 0, 0, vCov; }
 
-    gtsam::Matrix2 makeFullCov() { return omegaVelCov; }
+    gtsam::Matrix2 make2DCov() { return omegaVelCov; }
 
-    gtsam::Matrix6 makeFullVelCov() {
+    gtsam::Matrix6 make3DCov() {
         gtsam::Matrix6 cov = gtsam::Matrix6::Zero();
         cov(0, 0) = wxCov;
         cov(1, 1) = wyCov;
@@ -68,7 +63,6 @@ struct PreintegratedWheelParams {
     }
 };
 
-// TODO: Make equals functions for these classes
 class PreintegratedWheelBase {
   protected:
     boost::shared_ptr<PreintegratedWheelParams> p_;
@@ -86,15 +80,6 @@ class PreintegratedWheelBase {
     gtsam::Vector6 preint() const { return preint_; }
     double deltaTij() const { return deltaTij_; }
     virtual Eigen::Matrix<double, 12, 12> preintMeasCov() const { return preintMeasCov_; }
-
-    // Debatably shoudl be rotated covariance by body_T_sensor adjoint
-    // Doesn't seem to make a large difference though
-    Eigen::Matrix<double, 12, 12> preintMeasCovAdj(const gtsam::Pose3 &T) {
-        gtsam::Matrix6 adj = T.AdjointMap();
-        Eigen::Matrix<double, 12, 12> adj_cov = preintMeasCov_;
-        adj_cov.block<6, 6>(0, 0) = adj * preintMeasCov_.block<6, 6>(0, 0) * adj.transpose();
-        return adj_cov;
-    }
 
     virtual void resetIntegration() {
         preint_.setZero();

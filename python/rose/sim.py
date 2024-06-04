@@ -516,10 +516,6 @@ class Simulation:
             sig_wl = Minv @ wz_vx @ Minv.T
 
             return WheelNoise(
-                sig_man=1e-9,
-                sig_maninit=1e-6,
-                sig_man_pos=1e-2,
-                sig_man_orien=1e-2,
                 sigma_rad_s=sig_wl[0, 0],
                 sigma_wx=5e-2,
                 sigma_wy=5e-2,

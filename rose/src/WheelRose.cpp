@@ -55,7 +55,7 @@ void PreintegratedWheelRose::integrateMeasurements(double wl, double wr, double 
     H_intr_ = A * H_intr_ + Htinv * E * C * dt;
 
     preintMeasCov_.block<6, 6>(0, 0) =
-        A * preintMeasCov_.block<6, 6>(0, 0) * A.transpose() + B * (p_->makeFullVelCov() / dt) * B.transpose();
+        A * preintMeasCov_.block<6, 6>(0, 0) * A.transpose() + B * (p_->make3DCov() / dt) * B.transpose();
 
     preintMeasCov_.block<3, 3>(6, 6) = p_->intrinsicsBetweenCov;
 
