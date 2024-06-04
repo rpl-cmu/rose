@@ -38,6 +38,5 @@ If citing, please reference TODO
 
 ## TODO
 
-- [ ] Clean up wheel factor code, it's a bit messy
 - [ ] Fill out TODOs here once published (at least on arxiv)
 - [ ] Figure out licensing stuff
