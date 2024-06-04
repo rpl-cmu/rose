@@ -7,6 +7,7 @@
 #include <gtsam/nonlinear/LevenbergMarquardtParams.h>
 
 #include "rose/PlanarPriorFactor.h"
+#include "rose/WheelBaseline.h"
 #include "rose/WheelRose.h"
 #include "rose/ZPriorFactor.h"
 
@@ -21,6 +22,46 @@ using namespace rose;
 
 #define EXPECT_MATRICES_EQ(M_actual, M_expected)                                                                       \
     EXPECT_TRUE(M_actual.isApprox(M_expected, 1e-5)) << "  Actual:\n" << M_actual << "\nExpected:\n" << M_expected
+
+TEST(Jacobians, WheelBaseline) {
+    double wl = 0.6;
+    double wr = 0.4;
+    double dt = 0.1;
+
+    // Setup pwm
+    auto pwm_params = PreintegratedWheelParams::MakeShared();
+    pwm_params->setWVCovFromWV(1e-4, 1e-4);
+    pwm_params->wxCov = 1e-2;
+    pwm_params->wyCov = 1e-2;
+    pwm_params->vyCov = 1e-4;
+    pwm_params->vzCov = 1e-4;
+    PreintegratedWheelBaseline pwm(pwm_params);
+    for (int i = 0; i < 10; ++i) {
+        pwm.integrateMeasurements(wl, wr, dt);
+    }
+
+    gtsam::Pose3 b_T_s = gtsam::Pose3(); // gtsam::Pose3(gtsam::Rot3(0, 1, 0, 0), {1, 2, 3});
+
+    // Setup states
+    gtsam::Pose3 x0 = gtsam::Pose3(gtsam::Rot3::RzRyRx(4, 5, 6), {4, 5, 6});
+    gtsam::Pose3 x1 = gtsam::Pose3(gtsam::Rot3::RzRyRx(1, 2, 3), {1, 2, 3});
+    // x0 = pwm.predict(x0, x0);
+
+    // Setup lambda
+    std::function<gtsam::Vector(const gtsam::Pose3 &, const gtsam::Pose3 &)> errorComputer =
+        [pwm, b_T_s](const gtsam::Pose3 &pose_i, const gtsam::Pose3 &pose_j) {
+            return pwm.evaluateError(pose_i, pose_j);
+        };
+
+    gtsam::Matrix H1, H2, H1_num, H2_num;
+    gtsam::Vector e = pwm.evaluateError(x0, x1, H1, H2);
+
+    H1_num = gtsam::numericalDerivative21(errorComputer, x0, x1);
+    H2_num = gtsam::numericalDerivative22(errorComputer, x0, x1);
+
+    EXPECT_MATRICES_EQ(H1, H1_num);
+    EXPECT_MATRICES_EQ(H2, H2_num);
+}
 
 TEST(Jacobians, WheelRose) {
     double wl = 0.6;

@@ -38,28 +38,11 @@ gtsam::Vector WheelFactor2::evaluateError(const gtsam::Pose3 &pose_i, const gtsa
         pwm_->evaluateError(pose_i.compose(body_T_sensor_, H1_comp), pose_j.compose(body_T_sensor_, H2_comp), H1, H2);
 
     // Combine with body_T_sensor composition
-    if (H1 && !H1->isZero()) {
+    if (H1) {
         *H1 *= H1_comp;
     }
-    if (H2 && !H2->isZero()) {
+    if (H2) {
         *H2 *= H2_comp;
-    }
-
-    // If PWM doesn't implement Jacobians, do them numerically
-    std::function<gtsam::Vector(const gtsam::Pose3 &, const gtsam::Pose3 &)> errorComputer =
-        [this](const gtsam::Pose3 &pose_i, const gtsam::Pose3 &pose_j) {
-            return pwm_->evaluateError(pose_i.compose(body_T_sensor_), pose_j.compose(body_T_sensor_));
-        };
-
-    if (H1 && H1->isZero()) {
-        H1->resize(pwm_->dimension2(), 6);
-        H1->setZero();
-        *H1 = gtsam::numericalDerivative21(errorComputer, pose_i, pose_j);
-    }
-    if (H2 && H2->isZero()) {
-        H2->resize(pwm_->dimension2(), 6);
-        H2->setZero();
-        *H2 = gtsam::numericalDerivative22(errorComputer, pose_i, pose_j);
     }
 
     return e;
