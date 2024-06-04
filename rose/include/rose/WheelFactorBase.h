@@ -67,19 +67,19 @@ class PreintegratedWheelBase {
   protected:
     boost::shared_ptr<PreintegratedWheelParams> p_;
     gtsam::Vector6 preint_;
-    Eigen::Matrix<double, 12, 12> preintMeasCov_;
+    Eigen::Matrix<double, 9, 9> preintMeasCov_;
     double deltaTij_;
 
   public:
     typedef typename boost::shared_ptr<PreintegratedWheelBase> shared_ptr;
 
     PreintegratedWheelBase(const boost::shared_ptr<PreintegratedWheelParams> &p);
-    PreintegratedWheelBase(gtsam::Vector6 preint, Eigen::Matrix<double, 12, 12> preintMeasCov, double deltaTij);
+    PreintegratedWheelBase(gtsam::Vector6 preint, Eigen::Matrix<double, 9, 9> preintMeasCov, double deltaTij);
 
     boost::shared_ptr<PreintegratedWheelParams> params() const { return p_; }
     gtsam::Vector6 preint() const { return preint_; }
     double deltaTij() const { return deltaTij_; }
-    virtual Eigen::Matrix<double, 12, 12> preintMeasCov() const { return preintMeasCov_; }
+    virtual Eigen::Matrix<double, 9, 9> preintMeasCov() const { return preintMeasCov_; }
 
     virtual void resetIntegration() {
         preint_.setZero();

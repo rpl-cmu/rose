@@ -39,7 +39,7 @@ class PreintegratedWheelRose : public PreintegratedWheelBase {
 
     // This are inherited, overriden functions
     void integrateMeasurements(double wl, double wr, double dt) override;
-    void resetIntegration();
+    void resetIntegration() override;
 
     size_t dimension2() const override { return 6; }
     gtsam::Pose3 predict(const gtsam::Pose3 &x_i, boost::optional<gtsam::Matrix &> H1 = boost::none) const override;

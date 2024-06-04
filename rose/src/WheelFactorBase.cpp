@@ -3,7 +3,7 @@
 namespace rose {
 
 // ------------------------- Preintegration Base ------------------------- //
-PreintegratedWheelBase::PreintegratedWheelBase(gtsam::Vector6 preint, Eigen::Matrix<double, 12, 12> preintMeasCov,
+PreintegratedWheelBase::PreintegratedWheelBase(gtsam::Vector6 preint, Eigen::Matrix<double, 9, 9> preintMeasCov,
                                                double deltaTij)
     : preint_(preint), preintMeasCov_(preintMeasCov), deltaTij_(deltaTij) {}
 

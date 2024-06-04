@@ -232,7 +232,7 @@ PreintegratedWheelBase::shared_ptr parsePWBase(const nlohmann::json &input_json)
 
     // Construct the factor
     gtsam::Vector6 preint = jrl::io_values::parse<gtsam::Vector>(measurement_json);
-    typename Eigen::Matrix<double, 12, 12> covariance = jrl::io_measurements::parseCovariance(covariance_json, 12);
+    typename Eigen::Matrix<double, 9, 9> covariance = jrl::io_measurements::parseCovariance(covariance_json, 9);
     double deltaTij = deltaTij_json.get<double>();
 
     return boost::make_shared<PreintegratedWheelBase>(preint, covariance, deltaTij);
