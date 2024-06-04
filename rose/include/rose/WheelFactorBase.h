@@ -73,7 +73,7 @@ class PreintegratedWheelBase {
   public:
     typedef typename boost::shared_ptr<PreintegratedWheelBase> shared_ptr;
 
-    PreintegratedWheelBase(boost::shared_ptr<PreintegratedWheelParams> p);
+    PreintegratedWheelBase(const boost::shared_ptr<PreintegratedWheelParams> &p);
     PreintegratedWheelBase(gtsam::Vector6 preint, Eigen::Matrix<double, 12, 12> preintMeasCov, double deltaTij);
 
     boost::shared_ptr<PreintegratedWheelParams> params() const { return p_; }

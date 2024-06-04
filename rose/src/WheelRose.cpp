@@ -3,7 +3,7 @@
 namespace rose {
 
 // ------------------------- Preintegrated Wheel Measurements ------------------------- //
-PreintegratedWheelRose::PreintegratedWheelRose(const boost::shared_ptr<PreintegratedWheelParams> p) : Base(p) {
+PreintegratedWheelRose::PreintegratedWheelRose(const boost::shared_ptr<PreintegratedWheelParams> &p) : Base(p) {
     resetIntegration();
     intr_est_ = p_->intrinsics;
 }

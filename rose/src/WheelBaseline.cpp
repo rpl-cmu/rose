@@ -3,7 +3,7 @@
 // ------------------------- Preintegrated Wheel Measurements ------------------------- //
 namespace rose {
 
-PreintegratedWheelBaseline::PreintegratedWheelBaseline(const boost::shared_ptr<PreintegratedWheelParams> p) : Base(p) {
+PreintegratedWheelBaseline::PreintegratedWheelBaseline(const boost::shared_ptr<PreintegratedWheelParams> &p) : Base(p) {
     resetIntegration();
 }
 
@@ -43,11 +43,11 @@ void PreintegratedWheelBaseline::integrateVelocities(double w, double v, double 
     if (preintMeasCov_(2, 2) <= 1e-8) {
         preintMeasCov_(2, 2) = 1e-8;
     }
-    // preintMeasCov_.block<3,3>(0,0) = gtsam::I_3x3 * 1e-3;
 
     deltaTij_ += dt;
 }
 
+// TODO: Implement Jacobians for WheelBaseline
 gtsam::Pose3 PreintegratedWheelBaseline::predict(const gtsam::Pose3 &x_i, boost::optional<gtsam::Matrix &> H1) const {
     gtsam::Pose3 delta(gtsam::Rot3::Rz(preint_[0]), gtsam::Vector3(preint_[1], preint_[2], 0));
     return x_i.compose(delta);

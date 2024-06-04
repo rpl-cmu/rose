@@ -23,7 +23,7 @@ class PreintegratedWheelBaseline : public PreintegratedWheelBase {
     typedef PreintegratedWheelBase Base;
     typedef typename boost::shared_ptr<PreintegratedWheelBaseline> shared_ptr;
 
-    PreintegratedWheelBaseline(const boost::shared_ptr<PreintegratedWheelParams> p);
+    PreintegratedWheelBaseline(const boost::shared_ptr<PreintegratedWheelParams> &p);
     PreintegratedWheelBaseline(Base base);
 
     // This are inherited, overriden functions

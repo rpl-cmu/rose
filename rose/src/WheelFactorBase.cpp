@@ -7,7 +7,7 @@ PreintegratedWheelBase::PreintegratedWheelBase(gtsam::Vector6 preint, Eigen::Mat
                                                double deltaTij)
     : preint_(preint), preintMeasCov_(preintMeasCov), deltaTij_(deltaTij) {}
 
-PreintegratedWheelBase::PreintegratedWheelBase(boost::shared_ptr<PreintegratedWheelParams> p) : p_(p) {}
+PreintegratedWheelBase::PreintegratedWheelBase(const boost::shared_ptr<PreintegratedWheelParams> &p) : p_(p) {}
 
 void PreintegratedWheelBase::integrateMeasurements(double wl, double wr, double dt) {
     double baseline = p_->intrinsics[0];
@@ -100,34 +100,12 @@ gtsam::Vector WheelFactor3::evaluateError(const gtsam::Pose3 &pose_i, const gtsa
 
     // If we got Jacobians out
     // Combine with body_T_sensor_ composition
-    if (H1 && !H1->isZero()) {
+    if (H1) {
         *H1 *= H1_comp;
     }
-    if (H2 && !H2->isZero()) {
+    if (H2) {
         *H2 *= H2_comp;
     }
-
-    // // If PWM doesn't implement Jacobians, do them numerically
-    // std::function<gtsam::Vector(const gtsam::Pose3 &, const gtsam::Pose3 &, const gtsam::Vector2 &)> errorComputer =
-    //     [this](const gtsam::Pose3 &pose_i, const gtsam::Pose3 &pose_j, const gtsam::Vector2 &slip) {
-    //         return pwm_->evaluateError(pose_i.compose(body_T_sensor_), slip, pose_j.compose(body_T_sensor_));
-    //     };
-
-    // if (H1) {
-    //     H1->resize(pwm_->dimension2(), 6);
-    //     H1->setZero();
-    //     *H1 = gtsam::numericalDerivative31(errorComputer, pose_i, pose_j, slip);
-    // }
-    // if (H2) {
-    //     H2->resize(pwm_->dimension2(), 6);
-    //     H2->setZero();
-    //     *H2 = gtsam::numericalDerivative32(errorComputer, pose_i, pose_j, slip);
-    // }
-    // if (H3) {
-    //     H3->resize(pwm_->dimension2(), 6);
-    //     H3->setZero();
-    //     *H3 = gtsam::numericalDerivative33(errorComputer, pose_i, pose_j, slip);
-    // }
 
     return e;
 }
@@ -171,41 +149,12 @@ gtsam::Vector WheelFactor4::evaluateError(const gtsam::Pose3 &pose_i, const gtsa
 
     // If we got Jacobians out
     // Combine with body_T_sensor_ composition
-    if (H1 && !H1->isZero()) {
+    if (H1) {
         *H1 *= H1_comp;
     }
-    if (H3 && !H3->isZero()) {
+    if (H3) {
         *H3 *= H3_comp;
     }
-
-    // std::function<gtsam::Vector(const gtsam::Pose3 &, const gtsam::Vector3 &, const gtsam::Pose3 &,
-    //                             const gtsam::Vector3 &)>
-    //     errorComputer = [this](const gtsam::Pose3 &pose_i, const gtsam::Vector3 &intr_i, const gtsam::Pose3 &pose_j,
-    //                            const gtsam::Vector3 &intr_j) {
-    //         return pwm_->evaluateError(pose_i.compose(body_T_sensor_), intr_i, pose_j.compose(body_T_sensor_),
-    //         intr_j);
-    //     };
-
-    // if (H1) {
-    //     H1->resize(pwm_->dimension4(), 6);
-    //     H1->setZero();
-    //     *H1 = gtsam::numericalDerivative41(errorComputer, pose_i, intr_i, pose_j, intr_j);
-    // }
-    // if (H2) {
-    //     H2->resize(pwm_->dimension4(), 3);
-    //     H2->setZero();
-    //     *H2 = gtsam::numericalDerivative42(errorComputer, pose_i, intr_i, pose_j, intr_j);
-    // }
-    // if (H3) {
-    //     H3->resize(pwm_->dimension4(), 6);
-    //     H3->setZero();
-    //     *H3 = gtsam::numericalDerivative43(errorComputer, pose_i, intr_i, pose_j, intr_j);
-    // }
-    // if (H4) {
-    //     H4->resize(pwm_->dimension4(), 3);
-    //     H4->setZero();
-    //     *H4 = gtsam::numericalDerivative44(errorComputer, pose_i, intr_i, pose_j, intr_j);
-    // }
 
     return e;
 }
@@ -251,47 +200,12 @@ gtsam::Vector WheelFactor5::evaluateError(const gtsam::Pose3 &pose_i, const gtsa
 
     // If we got Jacobians out
     // Combine with body_T_sensor_ composition
-    if (H1 && !H1->isZero()) {
+    if (H1) {
         *H1 *= H1_comp;
     }
-    if (H3 && !H3->isZero()) {
+    if (H3) {
         *H3 *= H3_comp;
     }
-
-    // std::function<gtsam::Vector(const gtsam::Pose3 &, const gtsam::Vector3 &, const gtsam::Pose3 &,
-    //                             const gtsam::Vector3 &, const gtsam::Vector2 &)>
-    //     errorComputer = [this](const gtsam::Pose3 &pose_i, const gtsam::Vector3 &intr_i, const gtsam::Pose3 &pose_j,
-    //                            const gtsam::Vector3 &intr_j, const gtsam::Vector2 &slip) {
-    //         return pwm_->evaluateError(pose_i.compose(body_T_sensor_), intr_i, pose_j.compose(body_T_sensor_),
-    //         intr_j,
-    //                                    slip);
-    //     };
-
-    // if (H1) {
-    //     H1->resize(pwm_->dimension4(), 6);
-    //     H1->setZero();
-    //     *H1 = gtsam::numericalDerivative51(errorComputer, pose_i, intr_i, pose_j, intr_j, slip);
-    // }
-    // if (H2) {
-    //     H2->resize(pwm_->dimension4(), 3);
-    //     H2->setZero();
-    //     *H2 = gtsam::numericalDerivative52(errorComputer, pose_i, intr_i, pose_j, intr_j, slip);
-    // }
-    // if (H3) {
-    //     H3->resize(pwm_->dimension4(), 6);
-    //     H3->setZero();
-    //     *H3 = gtsam::numericalDerivative53(errorComputer, pose_i, intr_i, pose_j, intr_j, slip);
-    // }
-    // if (H4) {
-    //     H4->resize(pwm_->dimension4(), 3);
-    //     H4->setZero();
-    //     *H4 = gtsam::numericalDerivative54(errorComputer, pose_i, intr_i, pose_j, intr_j, slip);
-    // }
-    // if (H5) {
-    //     H5->resize(pwm_->dimension4(), 2);
-    //     H5->setZero();
-    //     *H5 = gtsam::numericalDerivative55(errorComputer, pose_i, intr_i, pose_j, intr_j, slip);
-    // }
 
     return e;
 }

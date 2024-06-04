@@ -34,7 +34,7 @@ class PreintegratedWheelRose : public PreintegratedWheelBase {
     typedef PreintegratedWheelBase Base;
     typedef typename boost::shared_ptr<PreintegratedWheelRose> shared_ptr;
 
-    PreintegratedWheelRose(const boost::shared_ptr<PreintegratedWheelParams> p);
+    PreintegratedWheelRose(const boost::shared_ptr<PreintegratedWheelParams> &p);
     PreintegratedWheelRose(Base base, gtsam::Matrix62 H_slip, gtsam::Matrix63 H_intr, gtsam::Vector3 intr_est);
 
     // This are inherited, overriden functions
