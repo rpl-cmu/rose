@@ -4,7 +4,7 @@ import rose.plot as plot
 import seaborn as sns
 
 
-def plot_bars(file):
+def plot_bars(file, rot_max, t_max):
     colors = plot.setup_plot()
     tags_to_names = plot.tags_to_names()
     df = pd.read_pickle(f"figures/data/{file}.pkl")
@@ -34,7 +34,7 @@ def plot_bars(file):
     ax[0].set_title("ATEt $(m)$")
     ax[0].set_ylabel("")
     ax[0].tick_params(axis="y", pad=-2)
-    ax[0].set_ylim(0, 10)
+    ax[0].set_ylim(0, t_max)
 
     sns.boxplot(
         df,
@@ -50,15 +50,15 @@ def plot_bars(file):
     ax[1].get_legend().remove()
     ax[1].set_ylabel("")
     ax[1].tick_params(axis="y", pad=-2)
-    ax[1].set_ylim(0, 5)
+    ax[1].set_ylim(0, rot_max)
 
     fig.legend(loc="lower center", ncol=3, bbox_to_anchor=(0.5, -0.23))
 
-    # plt.savefig(f"figures/{file}.png", bbox_inches="tight", dpi=300)
+    plt.savefig(f"figures/{file}.png", bbox_inches="tight", dpi=300)
     plt.savefig(f"figures/{file}.pdf", bbox_inches="tight", dpi=300)
     # plt.show()
 
 
 if __name__ == "__main__":
-    plot_bars("sim_monte_carlo_ideal")
-    plot_bars("sim_monte_carlo_real")
+    plot_bars("sim_monte_carlo_ideal", 5, 10)
+    plot_bars("sim_monte_carlo_real", 10, 20)

@@ -116,7 +116,7 @@ if __name__ == "__main__":
     dark_ones = [plot.WheelType.WHEEL_ROSE_INTR_SLIP.value, plot.WheelType.GT.value]
     for name, values in results.items():
         alpha = 1 if name in dark_ones else 0.9
-        lw = 1.25 if name in dark_ones else 0.8
+        lw = 1.25 if name in dark_ones else 0.9
         ax.plot(
             values["$p_y$"] - min_x,
             values["$p_x$"] - min_y,
@@ -147,6 +147,12 @@ if __name__ == "__main__":
         # label_outline=0.75,
     )
     ax.add_artist(ob)
+
+    # Insert nearmap logo
+    nearmap = plt.imread("figures/nearmap.png")
+    nearax = fig.add_axes([0.03, 0.86, 0.17, 0.17])
+    nearax.axis("off")
+    nearax.imshow(nearmap)
 
     fig.legend(loc="lower center", ncol=4, bbox_to_anchor=(0.5, -0.07))
 
