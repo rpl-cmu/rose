@@ -43,7 +43,7 @@ def main(ideal: bool):
     np.random.seed(0)
     params = SimParameters()
 
-    runs = 10
+    runs = 50
 
     params.slip_num = 0 if ideal else 10
     params.slip_length = 0.5
@@ -140,5 +140,5 @@ def main(ideal: bool):
 
 
 if __name__ == "__main__":
-    # main(True)
+    main(True)
     main(False)

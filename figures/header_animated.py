@@ -154,7 +154,7 @@ def animate(traj):
     ax.legend(loc="lower right", ncol=1)
 
     fps = 30
-    t = 5
+    t = 8
 
     num_frames = fps * t
     N = len(results[plot.WheelType.GT.value]["$p_y$"])
@@ -177,9 +177,12 @@ def animate(traj):
         blit=True,
         interval=1000 / fps,
         cache_frame_data=False,
-        repeat=False,
     )
-    ani.save(f"figures/animations/{traj}.gif", dpi=300)
+    ani.save(
+        f"figures/animations/{traj}.gif",
+        dpi=300,
+        extra_args=["-loop", "-1"],
+    )
 
 
 if __name__ == "__main__":
@@ -189,6 +192,6 @@ if __name__ == "__main__":
         try:
             print(t)
             animate(t)
-        except Exception as _:
-            print(f"Failed on {t}")
+        except Exception as e:
+            print(f"Failed on {t}", e)
             continue

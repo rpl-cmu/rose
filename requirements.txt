@@ -1,0 +1,16 @@
+# Not included: C++ builds of
+# gtsam
+# jrl
+
+numpy
+opencv
+pyyaml
+matplotlib
+tqdm
+yourdfpy
+pandas
+seaborn
+tabulate
+sympy
+pre-commit
+rasterio

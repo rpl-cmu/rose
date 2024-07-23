@@ -12,7 +12,7 @@ from tabulate import tabulate
 
 
 def cbor(s):
-    return s.endswith("cbor")
+    return str(s).endswith("cbor")
 
 
 np.set_printoptions(suppress=True, precision=4)
@@ -148,7 +148,7 @@ if __name__ == "__main__":
         "cam_only": plot.WheelType.SVO.value,
         "wheel_only": plot.WheelType.WHEEL.value,
     }
-    df_no_imu = df[not df["Uses IMU"]].copy()
+    df_no_imu = df[df["Uses IMU"] == False].copy()  # noqa: E712
     df_no_imu["Wheel Type"] = df_no_imu["Wheel Type"].replace(alias)
     df_no_imu = df_no_imu[df_no_imu["Wheel Type"] != plot.WheelType.WHEEL_UNDER.value]
     df_no_imu["Wheel Type"] = pd.Categorical(
