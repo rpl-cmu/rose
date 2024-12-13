@@ -134,7 +134,7 @@ def tags_to_names():
 
 def setup_plot():
     matplotlib.rc("pdf", fonttype=42)
-    sns.set_context("paper")
+    sns.set_context("paper", font_scale=1.10)
     sns.set_style("whitegrid")
     sns.set_palette("colorblind")
     c = sns.color_palette("colorblind")

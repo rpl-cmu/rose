@@ -979,7 +979,7 @@ class Dataset2JRL:
         # The baseline struggles with the tighter noise. Loosen it some
         # 8 was empirically chosen as a good value for loosening
         baseline_noise = data.noise.copy()
-        baseline_noise.sigma_rad_s *= 8
+        # baseline_noise.sigma_rad_s *= 8
         pwmParamsBaseline = baseline_noise.gtsam(data.intrinsics)
 
         data.interp(self.stamps)

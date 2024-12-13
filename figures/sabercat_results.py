@@ -188,6 +188,7 @@ if __name__ == "__main__":
     ax[0].set_xlabel("")
     ax[0].set_title("Visual Wheel Odometry")
     ax[0].tick_params(axis="x", rotation=12, bottom=True)
+    ax[0].set_ylim([0, 1000])
 
     # With IMU
     alias = {k: v.replace("SVO", "SVIO") for k, v in alias.items()}
@@ -207,6 +208,8 @@ if __name__ == "__main__":
         ],
         ordered=True,
     )
+
+    print(df_with_imu)
 
     sns.swarmplot(
         df_with_imu,
@@ -232,16 +235,22 @@ if __name__ == "__main__":
     ax[1].set_xlabel("")
     ax[1].set_title("Visual Intertial Wheel Odometry")
     ax[1].tick_params(axis="x", rotation=12, bottom=True)
-    ax[1].set_ylim([0, 200])
+    ax[1].set_ylim([0, 100_000])
 
-    ax[0].set_ylim(ax[1].get_ylim())
+    # handle log plots for large values
+    ax[0].set_yscale("symlog", linthresh=200, linscale=2.0)
+    ax[0].set_yticks(
+        [0, 50, 100, 150, 200, 500, 1000],
+        [0, 50, 100, 150, 200, 500, r"$10^3$"],
+    )
+    ax[0].get_ygridlines()[4].set_linestyle("--")
 
-    # pivot = df_with_imu.pivot(
-    #     index="Trajectory", columns=["Wheel Type"], values="ATEt / km"
-    # )
-    # print(pivot.to_markdown(tablefmt="github"))
-    # print("\n\n\n")
-    # print(pivot)
+    ax[1].set_yscale("symlog", linthresh=200, linscale=7.0)
+    ax[1].set_yticks(
+        [0, 50, 100, 150, 200, 10_000, 100_000],
+        [0, 50, 100, 150, 200, r"$10^4$", r"$10^5$"],
+    )
+    ax[1].get_ygridlines()[4].set_linestyle("--")
 
     if args.filename is not None:
         plt.savefig(args.filename, bbox_inches="tight", dpi=300)

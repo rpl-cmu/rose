@@ -233,11 +233,11 @@ if __name__ == "__main__":
 
     # run("base", "imu")
     # run("base", "imu", "wheel_rose")
-    run("base", "imu", "wheel_intr_slip")
-    # run("base", "imu", "wheel_baseline")
+    # run("base", "imu", "wheel_intr_slip")
+    run("base", "imu", "wheel_baseline")
     # run("base", "imu", "wheel_baseline", "planar_prior")
 
     # run("base", "wheel_rose")
-    run("base", "wheel_intr_slip")
+    # run("base", "wheel_intr_slip")
     # run("base", "wheel_baseline")
-    # run("base", "wheel_baseline", "planar_prior")
+    run("base", "wheel_baseline", "planar_prior")
